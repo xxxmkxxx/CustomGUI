@@ -1,65 +1,72 @@
 package com.xxxmkxxx.customgui.client.ui.containers.pane;
 
-import com.xxxmkxxx.customgui.client.common.Builder;
 import com.xxxmkxxx.customgui.client.common.Frame;
-import com.xxxmkxxx.customgui.client.hierarchy.Node;
+import com.xxxmkxxx.customgui.client.common.SimpleBuilder;
+import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
+import com.xxxmkxxx.customgui.client.hierarchy.node.NodeState;
+import com.xxxmkxxx.customgui.client.hierarchy.node.State;
+import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
+import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
+import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
+import lombok.Getter;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 
 import java.util.List;
 
+@Getter
 public class SimplePane extends AbstractPane {
     private int color;
 
-    @Override
-    public boolean hide() {
-
-        return true;
-    }
+    private SimplePane() {}
 
     @Override
-    public boolean view() {
-        state.execute(
-                matrixStack,
-                frame.getStartPos().x(), frame.getStartPos().y(),
-                frame.getStopPos().x(), frame.getStopPos().y(),
-                color
-        );
-
-        return true;
+    public void hide() {
+        this.state = State.HIDED;
     }
 
-    public static SimplePaneBuilder builder() {
-        return new SimplePaneBuilder();
+    @Override
+    public void display() {
+        this.state = State.DISPLAYED;
     }
 
-    public static class SimplePaneBuilder implements Builder<SimplePane> {
-        private SimplePane simplePane = new SimplePane();
+    @Override
+    public void initRenderer(RendererType type) {
+        this.renderer = new RendererFactory().create(type);
+    }
 
-        public SimplePaneBuilder color(int hexColorCode) {
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder implements SimpleBuilder<SimplePane> {
+        private final SimplePane simplePane = new SimplePane();
+
+        public Builder color(int hexColorCode) {
             simplePane.color = hexColorCode;
 
             return this;
         }
 
-        public SimplePaneBuilder state(PaneState state) {
+        public Builder state(NodeState<AbstractNode> state) {
             simplePane.state = state;
 
             return this;
         }
 
-        public SimplePaneBuilder frame(Frame frame) {
+        public Builder frame(Frame frame) {
             simplePane.frame = frame;
 
             return this;
         }
 
-        public SimplePaneBuilder matrixStack(MatrixStack matrixStack) {
+        public Builder matrixStack(MatrixStack matrixStack) {
             simplePane.matrixStack = matrixStack;
 
             return this;
         }
 
-        public SimplePaneBuilder nodes(List<Node> nodes) {
+        public Builder nodes(List<AbstractNode> nodes) {
             simplePane.nodes = nodes;
 
             return this;
@@ -68,6 +75,28 @@ public class SimplePane extends AbstractPane {
         @Override
         public SimplePane build() {
             return simplePane;
+        }
+    }
+
+    public static class RendererFactory implements NodeRendererFactory<SimplePane> {
+        @Override
+        public NodeRenderer<SimplePane> create(RendererType type) {
+            switch (type) {
+                case HUD: return node -> {
+                    DrawableHelper.fill(
+                            node.getMatrixStack(),
+                            node.getFrame().getStartPos().x(), node.getFrame().getStartPos().y(),
+                            node.getFrame().getStopPos().x(), node.getFrame().getStopPos().y(),
+                            node.getColor()
+                    );
+                };
+
+                case SCREEN: return node -> {
+                    System.out.println("screen renderer future");
+                };
+
+                default: return node -> {};
+            }
         }
     }
 }
