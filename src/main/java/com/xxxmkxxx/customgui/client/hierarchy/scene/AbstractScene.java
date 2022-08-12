@@ -2,10 +2,12 @@ package com.xxxmkxxx.customgui.client.hierarchy.scene;
 
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
+import lombok.Getter;
 
 import java.util.List;
 
 public abstract class AbstractScene implements Scene {
+    @Getter
     protected final RendererType type;
     protected List<AbstractNode> displays;
 
