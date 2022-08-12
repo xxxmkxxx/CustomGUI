@@ -1,5 +1,6 @@
 package com.xxxmkxxx.customgui.client.common;
 
-public interface Builder<T> {
+public interface SimpleBuilder<T> {
     T build();
 }
+
