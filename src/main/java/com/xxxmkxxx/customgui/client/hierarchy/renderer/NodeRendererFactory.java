@@ -1,7 +1,7 @@
 package com.xxxmkxxx.customgui.client.hierarchy.renderer;
 
-import com.xxxmkxxx.customgui.client.hierarchy.node.Node;
+import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 
-public interface RendererFactory <N extends Node> {
+public interface NodeRendererFactory<N extends AbstractNode> {
     NodeRenderer<N> create(RendererType type);
 }
