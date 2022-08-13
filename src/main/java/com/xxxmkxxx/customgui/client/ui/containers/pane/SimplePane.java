@@ -1,5 +1,7 @@
 package com.xxxmkxxx.customgui.client.ui.containers.pane;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.xxxmkxxx.customgui.client.CustomGUIClient;
 import com.xxxmkxxx.customgui.client.common.Frame;
 import com.xxxmkxxx.customgui.client.common.SimpleBuilder;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
@@ -9,7 +11,9 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import lombok.Getter;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 
 import java.util.List;
@@ -92,7 +96,19 @@ public class SimplePane extends AbstractPane {
                 };
 
                 case SCREEN: return node -> {
-                    System.out.println("screen renderer future");
+                    final int width = MinecraftClient.getInstance().getWindow().getWidth();
+                    final int height = MinecraftClient.getInstance().getWindow().getHeight();
+
+                    RenderSystem.setShader(GameRenderer::getPositionTexShader);
+                    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+                    CustomGUIClient.NODE_DRAWABLE_HELPER.gradient(
+                            node.getMatrixStack(),
+                            0, 0,
+                            width, height,
+                            -1072689136, -804253680
+                    );
+
+                    this.create(RendererType.HUD).render(node);
                 };
 
                 default: return node -> {};
