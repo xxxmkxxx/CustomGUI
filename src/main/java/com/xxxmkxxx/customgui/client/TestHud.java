@@ -34,9 +34,9 @@ public class TestHud {
             .build();
 
     public static void render() {
-        SimpleScene scene = new SimpleScene(RendererType.HUD);
+        SimpleScene scene = new SimpleScene(RendererType.SCREEN);
         scene.addElement(PANE);
 
-        CustomGUIClient.HUD_STAGE.setScene(scene);
+        CustomGUIClient.SCREEN_STAGE.setScene(scene);
     }
 }
