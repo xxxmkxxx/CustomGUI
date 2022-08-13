@@ -12,7 +12,6 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 
@@ -87,10 +86,9 @@ public class SimplePane extends AbstractPane {
         public NodeRenderer<SimplePane> create(RendererType type) {
             switch (type) {
                 case HUD: return node -> {
-                    DrawableHelper.fill(
+                    CustomGUIClient.NODE_DRAWABLE_HELPER.fillFrame(
                             node.getMatrixStack(),
-                            node.getFrame().getStartPos().x(), node.getFrame().getStartPos().y(),
-                            node.getFrame().getStopPos().x(), node.getFrame().getStopPos().y(),
+                            node.getFrame(),
                             node.getColor()
                     );
                 };
@@ -101,11 +99,10 @@ public class SimplePane extends AbstractPane {
 
                     RenderSystem.setShader(GameRenderer::getPositionTexShader);
                     RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-                    CustomGUIClient.NODE_DRAWABLE_HELPER.gradient(
+                    CustomGUIClient.NODE_DRAWABLE_HELPER.gradientFillFrame(
                             node.getMatrixStack(),
                             0, 0,
-                            width, height,
-                            -1072689136, -804253680
+                            width, height
                     );
 
                     this.create(RendererType.HUD).render(node);
