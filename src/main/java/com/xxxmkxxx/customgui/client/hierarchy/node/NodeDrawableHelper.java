@@ -1,12 +1,16 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node;
 
 import com.xxxmkxxx.customgui.client.common.Frame;
+import com.xxxmkxxx.customgui.client.common.Pos;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 
 public class NodeDrawableHelper extends DrawableHelper {
     public static int startGradientColor = -1072689136;
     public static int stopGradientColor = -804253680;
+    public static final MinecraftClient client = MinecraftClient.getInstance();
 
     public void gradientFillFrame(MatrixStack matrices, int startX, int startY, int stopX, int stopY, int colorStart, int colorEnd) {
         fillGradient(matrices, startX, startY, stopX, stopY, colorStart, colorEnd);
@@ -36,5 +40,13 @@ public class NodeDrawableHelper extends DrawableHelper {
                 frame.getStopPos().x(), frame.getStopPos().y(),
                 color
         );
+    }
+
+    public void drawText(MatrixStack matrices, Text text, int x, int y, int color) {
+        client.textRenderer.draw(matrices, text, x, y, color);
+    }
+
+    public void drawText(MatrixStack matrices, Text text, Pos pos, int color) {
+        client.textRenderer.draw(matrices, text, pos.x(), pos.y(), color);
     }
 }
