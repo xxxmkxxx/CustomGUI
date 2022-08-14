@@ -6,7 +6,7 @@ import com.xxxmkxxx.customgui.client.common.Frame;
 import com.xxxmkxxx.customgui.client.common.SimpleBuilder;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.NodeState;
-import com.xxxmkxxx.customgui.client.hierarchy.node.State;
+import com.xxxmkxxx.customgui.client.hierarchy.node.States;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
@@ -25,12 +25,12 @@ public class SimplePane extends AbstractPane {
 
     @Override
     public void hide() {
-        this.state = State.HIDED;
+        this.state = States.HIDED;
     }
 
     @Override
     public void display() {
-        this.state = State.DISPLAYED;
+        this.state = States.DISPLAYED;
     }
 
     @Override

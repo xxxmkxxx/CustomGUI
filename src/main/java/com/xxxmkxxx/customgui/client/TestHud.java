@@ -1,20 +1,12 @@
 package com.xxxmkxxx.customgui.client;
 
 import com.xxxmkxxx.customgui.client.common.Frame;
-import com.xxxmkxxx.customgui.client.hierarchy.node.State;
+import com.xxxmkxxx.customgui.client.hierarchy.node.States;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
-import com.xxxmkxxx.customgui.client.hierarchy.scene.Scene;
 import com.xxxmkxxx.customgui.client.hierarchy.scene.SimpleScene;
 import com.xxxmkxxx.customgui.client.ui.containers.pane.SimplePane;
-import net.fabricmc.fabric.impl.client.texture.FabricSprite;
-import net.minecraft.client.resource.metadata.AnimationResourceMetadata;
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
+import com.xxxmkxxx.customgui.client.ui.controls.field.TextField;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-
-import java.util.ArrayList;
 
 public class TestHud {
     /*private static final Identifier TEXTURE = new Identifier("customgui", "textures/gui/img_1.png");
@@ -29,13 +21,19 @@ public class TestHud {
     private static final SimplePane PANE = SimplePane.builder()
             .matrixStack(new MatrixStack())
             .frame(new Frame(100, 100, 50, 50, false))
-            .state(State.DISPLAYED)
+            .state(States.DISPLAYED)
             .color(0xFF786060)
             .build();
 
+    private static final TextField FIELD = TextField.builder()
+            .textColor(0xFF030202)
+            .pos(100, 100)
+            .text("test text")
+            .build();
+
     public static void render() {
-        SimpleScene scene = new SimpleScene(RendererType.SCREEN);
-        scene.addElement(PANE);
+        SimpleScene scene = new SimpleScene(RendererType.SCREEN, PANE);
+        scene.addElement(FIELD);
 
         CustomGUIClient.SCREEN_STAGE.setScene(scene);
     }
