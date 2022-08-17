@@ -1,12 +1,17 @@
 package com.xxxmkxxx.customgui.client;
 
-import com.xxxmkxxx.customgui.client.common.Frame;
+import com.xxxmkxxx.customgui.client.geometry.Frame;
+import com.xxxmkxxx.customgui.client.geometry.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.States;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.scene.SimpleScene;
 import com.xxxmkxxx.customgui.client.ui.containers.pane.SimplePane;
 import com.xxxmkxxx.customgui.client.ui.controls.field.TextField;
+import com.xxxmkxxx.customgui.client.ui.controls.slot.SimpleSlot;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemStack;
 
 public class TestHud {
     /*private static final Identifier TEXTURE = new Identifier("customgui", "textures/gui/img_1.png");
@@ -31,10 +36,68 @@ public class TestHud {
             .text("test text")
             .build();
 
+    private static final SimpleSlot SLOT = new SimpleSlot(
+            1,
+            1, new TestInventory(),
+            new Pos(50, 50),
+            new Frame(50, 50, 20, 20, false),
+            0xAF3C3B36
+    );
+
+
     public static void render() {
-        SimpleScene scene = new SimpleScene(RendererType.SCREEN, PANE);
+        SimpleScene scene = new SimpleScene(RendererType.SCREEN);
         scene.addElement(FIELD);
+        scene.addElement(SLOT);
 
         CustomGUIClient.SCREEN_STAGE.setScene(scene);
+    }
+
+    private static class TestInventory implements Inventory {
+
+        @Override
+        public int size() {
+            return 0;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
+
+        @Override
+        public ItemStack getStack(int slot) {
+            return null;
+        }
+
+        @Override
+        public ItemStack removeStack(int slot, int amount) {
+            return null;
+        }
+
+        @Override
+        public ItemStack removeStack(int slot) {
+            return null;
+        }
+
+        @Override
+        public void setStack(int slot, ItemStack stack) {
+
+        }
+
+        @Override
+        public void markDirty() {
+
+        }
+
+        @Override
+        public boolean canPlayerUse(PlayerEntity player) {
+            return false;
+        }
+
+        @Override
+        public void clear() {
+
+        }
     }
 }
