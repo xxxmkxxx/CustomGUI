@@ -85,26 +85,16 @@ public class TextField extends AbstractField {
     public static class RendererFactory implements NodeRendererFactory<TextField> {
         @Override
         public NodeRenderer<TextField> create(RendererType type) {
-            switch(type) {
-                case HUD: {
-                    return node -> {
-                        CustomGUIClient.NODE_DRAWABLE_HELPER.drawText(
-                                node.matrixStack,
-                                node.text,
-                                node.pos,
-                                node.textColor
-                        );
-                    };
-                }
+            return this::render;
+        }
 
-                case SCREEN: {
-                    return node -> {
-                        this.create(RendererType.HUD).render(node);
-                    };
-                }
-
-                default: return node -> {};
-            }
+        private void render(TextField field) {
+            CustomGUIClient.NODE_DRAWABLE_HELPER.drawText(
+                    field.matrixStack,
+                    field.text,
+                    field.pos,
+                    field.textColor
+            );
         }
     }
 }
