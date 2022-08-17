@@ -15,13 +15,17 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Getter
 public class SimplePane extends AbstractPane {
+    protected List<AbstractNode> nodes;
     private int color;
 
-    private SimplePane() {}
+    private SimplePane() {
+        nodes = new LinkedList<>();
+    }
 
     @Override
     public void hide() {
@@ -36,6 +40,10 @@ public class SimplePane extends AbstractPane {
     @Override
     public void initRenderer(RendererType type) {
         this.renderer = new RendererFactory().create(type);
+    }
+
+    public void addNode(AbstractNode node) {
+        nodes.add(node);
     }
 
     public static Builder builder() {
@@ -97,6 +105,8 @@ public class SimplePane extends AbstractPane {
                     simplePane.getFrame(),
                     simplePane.getColor()
             );
+
+            simplePane.getNodes().forEach(node -> node.getRenderer().render(node));
         }
 
         private void renderWithBackground(SimplePane simplePane) {
