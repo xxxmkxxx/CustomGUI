@@ -84,32 +84,34 @@ public class SimplePane extends AbstractPane {
     public static class RendererFactory implements NodeRendererFactory<SimplePane> {
         @Override
         public NodeRenderer<SimplePane> create(RendererType type) {
-            switch (type) {
-                case HUD: return node -> {
-                    CustomGUIClient.NODE_DRAWABLE_HELPER.fillFrame(
-                            node.getMatrixStack(),
-                            node.getFrame(),
-                            node.getColor()
-                    );
-                };
+            return switch (type) {
+                case HUD -> this::render;
+                case SCREEN -> this::renderWithBackground;
+                default -> node -> {};
+            };
+        }
 
-                case SCREEN: return node -> {
-                    final int width = MinecraftClient.getInstance().getWindow().getWidth();
-                    final int height = MinecraftClient.getInstance().getWindow().getHeight();
+        private void render(SimplePane simplePane) {
+            CustomGUIClient.NODE_DRAWABLE_HELPER.fillFrame(
+                    simplePane.getMatrixStack(),
+                    simplePane.getFrame(),
+                    simplePane.getColor()
+            );
+        }
 
-                    RenderSystem.setShader(GameRenderer::getPositionTexShader);
-                    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-                    CustomGUIClient.NODE_DRAWABLE_HELPER.gradientFillFrame(
-                            node.getMatrixStack(),
-                            0, 0,
-                            width, height
-                    );
+        private void renderWithBackground(SimplePane simplePane) {
+            final int width = MinecraftClient.getInstance().getWindow().getWidth();
+            final int height = MinecraftClient.getInstance().getWindow().getHeight();
 
-                    this.create(RendererType.HUD).render(node);
-                };
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            CustomGUIClient.NODE_DRAWABLE_HELPER.gradientFillFrame(
+                    simplePane.getMatrixStack(),
+                    0, 0,
+                    width, height
+            );
 
-                default: return node -> {};
-            }
+            render(simplePane);
         }
     }
 }
