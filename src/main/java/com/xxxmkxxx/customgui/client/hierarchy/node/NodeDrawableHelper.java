@@ -1,7 +1,7 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node;
 
-import com.xxxmkxxx.customgui.client.common.Frame;
-import com.xxxmkxxx.customgui.client.common.Pos;
+import com.xxxmkxxx.customgui.client.geometry.Frame;
+import com.xxxmkxxx.customgui.client.geometry.Pos;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;

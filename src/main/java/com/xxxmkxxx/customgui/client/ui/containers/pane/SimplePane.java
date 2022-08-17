@@ -2,7 +2,7 @@ package com.xxxmkxxx.customgui.client.ui.containers.pane;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.xxxmkxxx.customgui.client.CustomGUIClient;
-import com.xxxmkxxx.customgui.client.common.Frame;
+import com.xxxmkxxx.customgui.client.geometry.Frame;
 import com.xxxmkxxx.customgui.client.common.SimpleBuilder;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.NodeState;

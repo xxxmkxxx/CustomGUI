@@ -1,7 +1,7 @@
 package com.xxxmkxxx.customgui.client.ui.controls.field;
 
 import com.xxxmkxxx.customgui.client.CustomGUIClient;
-import com.xxxmkxxx.customgui.client.common.Pos;
+import com.xxxmkxxx.customgui.client.geometry.Pos;
 import com.xxxmkxxx.customgui.client.common.SimpleBuilder;
 import com.xxxmkxxx.customgui.client.hierarchy.node.States;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;

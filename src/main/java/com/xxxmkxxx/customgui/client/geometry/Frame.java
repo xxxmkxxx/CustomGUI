@@ -6,7 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class Frame {
-    public static final Frame DEFAULT_SLOT_FRAME = new Frame(0, 0, 20, 20, false);
     private final Pos startPos;
     private final Pos stopPos;
     private final boolean startInCenter;
