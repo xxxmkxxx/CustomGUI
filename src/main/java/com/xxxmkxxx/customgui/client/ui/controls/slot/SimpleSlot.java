@@ -8,14 +8,18 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import lombok.Getter;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 @Getter
-public class SimpleSlot extends AbstractSlot {
+public class CustomSlot extends AbstractSlot {
     private final int backgroundColor;
+    private Identifier itemAtlas = new Identifier("");
 
-    public SimpleSlot(int slotId, ItemContainer itemContainer, Pos pos, Frame frame, boolean isCustomAtlas, int backgroundColor) {
-        super(slotId, itemContainer, pos, frame, isCustomAtlas);
+    public CustomSlot(int slotId, ItemContainer itemContainer, Pos pos, Frame frame, int backgroundColor) {
+        super(slotId, itemContainer, pos, frame);
         this.backgroundColor = backgroundColor;
+
     }
 
     @Override
@@ -33,13 +37,20 @@ public class SimpleSlot extends AbstractSlot {
         this.renderer = new RendererFactory().create(type);
     }
 
-    public static class RendererFactory implements NodeRendererFactory<SimpleSlot> {
+    @Override
+    public void onContainerUpdate() {
+        Identifier itemId = Registry.ITEM.getId(itemContainer.getItemStack().getItem());
+
+        this.itemAtlas = new Identifier(itemId.getNamespace(), "textures/gui/" + itemId.getPath() + ".png");
+    }
+
+    public static class RendererFactory implements NodeRendererFactory<CustomSlot> {
         @Override
-        public NodeRenderer<SimpleSlot> create(RendererType type) {
+        public NodeRenderer<CustomSlot> create(RendererType type) {
             return this::render;
         }
 
-        private void render(SimpleSlot slot) {
+        private void render(CustomSlot slot) {
             slot.itemContainer.update();
 
             CustomGUIClient.NODE_DRAWABLE_HELPER.fillFrame(
@@ -48,26 +59,19 @@ public class SimpleSlot extends AbstractSlot {
                     slot.getBackgroundColor()
             );
 
-            if (slot.isCustomItemAtlas()) {
-                renderCustomItemAtlas(slot);
+            if (slot.getItemContainer().isContainedStandardItem()) {
+                CustomGUIClient.NODE_DRAWABLE_HELPER.drawTexture(
+                        slot.getItemContainer().getItemStack(),
+                        slot.getFrame()
+                );
             } else {
-                renderStandardItemAtlas(slot);
+                CustomGUIClient.NODE_DRAWABLE_HELPER.drawTexture(
+                        slot.getMatrixStack(),
+                        slot.getFrame(),
+                        slot.getItemAtlas()
+                );
             }
-        }
 
-        private void renderStandardItemAtlas(SimpleSlot slot) {
-            CustomGUIClient.NODE_DRAWABLE_HELPER.drawTexture(
-                    slot.getItemContainer().getItemStack(),
-                    slot.getFrame()
-            );
-        }
-
-        private void renderCustomItemAtlas(SimpleSlot slot) {
-            CustomGUIClient.NODE_DRAWABLE_HELPER.drawTexture(
-                    slot.getMatrixStack(),
-                    slot.getFrame(),
-                    slot.getItemContainer().getItemAtlas()
-            );
         }
     }
 }

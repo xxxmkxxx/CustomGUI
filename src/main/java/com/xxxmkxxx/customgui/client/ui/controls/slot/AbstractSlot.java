@@ -5,15 +5,12 @@ import com.xxxmkxxx.customgui.client.geometry.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.minecraft.inventory.Inventory;
-
 
 @Getter
 @AllArgsConstructor
-public abstract class AbstractSlot extends AbstractNode implements Slot {
+public abstract class AbstractSlot extends AbstractNode implements Slot, ItemContainerHandler {
     protected final int slotId;
-    protected final int index;
-    protected final Inventory inventory;
+    protected final ItemContainer itemContainer;
     protected final Pos pos;
     protected final Frame frame;
 }
