@@ -8,20 +8,18 @@ import com.xxxmkxxx.customgui.client.hierarchy.scene.SimpleScene;
 import com.xxxmkxxx.customgui.client.ui.containers.pane.SimplePane;
 import com.xxxmkxxx.customgui.client.ui.controls.field.TextField;
 import com.xxxmkxxx.customgui.client.ui.controls.slot.SimpleSlot;
+import com.xxxmkxxx.customgui.client.ui.controls.slot.ItemContainer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 
+@Environment(EnvType.CLIENT)
 public class TestHud {
-    /*private static final Identifier TEXTURE = new Identifier("customgui", "textures/gui/img_1.png");
-    private static final int height = 50;
-    private static final int width = height;
-    private static final NativeImage nativeImage = new NativeImage(width, height, false);
-    private static final SpriteAtlasTexture spriteAtlasTexture = new SpriteAtlasTexture(TEXTURE);
-    private static final AnimationResourceMetadata metadata = new AnimationResourceMetadata(new ArrayList<>(), 100, 100, 1, false);
-    private static final Sprite.Info info = new Sprite.Info(TEXTURE, width, height, metadata);
-    private static final FabricSprite sprite = new FabricSprite(spriteAtlasTexture, info, 1, 1, 1, 0, 0, nativeImage);*/
+    private static final Pos POS = new Pos(50, 50);
 
     private static final SimplePane PANE = SimplePane.builder()
             .matrixStack(new MatrixStack())
@@ -32,32 +30,33 @@ public class TestHud {
 
     private static final TextField FIELD = TextField.builder()
             .textColor(0xFF030202)
-            .pos(100, 100)
+            .pos(POS)
             .text("test text")
             .build();
 
     private static final SimpleSlot SLOT = new SimpleSlot(
             1,
-            1, new TestInventory(),
-            new Pos(50, 50),
-            new Frame(50, 50, 20, 20, false),
+            new ItemContainer(1, new TestInventory()),
+            POS,
+            new Frame(POS, 30, 30, true),
             0xAF3C3B36
     );
 
 
     public static void render() {
         SimpleScene scene = new SimpleScene(RendererType.SCREEN);
-        scene.addElement(FIELD);
+        //scene.addElement(FIELD);
         scene.addElement(SLOT);
 
         CustomGUIClient.SCREEN_STAGE.setScene(scene);
     }
 
     private static class TestInventory implements Inventory {
+        private ItemStack itemStack = new ItemStack(Items.ACACIA_DOOR, 1);
 
         @Override
         public int size() {
-            return 0;
+            return 1;
         }
 
         @Override
@@ -67,7 +66,7 @@ public class TestHud {
 
         @Override
         public ItemStack getStack(int slot) {
-            return null;
+            return itemStack;
         }
 
         @Override

@@ -12,11 +12,11 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 @Getter
-public class CustomSlot extends AbstractSlot {
+public class SimpleSlot extends AbstractSlot {
     private final int backgroundColor;
     private Identifier itemAtlas = new Identifier("");
 
-    public CustomSlot(int slotId, ItemContainer itemContainer, Pos pos, Frame frame, int backgroundColor) {
+    public SimpleSlot(int slotId, ItemContainer itemContainer, Pos pos, Frame frame, int backgroundColor) {
         super(slotId, itemContainer, pos, frame);
         this.backgroundColor = backgroundColor;
 
@@ -44,13 +44,13 @@ public class CustomSlot extends AbstractSlot {
         this.itemAtlas = new Identifier(itemId.getNamespace(), "textures/gui/" + itemId.getPath() + ".png");
     }
 
-    public static class RendererFactory implements NodeRendererFactory<CustomSlot> {
+    public static class RendererFactory implements NodeRendererFactory<SimpleSlot> {
         @Override
-        public NodeRenderer<CustomSlot> create(RendererType type) {
+        public NodeRenderer<SimpleSlot> create(RendererType type) {
             return this::render;
         }
 
-        private void render(CustomSlot slot) {
+        private void render(SimpleSlot slot) {
             slot.itemContainer.update();
 
             CustomGUIClient.NODE_DRAWABLE_HELPER.fillFrame(
