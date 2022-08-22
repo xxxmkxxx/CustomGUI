@@ -8,14 +8,13 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import lombok.Getter;
-import net.minecraft.inventory.Inventory;
 
 @Getter
 public class SimpleSlot extends AbstractSlot {
     private final int backgroundColor;
 
-    public SimpleSlot(int slotId, int index, Inventory inventory, Pos pos, Frame frame, int backgroundColor) {
-        super(slotId, index, inventory, pos, frame);
+    public SimpleSlot(int slotId, ItemContainer itemContainer, Pos pos, Frame frame, boolean isCustomAtlas, int backgroundColor) {
+        super(slotId, itemContainer, pos, frame, isCustomAtlas);
         this.backgroundColor = backgroundColor;
     }
 
@@ -40,11 +39,34 @@ public class SimpleSlot extends AbstractSlot {
             return this::render;
         }
 
-        private void render(SimpleSlot node) {
+        private void render(SimpleSlot slot) {
+            slot.itemContainer.update();
+
             CustomGUIClient.NODE_DRAWABLE_HELPER.fillFrame(
-                    node.getMatrixStack(),
-                    node.getFrame(),
-                    node.getBackgroundColor()
+                    slot.getMatrixStack(),
+                    slot.getFrame(),
+                    slot.getBackgroundColor()
+            );
+
+            if (slot.isCustomItemAtlas()) {
+                renderCustomItemAtlas(slot);
+            } else {
+                renderStandardItemAtlas(slot);
+            }
+        }
+
+        private void renderStandardItemAtlas(SimpleSlot slot) {
+            CustomGUIClient.NODE_DRAWABLE_HELPER.drawTexture(
+                    slot.getItemContainer().getItemStack(),
+                    slot.getFrame()
+            );
+        }
+
+        private void renderCustomItemAtlas(SimpleSlot slot) {
+            CustomGUIClient.NODE_DRAWABLE_HELPER.drawTexture(
+                    slot.getMatrixStack(),
+                    slot.getFrame(),
+                    slot.getItemContainer().getItemAtlas()
             );
         }
     }
