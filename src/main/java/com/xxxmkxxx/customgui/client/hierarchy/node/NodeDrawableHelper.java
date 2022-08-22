@@ -1,52 +1,136 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.xxxmkxxx.customgui.client.geometry.Frame;
 import com.xxxmkxxx.customgui.client.geometry.Pos;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.render.*;
+import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
 
+@Environment(EnvType.CLIENT)
 public class NodeDrawableHelper extends DrawableHelper {
     public static int startGradientColor = -1072689136;
     public static int stopGradientColor = -804253680;
-    public static final MinecraftClient client = MinecraftClient.getInstance();
+    public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
-    public void gradientFillFrame(MatrixStack matrices, int startX, int startY, int stopX, int stopY, int colorStart, int colorEnd) {
-        fillGradient(matrices, startX, startY, stopX, stopY, colorStart, colorEnd);
+    public void gradientFillFrame(MatrixStack matrix, int startX, int startY, int stopX, int stopY, int colorStart, int colorEnd) {
+        fillGradient(matrix, startX, startY, stopX, stopY, colorStart, colorEnd);
     }
 
-    public void gradientFillFrame(MatrixStack matrices, int startX, int startY, int stopX, int stopY) {
-        fillGradient(matrices, startX, startY, stopX, stopY, startGradientColor, stopGradientColor);
+    public void gradientFillFrame(MatrixStack matrix, int startX, int startY, int stopX, int stopY) {
+        fillGradient(matrix, startX, startY, stopX, stopY, startGradientColor, stopGradientColor);
     }
 
-    public void gradientFillFrame(MatrixStack matrices, Frame frame, int colorStart, int colorEnd) {
+    public void gradientFillFrame(MatrixStack matrix, Frame frame, int colorStart, int colorEnd) {
         gradientFillFrame(
-                matrices,
+                matrix,
                 frame.getStartPos().x(), frame.getStartPos().y(),
                 frame.getStopPos().x(), frame.getStopPos().y(),
                 colorStart, colorEnd
         );
     }
 
-    public void fillFrame(MatrixStack matrices, int startX, int startY, int stopX, int stopY, int color) {
-        fill(matrices, startX, startY, stopX, stopY, color);
+    public void fillFrame(MatrixStack matrix, int startX, int startY, int stopX, int stopY, int color) {
+        fill(matrix, startX, startY, stopX, stopY, color);
     }
 
-    public void fillFrame(MatrixStack matrices, Frame frame, int color) {
+    public void fillFrame(MatrixStack matrix, Frame frame, int color) {
         fillFrame(
-                matrices,
+                matrix,
                 frame.getStartPos().x(), frame.getStartPos().y(),
                 frame.getStopPos().x(), frame.getStopPos().y(),
                 color
         );
     }
 
-    public void drawText(MatrixStack matrices, Text text, int x, int y, int color) {
-        client.textRenderer.draw(matrices, text, x, y, color);
+    public void drawText(MatrixStack matrix, Text text, int x, int y, int color) {
+        CLIENT.textRenderer.draw(matrix, text, x, y, color);
     }
 
-    public void drawText(MatrixStack matrices, Text text, Pos pos, int color) {
-        client.textRenderer.draw(matrices, text, pos.x(), pos.y(), color);
+    public void drawText(MatrixStack matrix, Text text, Pos pos, int color) {
+        CLIENT.textRenderer.draw(matrix, text, pos.x(), pos.y(), color);
+    }
+
+    public void drawTexture(ItemStack stack, Frame frame) {
+        drawTexture(stack, frame.getStartPos(), frame.getWidth(), frame.getHeight());
+    }
+
+    public void drawTexture(ItemStack stack, Pos pos, int width, int height) {
+        final ItemRenderer itemRenderer = CLIENT.getItemRenderer();
+        BakedModel bakedModel = itemRenderer.getModel(stack, null, CLIENT.player, 0);
+
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.enableBlend();
+        RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
+        MatrixStack matrixStack = RenderSystem.getModelViewStack();
+        matrixStack.push();
+        matrixStack.translate(pos.x(), pos.y(), 0);
+        matrixStack.translate(width / 2, height / 2, 0);
+        matrixStack.scale(1.0F, -1.0F, 1.0F);
+        matrixStack.scale(width, height, 0);
+
+        RenderSystem.applyModelViewMatrix();
+        MatrixStack matrixStack2 = new MatrixStack();
+        VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
+
+        boolean bl = !bakedModel.isSideLit();
+        if (bl) {
+            DiffuseLighting.disableGuiDepthLighting();
+        }
+
+        itemRenderer.renderItem(stack, ModelTransformation.Mode.GUI, false, matrixStack2, immediate, 15728880, OverlayTexture.DEFAULT_UV, bakedModel);
+
+        immediate.draw();
+        RenderSystem.enableDepthTest();
+        matrixStack.pop();
+        RenderSystem.applyModelViewMatrix();
+
+        if (bl) {
+            DiffuseLighting.enableGuiDepthLighting();
+        }
+    }
+
+    public void drawTexture(MatrixStack matrix, Frame frame, Identifier texture) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShaderTexture(0, texture);
+        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
+        bufferBuilder
+                .vertex(matrix.peek().getPositionMatrix(), frame.getStartPos().x(), frame.getStopPos().y(), 0)
+                .texture(0, 1)
+                .next();
+        bufferBuilder
+                .vertex(matrix.peek().getPositionMatrix(), frame.getStopPos().x(), frame.getStopPos().y(), 0)
+                .texture(1, 1)
+                .next();
+        bufferBuilder
+                .vertex(matrix.peek().getPositionMatrix(), frame.getStopPos().x(), frame.getStartPos().y(), 0)
+                .texture(1, 0)
+                .next();
+        bufferBuilder
+                .vertex(matrix.peek().getPositionMatrix(), frame.getStartPos().x(), frame.getStartPos().y(), 0)
+                .texture(0, 0)
+                .next();
+        bufferBuilder.end();
+
+        BufferRenderer.draw(bufferBuilder);
     }
 }
