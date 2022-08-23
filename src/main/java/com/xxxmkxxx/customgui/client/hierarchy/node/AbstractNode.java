@@ -11,5 +11,15 @@ public abstract class AbstractNode implements Node {
     protected NodeState<AbstractNode> state = States.DISPLAYED;
     protected NodeRenderer renderer;
 
+    @Override
+    public void hide() {
+        state = States.HIDED;
+    }
+
+    @Override
+    public void display() {
+        state = States.HIDED;
+    }
+
     public abstract void initRenderer(RendererType type);
 }
