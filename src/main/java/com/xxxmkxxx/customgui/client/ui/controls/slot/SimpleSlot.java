@@ -16,10 +16,9 @@ public class SimpleSlot extends AbstractSlot {
     private final int backgroundColor;
     private Identifier itemAtlas = new Identifier("");
 
-    public SimpleSlot(int slotId, ItemContainer itemContainer, Pos pos, Frame frame, int backgroundColor) {
-        super(slotId, itemContainer, pos, frame);
+    public SimpleSlot(int slotId, ItemContainer itemContainer, Frame frame, int backgroundColor) {
+        super(slotId, itemContainer, frame);
         this.backgroundColor = backgroundColor;
-
     }
 
     @Override
@@ -42,6 +41,21 @@ public class SimpleSlot extends AbstractSlot {
         Identifier itemId = Registry.ITEM.getId(itemContainer.getItemStack().getItem());
 
         this.itemAtlas = new Identifier(itemId.getNamespace(), "textures/gui/" + itemId.getPath() + ".png");
+    }
+
+    public static class Factory implements SlotFactory<SimpleSlot> {
+        private final int slotId;
+        private final int backgroundColor;
+
+        public Factory(int slotId, int backgroundColor) {
+            this.slotId = slotId;
+            this.backgroundColor = backgroundColor;
+        }
+
+        @Override
+        public SimpleSlot create(Frame frame, ItemContainer itemContainer) {
+            return new SimpleSlot(slotId, itemContainer, frame, backgroundColor);
+        }
     }
 
     public static class RendererFactory implements NodeRendererFactory<SimpleSlot> {
