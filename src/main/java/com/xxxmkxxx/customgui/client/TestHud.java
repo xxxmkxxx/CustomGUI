@@ -2,16 +2,16 @@ package com.xxxmkxxx.customgui.client;
 
 import com.xxxmkxxx.customgui.client.geometry.Frame;
 import com.xxxmkxxx.customgui.client.geometry.Pos;
-import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.States;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.scene.SimpleScene;
 import com.xxxmkxxx.customgui.client.ui.containers.pane.SimplePane;
 import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.LinearSlotContainer;
-import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.RowSlotContainer;
+import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.RectangularSlotContainer;
+import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.SquareSlotContainer;
+import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.UnmodifiableLinearSlotContainer;
 import com.xxxmkxxx.customgui.client.ui.controls.field.TextField;
 import com.xxxmkxxx.customgui.client.ui.controls.slot.SimpleSlot;
-import com.xxxmkxxx.customgui.client.ui.controls.slot.ItemContainer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
@@ -21,14 +21,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class TestHud {
-    private static final Pos POS = new Pos(50, 50);
+    private static final Pos POS = new Pos(175, 100);
     private static final int COLOR = 0xAF3C3B36;
     private static final Inventory INVENTORY = new TestInventory();
+    private static final SimpleSlot.Factory SIMPLE_SLOT_FACTORY = new SimpleSlot.Factory(18, 18, COLOR, new TestInventory());
 
     private static final SimplePane PANE = SimplePane.builder()
             .matrixStack(new MatrixStack())
@@ -43,21 +43,32 @@ public class TestHud {
             .text("test text")
             .build();
 
-    private static final LinearSlotContainer<SimpleSlot> SLOT_CONTAINER = new LinearSlotContainer.Builder<SimpleSlot>(
-            new ItemContainer(0, INVENTORY),
-            new ItemContainer(1, INVENTORY),
-            new ItemContainer(2, INVENTORY)
-    ).build(
-            3,
-            new Frame(POS, 20, 20, true),
-            1,
-            new SimpleSlot.Factory(1, COLOR)
-    );
+    private static final SquareSlotContainer.Builder<SimpleSlot> SIMPLE_SLOT_CONTAINER_BUILDER = new SquareSlotContainer.Builder<SimpleSlot>(
+            new int[][]{
+                    {0, 1, 2, 100, 100, 100},
+                    {0, 1, 2, 100, 100, 1},
+                    {0, 1, 100, 100, 100, 100},
+                    {100, 1, 2, 100, 100, 100},
+                    {0, 1, 2, 100, 100, 100},
+                    {0, 1, 2, 1, 100, 100}
+            }
+    ).size(6);
 
+    private static final RectangularSlotContainer.Builder<SimpleSlot> SIMPLE_SLOT_CONTAINER_BUILDER_1 = new RectangularSlotContainer.Builder<SimpleSlot>(
+            new int[][]{
+                    {0, 100, 100, 100, 100, 100},
+                    {1, 100, 100, 100, 100, 100},
+                    {2, 100, 100, 100, 100, 100},
+                    {3, 100, 100, 100, 100, 100}
+            }
+    ).amountRows(4).rowSize(6);
+
+    private static final SquareSlotContainer<SimpleSlot> SQUARE_CLOT_CONTAINER =  SIMPLE_SLOT_CONTAINER_BUILDER.build(POS, SIMPLE_SLOT_FACTORY);
+    private static final RectangularSlotContainer<SimpleSlot> SQUARE_CLOT_CONTAINER_1 =  SIMPLE_SLOT_CONTAINER_BUILDER_1.build(POS, SIMPLE_SLOT_FACTORY);
 
     public static void render() {
         SimpleScene scene = new SimpleScene(RendererType.SCREEN);
-        scene.addElement(SLOT_CONTAINER);
+        scene.addElement(SQUARE_CLOT_CONTAINER_1);
 
         CustomGUIClient.SCREEN_STAGE.setScene(scene);
     }
@@ -66,7 +77,8 @@ public class TestHud {
         private List<ItemStack> itemStacks = Arrays.asList(
                 new ItemStack(Items.BASALT, 1),
                 new ItemStack(Items.ANDESITE_WALL, 1),
-                new ItemStack(Items.BIRCH_LOG, 1)
+                new ItemStack(Items.BIRCH_LOG, 1),
+                ItemStack.EMPTY
         );
 
         @Override
@@ -81,7 +93,10 @@ public class TestHud {
 
         @Override
         public ItemStack getStack(int slot) {
-            return itemStacks.get(slot);
+            if (slot >= size())
+                return ItemStack.EMPTY;
+            else
+                return itemStacks.get(slot);
         }
 
         @Override

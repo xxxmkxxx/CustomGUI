@@ -8,16 +8,19 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 @Getter
 public class SimpleSlot extends AbstractSlot {
     private final int backgroundColor;
-    private Identifier itemAtlas = new Identifier("");
 
-    public SimpleSlot(int slotId, ItemContainer itemContainer, Frame frame, int backgroundColor) {
-        super(slotId, itemContainer, frame);
+    private SimpleSlot(int index, Inventory inventory, Frame frame, int backgroundColor) {
+        super(index, inventory, frame);
         this.backgroundColor = backgroundColor;
     }
 
@@ -36,25 +39,23 @@ public class SimpleSlot extends AbstractSlot {
         this.renderer = new RendererFactory().create(type);
     }
 
-    @Override
-    public void onContainerUpdate() {
-        Identifier itemId = Registry.ITEM.getId(itemContainer.getItemStack().getItem());
+    public Identifier getItemAtlas(Item item) {
+        Identifier itemIdentifier = Registry.ITEM.getId(item);
+        Identifier itemAtlas = new Identifier(itemIdentifier.getNamespace(), "textures/gui/" + itemIdentifier.getPath());
 
-        this.itemAtlas = new Identifier(itemId.getNamespace(), "textures/gui/" + itemId.getPath() + ".png");
+        return itemAtlas;
     }
 
+    @RequiredArgsConstructor
     public static class Factory implements SlotFactory<SimpleSlot> {
-        private final int slotId;
+        private final int width;
+        private final int height;
         private final int backgroundColor;
-
-        public Factory(int slotId, int backgroundColor) {
-            this.slotId = slotId;
-            this.backgroundColor = backgroundColor;
-        }
+        private final Inventory inventory;
 
         @Override
-        public SimpleSlot create(Frame frame, ItemContainer itemContainer) {
-            return new SimpleSlot(slotId, itemContainer, frame, backgroundColor);
+        public SimpleSlot create(int index, Pos pos) {
+            return new SimpleSlot(index, inventory, new Frame(pos, width, height, false), backgroundColor);
         }
     }
 
@@ -65,7 +66,7 @@ public class SimpleSlot extends AbstractSlot {
         }
 
         private void render(SimpleSlot slot) {
-            slot.itemContainer.update();
+            ItemStack itemStack = slot.getItemStack();
 
             CustomGUIClient.NODE_DRAWABLE_HELPER.fillFrame(
                     slot.getMatrixStack(),
@@ -73,16 +74,19 @@ public class SimpleSlot extends AbstractSlot {
                     slot.getBackgroundColor()
             );
 
-            if (slot.getItemContainer().isContainedStandardItem()) {
+            if (itemStack == ItemStack.EMPTY)
+                return;
+
+            if (slot.isStandardItem()) {
                 CustomGUIClient.NODE_DRAWABLE_HELPER.drawTexture(
-                        slot.getItemContainer().getItemStack(),
+                        itemStack,
                         slot.getFrame()
                 );
             } else {
                 CustomGUIClient.NODE_DRAWABLE_HELPER.drawTexture(
                         slot.getMatrixStack(),
                         slot.getFrame(),
-                        slot.getItemAtlas()
+                        slot.getItemAtlas(itemStack.getItem())
                 );
             }
 
