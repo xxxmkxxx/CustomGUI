@@ -1,9 +1,8 @@
 package com.xxxmkxxx.customgui.client.ui.controls.slot;
 
 import com.xxxmkxxx.customgui.client.CustomGUIClient;
-import com.xxxmkxxx.customgui.client.geometry.Frame;
-import com.xxxmkxxx.customgui.client.geometry.Pos;
-import com.xxxmkxxx.customgui.client.hierarchy.node.States;
+import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
+import com.xxxmkxxx.customgui.client.geometry.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
@@ -16,22 +15,13 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 @Getter
+@SuppressWarnings("unused")
 public class SimpleSlot extends AbstractSlot {
     private final int backgroundColor;
 
-    private SimpleSlot(int index, Inventory inventory, Frame frame, int backgroundColor) {
+    protected SimpleSlot(int index, Inventory inventory, StaticFrame frame, int backgroundColor) {
         super(index, inventory, frame);
         this.backgroundColor = backgroundColor;
-    }
-
-    @Override
-    public void hide() {
-        this.state = States.HIDED;
-    }
-
-    @Override
-    public void display() {
-        this.state = States.DISPLAYED;
     }
 
     @Override
@@ -41,9 +31,8 @@ public class SimpleSlot extends AbstractSlot {
 
     public Identifier getItemAtlas(Item item) {
         Identifier itemIdentifier = Registry.ITEM.getId(item);
-        Identifier itemAtlas = new Identifier(itemIdentifier.getNamespace(), "textures/gui/" + itemIdentifier.getPath());
 
-        return itemAtlas;
+        return new Identifier(itemIdentifier.getNamespace(), "textures/gui/" + itemIdentifier.getPath());
     }
 
     @RequiredArgsConstructor
@@ -55,7 +44,7 @@ public class SimpleSlot extends AbstractSlot {
 
         @Override
         public SimpleSlot create(int index, Pos pos) {
-            return new SimpleSlot(index, inventory, new Frame(pos, width, height, false), backgroundColor);
+            return new SimpleSlot(index, inventory, new StaticFrame(pos, width, height, false), backgroundColor);
         }
     }
 
