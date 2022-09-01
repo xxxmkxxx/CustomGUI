@@ -2,8 +2,8 @@ package com.xxxmkxxx.customgui.client.hierarchy.node;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.xxxmkxxx.customgui.client.geometry.Frame;
-import com.xxxmkxxx.customgui.client.geometry.Pos;
+import com.xxxmkxxx.customgui.client.geometry.frame.AbstractFrame;
+import com.xxxmkxxx.customgui.client.geometry.position.Pos;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -12,14 +12,13 @@ import net.minecraft.client.render.*;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
 
 @Environment(EnvType.CLIENT)
+@SuppressWarnings("unused")
 public class NodeDrawableHelper extends DrawableHelper {
     public static int startGradientColor = -1072689136;
     public static int stopGradientColor = -804253680;
@@ -33,7 +32,7 @@ public class NodeDrawableHelper extends DrawableHelper {
         fillGradient(matrix, startX, startY, stopX, stopY, startGradientColor, stopGradientColor);
     }
 
-    public void gradientFillFrame(MatrixStack matrix, Frame frame, int colorStart, int colorEnd) {
+    public void gradientFillFrame(MatrixStack matrix, AbstractFrame frame, int colorStart, int colorEnd) {
         gradientFillFrame(
                 matrix,
                 frame.getStartPos().x(), frame.getStartPos().y(),
@@ -46,7 +45,7 @@ public class NodeDrawableHelper extends DrawableHelper {
         fill(matrix, startX, startY, stopX, stopY, color);
     }
 
-    public void fillFrame(MatrixStack matrix, Frame frame, int color) {
+    public void fillFrame(MatrixStack matrix, AbstractFrame frame, int color) {
         fillFrame(
                 matrix,
                 frame.getStartPos().x(), frame.getStartPos().y(),
@@ -63,7 +62,7 @@ public class NodeDrawableHelper extends DrawableHelper {
         CLIENT.textRenderer.draw(matrix, text, pos.x(), pos.y(), color);
     }
 
-    public void drawTexture(ItemStack stack, Frame frame) {
+    public void drawTexture(ItemStack stack, AbstractFrame frame) {
         drawTexture(stack, frame.getStartPos(), frame.getWidth(), frame.getHeight());
     }
 
@@ -79,7 +78,7 @@ public class NodeDrawableHelper extends DrawableHelper {
         MatrixStack matrixStack = RenderSystem.getModelViewStack();
         matrixStack.push();
         matrixStack.translate(pos.x(), pos.y(), 0);
-        matrixStack.translate(width / 2, height / 2, 0);
+        matrixStack.translate(width / 2.0D, height / 2.0D, 0);
         matrixStack.scale(1.0F, -1.0F, 1.0F);
         matrixStack.scale(width, height, 0);
 
@@ -104,7 +103,7 @@ public class NodeDrawableHelper extends DrawableHelper {
         }
     }
 
-    public void drawTexture(MatrixStack matrix, Frame frame, Identifier texture) {
+    public void drawTexture(MatrixStack matrix, AbstractFrame frame, Identifier texture) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.enableBlend();
