@@ -2,15 +2,16 @@ package com.xxxmkxxx.customgui.client.ui.containers.pane;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.xxxmkxxx.customgui.client.CustomGUIClient;
-import com.xxxmkxxx.customgui.client.geometry.Frame;
 import com.xxxmkxxx.customgui.client.common.SimpleBuilder;
+import com.xxxmkxxx.customgui.client.common.Validator;
+import com.xxxmkxxx.customgui.client.geometry.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
-import com.xxxmkxxx.customgui.client.hierarchy.node.NodeState;
-import com.xxxmkxxx.customgui.client.hierarchy.node.States;
+import com.xxxmkxxx.customgui.client.hierarchy.node.TargetManager;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -19,22 +20,22 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Getter
+@SuppressWarnings("unused")
 public class SimplePane extends AbstractPane {
-    protected List<AbstractNode> nodes;
+    protected final List<AbstractNode> nodes;
+    @Setter
     private int color;
 
-    private SimplePane() {
+    protected SimplePane(AbstractFrame frame) {
+        Validator.checkNullObject(frame);
+        this.frame = frame;
         nodes = new LinkedList<>();
     }
 
-    @Override
-    public void hide() {
-        this.state = States.HIDED;
-    }
-
-    @Override
-    public void display() {
-        this.state = States.DISPLAYED;
+    protected SimplePane(AbstractFrame frame, List<AbstractNode> nodes) {
+        Validator.checkNullObject(frame);
+        Validator.checkNullObject(nodes);
+        this.nodes = nodes;
     }
 
     @Override
@@ -42,43 +43,50 @@ public class SimplePane extends AbstractPane {
         this.renderer = new RendererFactory().create(type);
     }
 
+    @Override
+    public void updateTarget(int xPos, int yPos, TargetManager targetManager) {
+        super.updateTarget(xPos, yPos, targetManager);
+
+        if (isTarget) {
+            for (AbstractNode element : nodes) {
+                element.updateTarget(xPos, yPos, targetManager);
+            }
+        }
+    }
+
     public void addNode(AbstractNode node) {
+        Validator.checkNullObject(node);
         nodes.add(node);
     }
 
-    public static Builder builder() {
-        return new Builder();
+    public static Builder builder(AbstractFrame frame, List<AbstractNode> nodes) {
+        return new Builder(frame, nodes);
+    }
+    public static Builder builder(AbstractFrame frame) {
+        return new Builder(frame);
     }
 
     public static final class Builder implements SimpleBuilder<SimplePane> {
-        private final SimplePane simplePane = new SimplePane();
+        private final SimplePane simplePane;
+
+        public Builder(AbstractFrame frame) {
+            simplePane = new SimplePane(frame);
+        }
+
+        public Builder(AbstractFrame frame, List<AbstractNode> nodes) {
+            simplePane = new SimplePane(frame, nodes);
+        }
 
         public Builder color(int hexColorCode) {
-            simplePane.color = hexColorCode;
-
-            return this;
-        }
-
-        public Builder state(NodeState<AbstractNode> state) {
-            simplePane.state = state;
-
-            return this;
-        }
-
-        public Builder frame(Frame frame) {
-            simplePane.frame = frame;
+            Validator.checkNullObject(hexColorCode);
+            simplePane.setColor(hexColorCode);
 
             return this;
         }
 
         public Builder matrixStack(MatrixStack matrixStack) {
+            Validator.checkNullObject(matrixStack);
             simplePane.matrixStack = matrixStack;
-
-            return this;
-        }
-
-        public Builder nodes(List<AbstractNode> nodes) {
-            simplePane.nodes = nodes;
 
             return this;
         }
@@ -95,10 +103,10 @@ public class SimplePane extends AbstractPane {
             return switch (type) {
                 case HUD -> this::render;
                 case SCREEN -> this::renderWithBackground;
-                default -> node -> {};
             };
         }
 
+        @SuppressWarnings("unchecked")
         private void render(SimplePane simplePane) {
             CustomGUIClient.NODE_DRAWABLE_HELPER.fillFrame(
                     simplePane.getMatrixStack(),
