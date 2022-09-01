@@ -4,7 +4,6 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.States;
 import com.xxxmkxxx.customgui.client.hierarchy.node.TargetManager;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
-import com.xxxmkxxx.customgui.client.ui.controls.slot.AbstractSlot;
 import lombok.Getter;
 
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.List;
 public abstract class AbstractScene implements Scene {
     @Getter
     protected final RendererType type;
-    @Getter
     protected List<AbstractNode> displays;
     @Getter
     protected final TargetManager targetManager;
