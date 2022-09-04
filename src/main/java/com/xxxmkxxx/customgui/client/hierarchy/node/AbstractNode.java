@@ -30,6 +30,8 @@ public abstract class AbstractNode implements Node {
     }
 
     public void updateTarget(int xPos, int yPos, TargetManager targetManager) {
+        if (state != States.DISPLAYED) return;
+
         isTarget = frame.isPosBelongs(xPos, yPos);
 
         if (isTarget) {
