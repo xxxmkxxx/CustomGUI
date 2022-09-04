@@ -4,7 +4,7 @@ import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.scene.SimpleScene;
-import com.xxxmkxxx.customgui.client.ui.animations.AnimationManager;
+import com.xxxmkxxx.customgui.client.hierarchy.animations.AnimationManager;
 import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.SquareSlotContainer;
 import com.xxxmkxxx.customgui.client.ui.controls.button.SimpleButton;
 import com.xxxmkxxx.customgui.client.ui.controls.slot.SimpleSlot;

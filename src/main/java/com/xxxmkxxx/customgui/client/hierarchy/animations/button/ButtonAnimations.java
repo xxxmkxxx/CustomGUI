@@ -1,8 +1,8 @@
-package com.xxxmkxxx.customgui.client.ui.animations.button;
+package com.xxxmkxxx.customgui.client.hierarchy.animations.button;
 
-import com.xxxmkxxx.customgui.client.ui.animations.AbstractAnimation;
-import com.xxxmkxxx.customgui.client.ui.animations.AnimationPhases;
-import com.xxxmkxxx.customgui.client.ui.animations.PermanentAnimation;
+import com.xxxmkxxx.customgui.client.hierarchy.animations.AbstractAnimation;
+import com.xxxmkxxx.customgui.client.hierarchy.animations.AnimationPhases;
+import com.xxxmkxxx.customgui.client.hierarchy.animations.PermanentAnimation;
 import com.xxxmkxxx.customgui.client.ui.controls.button.AbstractButton;
 
 @SuppressWarnings("unused")

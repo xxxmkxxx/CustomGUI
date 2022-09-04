@@ -1,7 +1,7 @@
 package com.xxxmkxxx.customgui.client.ui.controls.button;
 
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
-import com.xxxmkxxx.customgui.client.ui.animations.button.ButtonAnimations;
+import com.xxxmkxxx.customgui.client.hierarchy.animations.button.ButtonAnimations;
 import lombok.Getter;
 
 @Getter

@@ -1,4 +1,4 @@
-package com.xxxmkxxx.customgui.client.ui.animations;
+package com.xxxmkxxx.customgui.client.hierarchy.animations;
 
 public interface Animation {
     void addPhase(AnimationPhase phase);

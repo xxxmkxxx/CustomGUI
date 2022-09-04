@@ -3,7 +3,7 @@ package com.xxxmkxxx.customgui.client.hierarchy.scene;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.TargetManager;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
-import com.xxxmkxxx.customgui.client.ui.animations.AnimationManager;
+import com.xxxmkxxx.customgui.client.hierarchy.animations.AnimationManager;
 import lombok.Getter;
 
 import java.util.List;

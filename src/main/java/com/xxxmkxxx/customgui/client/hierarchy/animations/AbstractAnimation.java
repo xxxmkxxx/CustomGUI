@@ -1,4 +1,4 @@
-package com.xxxmkxxx.customgui.client.ui.animations;
+package com.xxxmkxxx.customgui.client.hierarchy.animations;
 
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import lombok.Getter;
