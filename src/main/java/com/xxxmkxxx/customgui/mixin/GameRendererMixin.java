@@ -1,8 +1,6 @@
 package com.xxxmkxxx.customgui.mixin;
 
 import com.xxxmkxxx.customgui.client.CustomGUIClient;
-import com.xxxmkxxx.customgui.client.common.SelfDestructionMethod;
-import com.xxxmkxxx.customgui.client.hierarchy.stage.state.StageState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import org.spongepowered.asm.mixin.Final;
