@@ -1,5 +1,6 @@
 package com.xxxmkxxx.customgui.client;
 
+<<<<<<< Updated upstream
 import com.xxxmkxxx.customgui.client.geometry.Frame;
 import com.xxxmkxxx.customgui.client.geometry.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.States;
@@ -11,6 +12,15 @@ import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.RectangularSlot
 import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.SquareSlotContainer;
 import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.UnmodifiableLinearSlotContainer;
 import com.xxxmkxxx.customgui.client.ui.controls.field.TextField;
+=======
+import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
+import com.xxxmkxxx.customgui.client.geometry.position.Pos;
+import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
+import com.xxxmkxxx.customgui.client.hierarchy.scene.SimpleScene;
+import com.xxxmkxxx.customgui.client.ui.animations.AnimationManager;
+import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.SquareSlotContainer;
+import com.xxxmkxxx.customgui.client.ui.controls.button.SimpleButton;
+>>>>>>> Stashed changes
 import com.xxxmkxxx.customgui.client.ui.controls.slot.SimpleSlot;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -67,8 +77,15 @@ public class TestHud {
     private static final RectangularSlotContainer<SimpleSlot> SQUARE_CLOT_CONTAINER_1 =  SIMPLE_SLOT_CONTAINER_BUILDER_1.build(POS, SIMPLE_SLOT_FACTORY);
 
     public static void render() {
+        SimpleButton button = new SimpleButton();
         SimpleScene scene = new SimpleScene(RendererType.SCREEN);
+<<<<<<< Updated upstream
         scene.addElement(SQUARE_CLOT_CONTAINER_1);
+=======
+        scene.addElement(button);
+
+        AnimationManager.addAnimation(button.getAnimations().SIMPLE);
+>>>>>>> Stashed changes
 
         CustomGUIClient.SCREEN_STAGE.setScene(scene);
     }
