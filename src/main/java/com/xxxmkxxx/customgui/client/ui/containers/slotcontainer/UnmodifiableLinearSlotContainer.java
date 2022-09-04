@@ -1,7 +1,11 @@
 package com.xxxmkxxx.customgui.client.ui.containers.slotcontainer;
 
+import com.xxxmkxxx.customgui.client.common.SimpleBuilder;
 import com.xxxmkxxx.customgui.client.common.Validator;
-import com.xxxmkxxx.customgui.client.geometry.Pos;
+import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
+import com.xxxmkxxx.customgui.client.geometry.position.Pos;
+import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
+import com.xxxmkxxx.customgui.client.hierarchy.node.TargetManager;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
@@ -13,14 +17,17 @@ import javax.naming.OperationNotSupportedException;
 import java.util.Arrays;
 
 @Getter
+@SuppressWarnings("unused")
 public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlotContainer<T> {
     private final int size;
     private final Object[] slots;
 
-    private UnmodifiableLinearSlotContainer(int offset, Pos pos, SlotFactory<T> factory, int[] indexes) {
-        super(offset, pos, factory);
+    @SuppressWarnings("unchecked")
+    protected UnmodifiableLinearSlotContainer(int offset, Pos pos, SlotFactory<T> factory, int[] indexes) {
+        super(offset, factory);
         this.size = indexes.length;
         this.slots = initSlots(indexes, offset, pos, factory);
+        this.frame = new StaticFrame(pos, ((T)slots[slots.length - 1]).getFrame().getStopPos(), false);
     }
 
     @Override
@@ -52,7 +59,21 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
         return (T) slots[index];
     }
 
-    @SuppressWarnings("unchecked")
+    @Override
+    public void updateTarget(int xPos, int yPos, TargetManager targetManager) {
+        super.updateTarget(xPos, yPos, targetManager);
+
+        if (isTarget) {
+            for (Object slot : slots) {
+                ((AbstractNode)slot).updateTarget(xPos, yPos, targetManager);
+            }
+        }
+    }
+
+    public static Builder<? extends AbstractSlot> builder(Pos pos, SlotFactory<? extends AbstractSlot> factory, int ... indexes) {
+        return new Builder<>(pos, factory, indexes);
+    }
+
     private Object[] initSlots(int[] indexes, int offset, Pos pos, SlotFactory<T> factory) {
         Object[] result = new Object[size];
         Pos currentPos = pos;
@@ -68,12 +89,16 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
         return result;
     }
 
-    public static class Builder<T extends AbstractSlot> {
+    public static class Builder<T extends AbstractSlot> implements SimpleBuilder<UnmodifiableLinearSlotContainer<T>> {
+        private final Pos pos;
+        private final SlotFactory<T> factory;
         private final int[] indexes;
         private int size = 1;
         private int offset = 1;
 
-        public Builder(int ... indexes) {
+        public Builder(Pos pos, SlotFactory<T> factory, int ... indexes) {
+            this.pos = pos;
+            this.factory = factory;
             this.indexes = indexes;
         }
 
@@ -88,7 +113,7 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
             return this;
         }
 
-        public UnmodifiableLinearSlotContainer<T> build(Pos pos, SlotFactory<T> factory) {
+        public UnmodifiableLinearSlotContainer<T> build() {
             return new UnmodifiableLinearSlotContainer<>(offset, pos, factory, indexes);
         }
     }

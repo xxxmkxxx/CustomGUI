@@ -2,30 +2,25 @@ package com.xxxmkxxx.customgui.client.ui.controls.field;
 
 import com.xxxmkxxx.customgui.client.CustomGUIClient;
 import com.xxxmkxxx.customgui.client.common.SimpleBuilder;
-import com.xxxmkxxx.customgui.client.geometry.Pos;
-import com.xxxmkxxx.customgui.client.hierarchy.node.States;
+import com.xxxmkxxx.customgui.client.common.Validator;
+import com.xxxmkxxx.customgui.client.geometry.frame.DynamicFrame;
+import com.xxxmkxxx.customgui.client.geometry.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-
+@Getter
+@SuppressWarnings("unused")
 public class TextField extends AbstractField {
-    @Getter
     private Text text;
+    @Setter
     private int textColor;
 
-    private TextField() {}
-
-    @Override
-    public void hide() {
-        this.state = States.HIDED;
-    }
-
-    @Override
-    public void display() {
-        this.state = States.DISPLAYED;
+    private TextField() {
+        this.frame = new DynamicFrame(0, 0, 18, 18, false);
     }
 
     @Override
@@ -33,45 +28,51 @@ public class TextField extends AbstractField {
         this.renderer = new RendererFactory().create(type);
     }
 
+    public void setText(Text text) {
+        Validator.checkNullObject(text);
+        ((DynamicFrame)this.frame).setStopPos(text.getString().length() * 3, frame.getStopPos().y());
+        this.text = text;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
 
     public static class Builder implements SimpleBuilder<TextField> {
-        private TextField textField = new TextField();
+        private final TextField textField = new TextField();
 
         public Builder text(String str) {
-            textField.text = Text.of(str);
+            textField.setText(Text.of(str));
 
             return this;
         }
 
         public Builder text(Text text) {
-            textField.text = text;
+            textField.setText(text);
 
             return this;
         }
 
         public Builder textColor(int color) {
-            textField.textColor = color;
+            textField.setTextColor(color);
 
             return this;
         }
 
         public Builder matrix(MatrixStack matrixStack) {
-            textField.matrixStack = matrixStack;
-
-            return this;
-        }
-
-        public Builder pos(Pos pos) {
-            textField.pos = pos;
+            textField.setMatrixStack(matrixStack);
 
             return this;
         }
 
         public Builder pos(int x, int y) {
-            textField.pos = new Pos(x, y);
+            ((DynamicFrame)textField.getFrame()).setStartPos(new Pos(x, y));
+
+            return this;
+        }
+        public Builder pos(Pos pos) {
+            Validator.checkNullObject(pos);
+            ((DynamicFrame)textField.getFrame()).setStartPos(pos);
 
             return this;
         }
@@ -90,10 +91,10 @@ public class TextField extends AbstractField {
 
         private void render(TextField field) {
             CustomGUIClient.NODE_DRAWABLE_HELPER.drawText(
-                    field.matrixStack,
-                    field.text,
-                    field.pos,
-                    field.textColor
+                    field.getMatrixStack(),
+                    field.getText(),
+                    field.getFrame().getStartPos(),
+                    field.getTextColor()
             );
         }
     }
