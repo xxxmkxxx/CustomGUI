@@ -9,14 +9,9 @@ public abstract class AbstractAnimation implements Animation {
     private final String name;
     @Getter
     protected final List<AnimationFrameTimeStamp> frames = new ArrayList<>();
-    @Getter
-    protected final int amountAnimationPlays;
-    @Getter
-    protected int currentAmountAnimationPlays = 0;
 
-    public AbstractAnimation(String name, int amountAnimationPlays) {
+    public AbstractAnimation(String name) {
         this.name = name;
-        this.amountAnimationPlays = amountAnimationPlays;
     }
 
     @Override
