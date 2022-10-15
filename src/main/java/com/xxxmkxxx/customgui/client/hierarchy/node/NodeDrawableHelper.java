@@ -16,6 +16,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Matrix4f;
 
 @Environment(EnvType.CLIENT)
 @SuppressWarnings("unused")
@@ -54,12 +55,27 @@ public class NodeDrawableHelper extends DrawableHelper {
         );
     }
 
+    public void fillRoundingFrame() {
+        Matrix4f m = new MatrixStack().peek().getPositionMatrix();
+        RenderSystem.enableBlend();
+        RenderSystem.disableTexture();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+        bufferBuilder.begin(VertexFormat.DrawMode.TRIANGLES, VertexFormats.POSITION_COLOR);
+        bufferBuilder.vertex(m, 0, 0, 0).color(stopGradientColor).next();
+        bufferBuilder.vertex(m, 50, 50, 0).color(stopGradientColor).next();
+        bufferBuilder.vertex(m, 0, 10, 0).color(stopGradientColor).next();
+        bufferBuilder.end();
+        BufferRenderer.draw(bufferBuilder);
+    }
+
     public void drawText(MatrixStack matrix, Text text, int x, int y, int color) {
         CLIENT.textRenderer.draw(matrix, text, x, y, color);
     }
 
     public void drawText(MatrixStack matrix, Text text, Pos pos, int color) {
-        CLIENT.textRenderer.draw(matrix, text, pos.x(), pos.y(), color);
+        drawText(matrix, text, pos.x(), pos.y(), color);
     }
 
     public void drawTexture(ItemStack stack, AbstractFrame frame) {
