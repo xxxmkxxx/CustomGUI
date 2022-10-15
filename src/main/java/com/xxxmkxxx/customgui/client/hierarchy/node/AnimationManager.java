@@ -10,16 +10,24 @@ import lombok.RequiredArgsConstructor;
 public class AnimationManager {
     private final TimeControl timeControl;
 
-    public void addAnimation(AbstractAnimation animation) {
-        for (AnimationFrameTimeStamp stamp : animation.getFrames()) {
-            timeControl.getScheduler().addTask(
-                    stamp.timeUnit(),
-                    new SimpleTask(animation.getName(), () -> {
-                        timeControl.getTickerController().TICKER().removeTask(animation.getName());
-                        timeControl.getTickerController().createTickerTask(animation.getName(), () -> stamp.frame().display());
-                    })
-            );
-        }
+    public void addAnimation(AbstractAnimation animation, int amountAnimationCycles) {
+        int lastTick = 0;
 
+        for (int i = 0; i < amountAnimationCycles; i++) {
+            for (AnimationFrameTimeStamp stamp : animation.getFrames()) {
+                scheduleFrame(lastTick, animation.getName(), stamp);
+                lastTick += stamp.timeUnit();
+            }
+        }
+    }
+
+    private void scheduleFrame(long tick, String name, AnimationFrameTimeStamp stamp) {
+        timeControl.getScheduler().addTask(
+                tick,
+                new SimpleTask(name, () -> {
+                    timeControl.getTickerController().TICKER().removeTask(name);
+                    timeControl.getTickerController().createTickerTask(name, () -> stamp.frame().display());
+                })
+        );
     }
 }
