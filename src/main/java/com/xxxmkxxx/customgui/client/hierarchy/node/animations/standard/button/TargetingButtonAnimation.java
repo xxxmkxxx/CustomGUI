@@ -7,9 +7,9 @@ import com.xxxmkxxx.customgui.client.ui.controls.button.AbstractButton;
 
 public class TargetingButtonAnimation extends AbstractAnimation {
     public TargetingButtonAnimation(AbstractButton button) {
-        super("standardTargetingButton-" + button.getName().getString(), 1);
+        super("standardTargetingButton-" + button.getName().getString());
 
-        addFrame(1, () -> {
+        addFrame(5, () -> {
             CustomGUIClient.NODE_DRAWABLE_HELPER.fillFrame(
                     button.getMatrixStack(),
                     button.getFrame(),
@@ -17,7 +17,7 @@ public class TargetingButtonAnimation extends AbstractAnimation {
             );
         });
 
-        addFrame(2, () -> {
+        addFrame(10, () -> {
             CustomGUIClient.NODE_DRAWABLE_HELPER.fillFrame(
                     button.getMatrixStack(),
                     button.getFrame(),
@@ -25,7 +25,7 @@ public class TargetingButtonAnimation extends AbstractAnimation {
             );
         });
 
-        addFrame(3, () -> {
+        addFrame(5, () -> {
             CustomGUIClient.NODE_DRAWABLE_HELPER.fillFrame(
                     button.getMatrixStack(),
                     button.getFrame(),
@@ -33,6 +33,6 @@ public class TargetingButtonAnimation extends AbstractAnimation {
             );
         });
 
-        addFrame(4, AnimationFrame.EMPTY);
+        addFrame(3, AnimationFrame.EMPTY);
     }
 }

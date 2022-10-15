@@ -50,7 +50,7 @@ public class TestHud {
         });
 
         button.addEvent((TargetEvent) () -> {
-            scene.getAnimationManager().addAnimation(new TargetingButtonAnimation(button));
+            scene.getAnimationManager().addAnimation(new TargetingButtonAnimation(button), 1);
         });
 
         scene.addElement(button);
