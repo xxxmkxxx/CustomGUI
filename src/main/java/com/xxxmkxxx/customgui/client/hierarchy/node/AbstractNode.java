@@ -4,13 +4,24 @@ import com.xxxmkxxx.customgui.client.geometry.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
+import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import com.xxxmkxxx.customgui.client.ui.controls.button.AbstractButton;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.util.math.MatrixStack;
 
 @Getter
 public abstract class AbstractNode implements Node {
+    public static final AbstractNode EMPTY_NODE = new AbstractNode() {
+        @Override
+        public void initRenderer(RendererType type) {
+
+        }
+    };
+
     protected AbstractFrame frame = new StaticFrame(0, 0, 18, 18, false);
+    @Setter
+    protected Style style = new Style();
     @Setter
     protected MatrixStack matrixStack = new MatrixStack();
     protected NodeState<AbstractNode> state = States.DISPLAYED;
@@ -32,7 +43,7 @@ public abstract class AbstractNode implements Node {
     public void updateTarget(int xPos, int yPos, TargetManager targetManager) {
         if (state != States.DISPLAYED) return;
 
-        isTarget = frame.isPosBelongs(xPos, yPos);
+        isTarget = frame.checkPosBelongs(xPos, yPos);
 
         if (isTarget) {
             targetManager.setNode(this);
