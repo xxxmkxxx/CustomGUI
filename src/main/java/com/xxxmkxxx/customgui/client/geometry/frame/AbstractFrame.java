@@ -38,16 +38,16 @@ public abstract class AbstractFrame implements Frame {
     }
 
     @Override
-    public boolean isPosBelongs(int xPos, int yPos) {
-        return isPosBelongs(startPos, stopPos, xPos, yPos);
+    public boolean checkPosBelongs(int xPos, int yPos) {
+        return checkPosBelongs(startPos, stopPos, xPos, yPos);
     }
 
     @Override
-    public boolean isPosBelongs(Pos pos) {
-        return isPosBelongs(pos.x(), pos.y());
+    public boolean checkPosBelongs(Pos pos) {
+        return checkPosBelongs(pos.x(), pos.y());
     }
 
-    public static boolean isPosBelongs(Pos startPos, Pos stopPos, int xPos, int yPos) {
+    public static boolean checkPosBelongs(Pos startPos, Pos stopPos, int xPos, int yPos) {
         boolean xBelongs = false, yBelongs = false;
 
         if (startPos.x() < stopPos.x()) {
