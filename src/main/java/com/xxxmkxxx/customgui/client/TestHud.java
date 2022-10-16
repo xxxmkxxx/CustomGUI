@@ -5,11 +5,15 @@ import com.xxxmkxxx.customgui.client.geometry.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.ClickEvent;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.scene.SimpleScene;
+import com.xxxmkxxx.customgui.client.ui.containers.pane.Pane;
+import com.xxxmkxxx.customgui.client.ui.containers.pane.SimplePane;
+import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.RectangularSlotContainer;
 import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.SquareSlotContainer;
 import com.xxxmkxxx.customgui.client.ui.controls.button.SimpleButton;
 import com.xxxmkxxx.customgui.client.ui.controls.slot.SimpleSlot;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -22,31 +26,24 @@ import java.util.List;
 public class TestHud {
     private static final Pos POS = new Pos(10, 10);
     private static final Pos POS2 = new Pos(200, 200);
-    private static final StaticFrame FRAME = new StaticFrame(POS, POS2, false);
     private static final int COLOR = 0xAF3C3B36;
-    private static final Inventory INVENTORY = new TestInventory();
     private static final SimpleSlot.Factory SIMPLE_SLOT_FACTORY = new SimpleSlot.Factory(18, 18, COLOR, new TestInventory());
-    private static final SquareSlotContainer.Builder<SimpleSlot> BUILDER = new SquareSlotContainer.Builder<>(
-            POS,
-            SIMPLE_SLOT_FACTORY,
+    private static final RectangularSlotContainer.Builder<SimpleSlot> BUILDER = new RectangularSlotContainer.Builder<>(
+        POS, SIMPLE_SLOT_FACTORY,
             new int[][]{
-                    {0, 100, 100},
-                    {1, 100, 100},
-                    {2, 100, 100}
+                    {0, 1, 2, 3, 4, 5, 6},
+                    {7, 8, 9, 10, 11, 12, 13},
+                    {14, 15, 16, 17, 18, 19, 20},
+                    {21, 22, 23, 24, 25, 26, 27},
             }
-    ).size(3);
-
-    private static final SquareSlotContainer<SimpleSlot> SLOT_CONTAINER = BUILDER.build();
+    );
+    private static final RectangularSlotContainer<SimpleSlot> SLOT_CONTAINER = BUILDER.amountRows(4).rowSize(7).build();
 
     public static void render() {
         SimpleScene scene = new SimpleScene(RendererType.SCREEN);
-        SimpleButton button = SimpleButton.builder().startPos(POS).name("test button").build();
 
-        button.addEvent((ClickEvent) () -> {
-            System.out.println("hoho");
-        });
+        scene.addElement(SLOT_CONTAINER);
 
-        scene.addElement(button);
         CustomGUIClient.SCREEN_STAGE.setActiveScene(scene);
     }
 
