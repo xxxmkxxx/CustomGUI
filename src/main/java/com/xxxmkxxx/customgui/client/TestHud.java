@@ -2,15 +2,12 @@ package com.xxxmkxxx.customgui.client;
 
 import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
-import com.xxxmkxxx.customgui.client.hierarchy.node.animations.standard.button.TargetingButtonAnimation;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.ClickEvent;
-import com.xxxmkxxx.customgui.client.hierarchy.node.events.target.TargetEvent;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.scene.SimpleScene;
 import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.SquareSlotContainer;
 import com.xxxmkxxx.customgui.client.ui.controls.button.SimpleButton;
 import com.xxxmkxxx.customgui.client.ui.controls.slot.SimpleSlot;
-import com.xxxmkxxx.timecontrol.client.TimeControlClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
@@ -47,10 +44,6 @@ public class TestHud {
 
         button.addEvent((ClickEvent) () -> {
             System.out.println("hoho");
-        });
-
-        button.addEvent((TargetEvent) () -> {
-            scene.getAnimationManager().addAnimation(new TargetingButtonAnimation(button), 1);
         });
 
         scene.addElement(button);

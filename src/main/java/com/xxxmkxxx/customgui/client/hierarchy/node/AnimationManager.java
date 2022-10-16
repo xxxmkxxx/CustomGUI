@@ -19,6 +19,14 @@ public class AnimationManager {
                 lastTick += stamp.timeUnit();
             }
         }
+
+        timeControl.getScheduler().addTask(
+                lastTick,
+                new SimpleTask(
+                        animation.getName(),
+                        () -> timeControl.getTickerController().TICKER().removeTask(animation.getName())
+                )
+        );
     }
 
     private void scheduleFrame(long tick, String name, AnimationFrameTimeStamp stamp) {

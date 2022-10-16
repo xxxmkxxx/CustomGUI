@@ -1,5 +1,5 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node.animations;
 
-public record AnimationFrameTimeStamp(int timeUnit, AnimationFrame frame) {
+public record AnimationFrameTimeStamp(long timeUnit, AnimationFrame frame) {
 
 }

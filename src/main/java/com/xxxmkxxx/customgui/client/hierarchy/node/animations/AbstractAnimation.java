@@ -15,7 +15,7 @@ public abstract class AbstractAnimation implements Animation {
     }
 
     @Override
-    public void addFrame(int timeUnit, AnimationFrame frame) {
+    public void addFrame(long timeUnit, AnimationFrame frame) {
         frames.add(new AnimationFrameTimeStamp(timeUnit, frame));
     }
 }
