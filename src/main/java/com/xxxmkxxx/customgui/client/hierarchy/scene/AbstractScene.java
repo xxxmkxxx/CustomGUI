@@ -2,8 +2,8 @@ package com.xxxmkxxx.customgui.client.hierarchy.scene;
 
 import com.xxxmkxxx.customgui.client.common.RenderTime;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
-import com.xxxmkxxx.customgui.client.hierarchy.node.AnimationManager;
-import com.xxxmkxxx.customgui.client.hierarchy.node.TargetManager;
+import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AnimationManager;
+import com.xxxmkxxx.customgui.client.hierarchy.node.target.TargetManager;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.timecontrol.TimeControl;
 import lombok.Getter;
@@ -42,7 +42,7 @@ public abstract class AbstractScene implements Scene {
     }
 
     public void updateTarget(int x, int y) {
-        targetManager.setNode(null);
+        targetManager.setCurrentSelection(null);
 
         displays.forEach(node -> node.updateTarget(x, y, targetManager));
     }

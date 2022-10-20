@@ -2,10 +2,10 @@ package com.xxxmkxxx.customgui.client.hierarchy.node;
 
 import com.xxxmkxxx.customgui.client.geometry.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
+import com.xxxmkxxx.customgui.client.hierarchy.node.target.TargetManager;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
-import com.xxxmkxxx.customgui.client.ui.controls.button.AbstractButton;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.util.math.MatrixStack;
@@ -41,13 +41,7 @@ public abstract class AbstractNode implements Node {
     }
 
     public void updateTarget(int xPos, int yPos, TargetManager targetManager) {
-        if (state != States.DISPLAYED) return;
 
-        isTarget = frame.checkPosBelongs(xPos, yPos);
-
-        if (isTarget) {
-            targetManager.setNode(this);
-        }
     }
 
     public abstract void initRenderer(RendererType type);

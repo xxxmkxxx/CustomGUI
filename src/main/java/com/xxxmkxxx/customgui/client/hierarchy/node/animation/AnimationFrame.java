@@ -1,4 +1,4 @@
-package com.xxxmkxxx.customgui.client.hierarchy.node.animations;
+package com.xxxmkxxx.customgui.client.hierarchy.node.animation;
 
 @FunctionalInterface
 public interface AnimationFrame {

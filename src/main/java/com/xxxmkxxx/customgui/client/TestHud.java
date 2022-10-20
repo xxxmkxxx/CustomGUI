@@ -1,19 +1,17 @@
 package com.xxxmkxxx.customgui.client;
 
-import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
-import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.ClickEvent;
+import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AbstractAnimation;
+import com.xxxmkxxx.customgui.client.hierarchy.node.animation.standard.StandardButtonAnimation;
+import com.xxxmkxxx.customgui.client.hierarchy.node.events.deselection.DeselectionEventHandler;
+import com.xxxmkxxx.customgui.client.hierarchy.node.events.selection.SelectionEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.scene.SimpleScene;
-import com.xxxmkxxx.customgui.client.ui.containers.pane.Pane;
-import com.xxxmkxxx.customgui.client.ui.containers.pane.SimplePane;
 import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.RectangularSlotContainer;
-import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.SquareSlotContainer;
 import com.xxxmkxxx.customgui.client.ui.controls.button.SimpleButton;
 import com.xxxmkxxx.customgui.client.ui.controls.slot.SimpleSlot;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -41,9 +39,20 @@ public class TestHud {
 
     public static void render() {
         SimpleScene scene = new SimpleScene(RendererType.SCREEN);
+        SimpleButton button = new SimpleButton.Builder().name("aboba").startPos(POS2).build();
+        AbstractAnimation animation = new StandardButtonAnimation(button.getName().getString(), button);
 
-        scene.addElement(SLOT_CONTAINER);
+        button.addEvent((SelectionEventHandler) () -> {
+            scene.getAnimationManager().addStickyAnimation(animation, 0);
+            System.out.println("sel");
+        });
 
+        button.addEvent((DeselectionEventHandler) () -> {
+            scene.getAnimationManager().deleteStickyAnimation(animation);
+            System.out.println("desel");
+        });
+
+        scene.addElement(button);
         CustomGUIClient.SCREEN_STAGE.setActiveScene(scene);
     }
 
