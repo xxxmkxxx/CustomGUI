@@ -54,17 +54,6 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
     }
 
     @Override
-    public void updateTarget(int xPos, int yPos, TargetManager targetManager) {
-        super.updateTarget(xPos, yPos, targetManager);
-
-        if (isTarget) {
-            for (AbstractNode row : rows) {
-                row.updateTarget(xPos, yPos, targetManager);
-            }
-        }
-    }
-
-    @Override
     public void setSlot(int rowIndex, int slotIndex, T slot) throws OperationNotSupportedException {
         throw new OperationNotSupportedException("SquareSlotContainer cannot be changed!");
     }

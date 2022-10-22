@@ -2,15 +2,16 @@ package com.xxxmkxxx.customgui.client.hierarchy.node;
 
 import com.xxxmkxxx.customgui.client.geometry.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
-import com.xxxmkxxx.customgui.client.hierarchy.node.target.TargetManager;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.util.math.MatrixStack;
 
 @Getter
+@EqualsAndHashCode
 public abstract class AbstractNode implements Node {
     public static final AbstractNode EMPTY_NODE = new AbstractNode() {
         @Override
@@ -27,7 +28,6 @@ public abstract class AbstractNode implements Node {
     protected NodeState<AbstractNode> state = States.DISPLAYED;
     @SuppressWarnings("rawtypes")
     protected NodeRenderer renderer;
-    @Getter
     protected boolean isTarget;
 
     @Override
@@ -38,10 +38,6 @@ public abstract class AbstractNode implements Node {
     @Override
     public void display() {
         state = States.HIDED;
-    }
-
-    public void updateTarget(int xPos, int yPos, TargetManager targetManager) {
-
     }
 
     public abstract void initRenderer(RendererType type);

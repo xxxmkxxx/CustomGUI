@@ -55,18 +55,6 @@ public class LinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlot
         return slots.get(index);
     }
 
-    @Override
-    public void updateTarget(int xPos, int yPos, TargetManager targetManager) {
-        super.updateTarget(xPos, yPos, targetManager);
-
-        if (isTarget) {
-            for (AbstractNode slot : slots) {
-                slot.updateTarget(xPos, yPos, targetManager);
-            }
-        }
-    }
-
-
     public static Builder<? extends AbstractSlot> builder(Pos pos, SlotFactory<? extends AbstractSlot> factory, List<Integer> indexes) {
         return new Builder<>(pos, factory, indexes);
     }

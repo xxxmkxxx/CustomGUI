@@ -1,6 +1,7 @@
 package com.xxxmkxxx.customgui.client.hierarchy.scene;
 
 import com.xxxmkxxx.customgui.client.common.RenderTime;
+import com.xxxmkxxx.customgui.client.common.comparators.NodeFrameComparator;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.NodeSection;
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AnimationManager;
@@ -9,28 +10,25 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.timecontrol.TimeControl;
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.List;
+import java.util.*;
 
 public abstract class AbstractScene implements Scene {
     @Getter
     protected final TimeControl renderTimeControl;
     @Getter
     protected final RendererType type;
-    protected final EnumMap<NodeSection, List<AbstractNode>> sections = new EnumMap<>(NodeSection.class);
+    protected final EnumMap<NodeSection, Set<AbstractNode>> sections = new EnumMap<>(NodeSection.class);
     @Getter
     protected final TargetManager targetManager;
     @Getter
     protected final AnimationManager animationManager;
 
     public AbstractScene(RendererType type) {
-        Arrays.stream(NodeSection.values()).forEach(nodeSection -> sections.put(nodeSection, new ArrayList<>()));
+        Arrays.stream(NodeSection.values()).forEach(nodeSection -> sections.put(nodeSection, new TreeSet<>(new NodeFrameComparator())));
 
         this.renderTimeControl = new TimeControl(new RenderTime());
         this.type = type;
-        this.targetManager = new TargetManager();
+        this.targetManager = new TargetManager(this.sections);
         this.animationManager = new AnimationManager(renderTimeControl);
     }
 
@@ -49,6 +47,6 @@ public abstract class AbstractScene implements Scene {
     }
 
     public void updateTarget(int x, int y) {
-
+        targetManager.update(x, y);
     }
 }

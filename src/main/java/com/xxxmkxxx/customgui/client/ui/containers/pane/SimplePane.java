@@ -43,17 +43,6 @@ public class SimplePane extends AbstractPane {
         this.renderer = new RendererFactory().create(type);
     }
 
-    @Override
-    public void updateTarget(int xPos, int yPos, TargetManager targetManager) {
-        super.updateTarget(xPos, yPos, targetManager);
-
-        if (isTarget) {
-            for (AbstractNode element : nodes) {
-                element.updateTarget(xPos, yPos, targetManager);
-            }
-        }
-    }
-
     public void addNode(AbstractNode node) {
         Validator.checkNullObject(node);
         nodes.add(node);

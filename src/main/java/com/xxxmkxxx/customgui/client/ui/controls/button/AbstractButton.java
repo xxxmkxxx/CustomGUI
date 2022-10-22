@@ -2,7 +2,6 @@ package com.xxxmkxxx.customgui.client.ui.controls.button;
 
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.ClickEventHandler;
-import com.xxxmkxxx.customgui.client.hierarchy.node.target.TargetManager;
 import lombok.Getter;
 import net.minecraft.text.Text;
 
@@ -16,11 +15,6 @@ public abstract class AbstractButton extends AbstractNode implements Button, Cli
 
     @Override
     public void onClick() {
-
-    }
-
-    @Override
-    public void updateTarget(int xPos, int yPos, TargetManager targetManager) {
 
     }
 }

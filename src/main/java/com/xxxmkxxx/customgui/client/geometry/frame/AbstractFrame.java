@@ -7,6 +7,7 @@ import lombok.Getter;
 public abstract class AbstractFrame implements Frame {
     protected Pos startPos;
     protected Pos stopPos;
+    protected int diagonal;
     protected int width;
     protected int height;
     protected boolean startInCenter;
@@ -23,6 +24,8 @@ public abstract class AbstractFrame implements Frame {
             this.startPos = new Pos(xPos, yPos);
             this.stopPos = new Pos(xPos + width, yPos + height);
         }
+
+        this.diagonal = Pos.calculateSegmentLength(startPos, stopPos);
     }
 
     protected AbstractFrame(Pos startPos, int width, int height, boolean startInCenter) {
@@ -35,6 +38,7 @@ public abstract class AbstractFrame implements Frame {
         this.startInCenter = startInCenter;
         this.width = stopPos.x() - startPos.x();
         this.height = stopPos.y() - startPos.y();
+        this.diagonal = Pos.calculateSegmentLength(startPos, stopPos);
     }
 
     @Override

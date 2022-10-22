@@ -59,17 +59,6 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
         return (T) slots[index];
     }
 
-    @Override
-    public void updateTarget(int xPos, int yPos, TargetManager targetManager) {
-        super.updateTarget(xPos, yPos, targetManager);
-
-        if (isTarget) {
-            for (Object slot : slots) {
-                ((AbstractNode)slot).updateTarget(xPos, yPos, targetManager);
-            }
-        }
-    }
-
     public static Builder<? extends AbstractSlot> builder(Pos pos, SlotFactory<? extends AbstractSlot> factory, int ... indexes) {
         return new Builder<>(pos, factory, indexes);
     }

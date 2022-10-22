@@ -5,6 +5,8 @@ import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
 import lombok.Getter;
 
+import java.util.function.Consumer;
+
 import static com.xxxmkxxx.customgui.client.common.MinecraftOptions.windowHeight;
 import static com.xxxmkxxx.customgui.client.common.MinecraftOptions.windowWidth;
 
@@ -44,5 +46,11 @@ public enum NodeSection {
 
     NodeSection(Pos startPos, Pos stopPos) {
         frame = new StaticFrame(startPos, stopPos, false);
+    }
+
+    public static void forEach(Consumer<NodeSection> consumer) {
+        for (NodeSection section : values()) {
+            consumer.accept(section);
+        }
     }
 }
