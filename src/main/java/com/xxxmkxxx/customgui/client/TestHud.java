@@ -37,10 +37,18 @@ public class TestHud {
 
     public static void render() {
         SimpleScene scene = new SimpleScene(RendererType.SCREEN);
+
         SimpleButton button = new SimpleButton.Builder().name("aboba").startPos(POS2).build();
-        AbstractAnimation animation = new StandardButtonAnimation(button.getName().getString(), button);
+        SimpleButton button2 = new SimpleButton.Builder().name("fe").startPos(new Pos(50, 50)).build();
+        SimpleButton button3 = new SimpleButton.Builder().name("abosdyhba").startPos(new Pos(40, 20)).build();
+        SimpleButton button4 = new SimpleButton.Builder().name("io").startPos(POS).build();
+
 
         scene.addElement(button);
+        scene.addElement(button2);
+        scene.addElement(button3);
+        scene.addElement(button4);
+
         CustomGUIClient.SCREEN_STAGE.setActiveScene(scene);
     }
 
