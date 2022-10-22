@@ -64,4 +64,8 @@ public abstract class AbstractFrame implements Frame {
 
         return xBelongs && yBelongs;
     }
+
+    public boolean isFrameBelong(AbstractFrame frame) {
+        return checkPosBelongs(frame.getStartPos()) && checkPosBelongs(frame.getStopPos());
+    }
 }

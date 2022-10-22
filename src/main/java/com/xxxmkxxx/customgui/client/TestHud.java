@@ -3,8 +3,6 @@ package com.xxxmkxxx.customgui.client;
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AbstractAnimation;
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.standard.StandardButtonAnimation;
-import com.xxxmkxxx.customgui.client.hierarchy.node.events.deselection.DeselectionEventHandler;
-import com.xxxmkxxx.customgui.client.hierarchy.node.events.selection.SelectionEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.scene.SimpleScene;
 import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.RectangularSlotContainer;
@@ -41,16 +39,6 @@ public class TestHud {
         SimpleScene scene = new SimpleScene(RendererType.SCREEN);
         SimpleButton button = new SimpleButton.Builder().name("aboba").startPos(POS2).build();
         AbstractAnimation animation = new StandardButtonAnimation(button.getName().getString(), button);
-
-        button.addEvent((SelectionEventHandler) () -> {
-            scene.getAnimationManager().addStickyAnimation(animation, 0);
-            System.out.println("sel");
-        });
-
-        button.addEvent((DeselectionEventHandler) () -> {
-            scene.getAnimationManager().deleteStickyAnimation(animation);
-            System.out.println("desel");
-        });
 
         scene.addElement(button);
         CustomGUIClient.SCREEN_STAGE.setActiveScene(scene);

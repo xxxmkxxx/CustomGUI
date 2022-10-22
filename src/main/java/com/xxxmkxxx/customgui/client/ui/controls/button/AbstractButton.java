@@ -1,15 +1,13 @@
 package com.xxxmkxxx.customgui.client.ui.controls.button;
 
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
-import com.xxxmkxxx.customgui.client.hierarchy.node.target.TargetManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.ClickEventHandler;
-import com.xxxmkxxx.customgui.client.hierarchy.node.events.deselection.DeselectionEventHandler;
-import com.xxxmkxxx.customgui.client.hierarchy.node.events.selection.SelectionEventHandler;
+import com.xxxmkxxx.customgui.client.hierarchy.node.target.TargetManager;
 import lombok.Getter;
 import net.minecraft.text.Text;
 
 @Getter
-public abstract class AbstractButton extends AbstractNode implements Button, ClickEventHandler, SelectionEventHandler, DeselectionEventHandler {
+public abstract class AbstractButton extends AbstractNode implements Button, ClickEventHandler {
     protected final Text name;
 
     public AbstractButton(Text name) {
@@ -18,16 +16,6 @@ public abstract class AbstractButton extends AbstractNode implements Button, Cli
 
     @Override
     public void onClick() {
-
-    }
-
-    @Override
-    public void onDeselect() {
-
-    }
-
-    @Override
-    public void onSelect() {
 
     }
 

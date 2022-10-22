@@ -1,6 +1,6 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node;
 
-import com.xxxmkxxx.customgui.client.geometry.frame.Frame;
+import com.xxxmkxxx.customgui.client.geometry.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
 import lombok.Getter;
@@ -40,7 +40,7 @@ public enum NodeSection {
             new Pos(windowWidth, windowHeight)
     );
 
-    private Frame frame;
+    private AbstractFrame frame;
 
     NodeSection(Pos startPos, Pos stopPos) {
         frame = new StaticFrame(startPos, stopPos, false);
