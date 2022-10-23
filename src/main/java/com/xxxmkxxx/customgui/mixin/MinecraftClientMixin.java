@@ -1,6 +1,6 @@
 package com.xxxmkxxx.customgui.mixin;
 
-import com.xxxmkxxx.customgui.client.common.MinecraftOptions;
+import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
 import org.spongepowered.asm.mixin.Final;
@@ -16,7 +16,6 @@ public class MinecraftClientMixin {
 
     @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;thread:Ljava/lang/Thread;", shift = At.Shift.AFTER, ordinal = 0), method = "run")
     private void onStart(CallbackInfo ci) {
-        MinecraftOptions.windowWidth = window.getWidth();
-        MinecraftOptions.windowHeight = window.getHeight();
+        Section.updateFrames(window.getWidth(), window.getHeight());
     }
 }

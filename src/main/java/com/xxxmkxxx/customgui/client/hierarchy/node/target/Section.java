@@ -4,53 +4,64 @@ import com.xxxmkxxx.customgui.client.geometry.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-import java.util.function.Consumer;
+import java.util.function.BiFunction;
 
-import static com.xxxmkxxx.customgui.client.common.MinecraftOptions.windowHeight;
-import static com.xxxmkxxx.customgui.client.common.MinecraftOptions.windowWidth;
-
-@Getter
+@RequiredArgsConstructor
+@SuppressWarnings("all")
 public enum Section {
     TOP(
-            new Pos(0, 0),
-            new Pos(windowWidth, windowHeight / 4)
+            (width, height) -> new Pos(0, 0),
+            (width, height) -> new Pos(width, height / 4)
     ),
 
     BOTTOM(
-            new Pos(0, (windowHeight / 4) * 3),
-            new Pos(windowWidth, windowHeight)
+            (width, height) -> new Pos(0, (height / 4) * 3),
+            (width, height) -> new Pos(width, height)
     ),
 
     LEFT(
-            new Pos(0, windowHeight / 4),
-            new Pos(windowWidth / 3, (windowHeight / 4) * 3)
+            (width, height) -> new Pos(0, height / 4),
+            (width, height) -> new Pos(width / 3, (height / 4) * 3)
     ),
 
     RIGHT(
-            new Pos((windowWidth / 3) * 2, windowHeight / 4),
-            new Pos(windowWidth, (windowHeight / 4) * 3)
+            (width, height) -> new Pos((width / 3) * 2, height / 4),
+            (width, height) -> new Pos(width, (height / 4) * 3)
     ),
 
     CENTER(
-            new Pos(windowWidth / 3, windowHeight / 4),
-            new Pos((windowWidth / 3) * 2, (windowHeight / 4) * 3)
+            (width, height) -> new Pos(width / 3, height / 4),
+            (width, height) -> new Pos((width / 3) * 2, (height / 4) * 3)
     ),
 
     MIXED(
-            new Pos(0, 0),
-            new Pos(windowWidth, windowHeight)
+            (width, height) -> new Pos(0, 0),
+            (width, height) -> new Pos(width, height)
     );
 
+    @Getter
     private AbstractFrame frame;
+    private final BiFunction<Integer, Integer, Pos> expressionStartPos;
+    private final BiFunction<Integer, Integer, Pos> expressionStopPos;
 
-    Section(Pos startPos, Pos stopPos) {
-        frame = new StaticFrame(startPos, stopPos, false);
+    public void initFrame(int windowWidth, int windowHeight) {
+        Pos pos1 = expressionStartPos.apply(windowWidth, windowHeight);
+        Pos pos2 = expressionStopPos.apply(windowWidth, windowHeight);
+
+        frame = new StaticFrame(
+                expressionStartPos.apply(windowWidth, windowHeight),
+                expressionStopPos.apply(windowWidth, windowHeight),
+                false
+        );
+
+        System.out.println(this + " start-" + pos1 + " stop-" + pos2);
     }
 
-    public static void forEach(Consumer<Section> consumer) {
+    public static void updateFrames(int windowWidth, int windowHeight) {
         for (Section section : values()) {
-            consumer.accept(section);
+            section.initFrame(windowWidth, windowHeight);
         }
     }
 }

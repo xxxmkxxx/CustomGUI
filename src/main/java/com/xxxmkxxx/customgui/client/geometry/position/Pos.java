@@ -11,4 +11,9 @@ public record Pos(int x, int y) {
 
         return Math.abs(differenceOnX * differenceOnX + differenceOnY * differenceOnY);
     }
+
+    @Override
+    public String toString() {
+        return "x - " + x + " y - " + y;
+    }
 }
