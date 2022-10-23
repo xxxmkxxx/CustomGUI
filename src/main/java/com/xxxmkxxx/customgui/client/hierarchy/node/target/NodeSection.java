@@ -1,4 +1,4 @@
-package com.xxxmkxxx.customgui.client.hierarchy.node;
+package com.xxxmkxxx.customgui.client.hierarchy.node.target;
 
 import com.xxxmkxxx.customgui.client.geometry.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;

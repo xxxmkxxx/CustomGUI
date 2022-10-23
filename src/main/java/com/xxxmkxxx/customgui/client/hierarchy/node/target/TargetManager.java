@@ -1,7 +1,6 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node.target;
 
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
-import com.xxxmkxxx.customgui.client.hierarchy.node.NodeSection;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

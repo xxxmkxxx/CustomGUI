@@ -3,7 +3,7 @@ package com.xxxmkxxx.customgui.client.hierarchy.scene;
 import com.xxxmkxxx.customgui.client.common.RenderTime;
 import com.xxxmkxxx.customgui.client.common.comparators.NodeFrameComparator;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
-import com.xxxmkxxx.customgui.client.hierarchy.node.NodeSection;
+import com.xxxmkxxx.customgui.client.hierarchy.node.target.NodeSection;
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AnimationManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.TargetManager;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
