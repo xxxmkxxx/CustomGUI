@@ -14,14 +14,14 @@ public class TargetManager {
     @Getter
     private AbstractNode lastSelection = AbstractNode.EMPTY_NODE;
 
-    private final EnumMap<NodeSection, Set<AbstractNode>> sections;
+    private final EnumMap<Section, Set<AbstractNode>> sections;
 
     public void update(int x, int y) {
         lastSelection = currentSelection;
         currentSelection = searchTargetNode(x, y, sections);
     }
 
-    private AbstractNode searchTargetNode(int x, int y, EnumMap<NodeSection, Set<AbstractNode>> sections) {
+    private AbstractNode searchTargetNode(int x, int y, EnumMap<Section, Set<AbstractNode>> sections) {
         for (AbstractNode node : sections.get(defineCursorSection(x, y))) {
             if (node.getFrame().checkPosBelongs(x, y)) return node;
         }
@@ -29,19 +29,19 @@ public class TargetManager {
         return AbstractNode.EMPTY_NODE;
     }
 
-    private NodeSection defineCursorSection(int x, int y) {
-        for (NodeSection section : NodeSection.values()) {
+    private Section defineCursorSection(int x, int y) {
+        for (Section section : Section.values()) {
             if (section.getFrame().checkPosBelongs(x, y)) return section;
         }
 
-        return NodeSection.MIXED;
+        return Section.MIXED;
     }
 
-    public NodeSection defineNodeSection(AbstractNode node) {
-        for (NodeSection section : NodeSection.values()) {
+    public Section defineNodeSection(AbstractNode node) {
+        for (Section section : Section.values()) {
             if (section.getFrame().isFrameBelong(node.getFrame())) return section;
         }
 
-        return NodeSection.MIXED;
+        return Section.MIXED;
     }
 }

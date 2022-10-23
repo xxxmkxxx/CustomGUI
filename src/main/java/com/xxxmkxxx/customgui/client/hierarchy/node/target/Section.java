@@ -11,7 +11,7 @@ import static com.xxxmkxxx.customgui.client.common.MinecraftOptions.windowHeight
 import static com.xxxmkxxx.customgui.client.common.MinecraftOptions.windowWidth;
 
 @Getter
-public enum NodeSection {
+public enum Section {
     TOP(
             new Pos(0, 0),
             new Pos(windowWidth, windowHeight / 4)
@@ -44,12 +44,12 @@ public enum NodeSection {
 
     private AbstractFrame frame;
 
-    NodeSection(Pos startPos, Pos stopPos) {
+    Section(Pos startPos, Pos stopPos) {
         frame = new StaticFrame(startPos, stopPos, false);
     }
 
-    public static void forEach(Consumer<NodeSection> consumer) {
-        for (NodeSection section : values()) {
+    public static void forEach(Consumer<Section> consumer) {
+        for (Section section : values()) {
             consumer.accept(section);
         }
     }

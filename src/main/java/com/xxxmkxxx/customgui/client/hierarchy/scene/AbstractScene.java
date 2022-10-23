@@ -3,7 +3,7 @@ package com.xxxmkxxx.customgui.client.hierarchy.scene;
 import com.xxxmkxxx.customgui.client.common.RenderTime;
 import com.xxxmkxxx.customgui.client.common.comparators.NodeFrameComparator;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
-import com.xxxmkxxx.customgui.client.hierarchy.node.target.NodeSection;
+import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AnimationManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.TargetManager;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
@@ -17,14 +17,14 @@ public abstract class AbstractScene implements Scene {
     protected final TimeControl renderTimeControl;
     @Getter
     protected final RendererType type;
-    protected final EnumMap<NodeSection, Set<AbstractNode>> sections = new EnumMap<>(NodeSection.class);
+    protected final EnumMap<Section, Set<AbstractNode>> sections = new EnumMap<>(Section.class);
     @Getter
     protected final TargetManager targetManager;
     @Getter
     protected final AnimationManager animationManager;
 
     public AbstractScene(RendererType type) {
-        Arrays.stream(NodeSection.values()).forEach(nodeSection -> sections.put(nodeSection, new TreeSet<>(new NodeFrameComparator())));
+        Arrays.stream(Section.values()).forEach(section -> sections.put(section, new TreeSet<>(new NodeFrameComparator())));
 
         this.renderTimeControl = new TimeControl(new RenderTime());
         this.type = type;
@@ -35,7 +35,7 @@ public abstract class AbstractScene implements Scene {
     @Override
     public void addElement(AbstractNode node) {
         node.initRenderer(type);
-        NodeSection section = targetManager.defineNodeSection(node);
+        Section section = targetManager.defineNodeSection(node);
         sections.get(section).add(node);
     }
 
@@ -43,7 +43,7 @@ public abstract class AbstractScene implements Scene {
     @SuppressWarnings("unchecked")
     public void render() {
         renderTimeControl.tick();
-        sections.forEach((nodeSection, nodes) -> nodes.forEach(node -> node.getRenderer().render(node)));
+        sections.forEach((section, nodes) -> nodes.forEach(node -> node.getRenderer().render(node)));
     }
 
     public void updateTarget(int x, int y) {
