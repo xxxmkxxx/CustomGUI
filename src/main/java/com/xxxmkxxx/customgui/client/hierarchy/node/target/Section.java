@@ -13,27 +13,27 @@ import java.util.function.BiFunction;
 public enum Section {
     TOP(
             (width, height) -> new Pos(0, 0),
-            (width, height) -> new Pos(width, height / 4)
+            (width, height) -> new Pos(width, height / 5)
     ),
 
     BOTTOM(
-            (width, height) -> new Pos(0, (height / 4) * 3),
+            (width, height) -> new Pos(0, (height / 5) * 4),
             (width, height) -> new Pos(width, height)
     ),
 
     LEFT(
-            (width, height) -> new Pos(0, height / 4),
-            (width, height) -> new Pos(width / 3, (height / 4) * 3)
+            (width, height) -> new Pos(0, height / 5),
+            (width, height) -> new Pos(width / 8, (height / 5) * 4)
     ),
 
     RIGHT(
-            (width, height) -> new Pos((width / 3) * 2, height / 4),
-            (width, height) -> new Pos(width, (height / 4) * 3)
+            (width, height) -> new Pos((width / 8) * 7, height / 5),
+            (width, height) -> new Pos(width, (height / 5) * 4)
     ),
 
     CENTER(
-            (width, height) -> new Pos(width / 3, height / 4),
-            (width, height) -> new Pos((width / 3) * 2, (height / 4) * 3)
+            (width, height) -> new Pos(width / 8, height / 5),
+            (width, height) -> new Pos((width / 8) * 7, (height / 5) * 4)
     ),
 
     MIXED(
