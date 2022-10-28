@@ -1,8 +1,6 @@
 package com.xxxmkxxx.customgui.client;
 
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
-import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AbstractAnimation;
-import com.xxxmkxxx.customgui.client.hierarchy.node.animation.standard.StandardButtonAnimation;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.scene.SimpleScene;
 import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.RectangularSlotContainer;
@@ -42,7 +40,6 @@ public class TestHud {
         SimpleButton button2 = new SimpleButton.Builder().name("fe").startPos(new Pos(50, 50)).build();
         SimpleButton button3 = new SimpleButton.Builder().name("abosdyhba").startPos(new Pos(40, 20)).build();
         SimpleButton button4 = new SimpleButton.Builder().name("io").startPos(POS).build();
-
 
         scene.addElement(button);
         scene.addElement(button2);

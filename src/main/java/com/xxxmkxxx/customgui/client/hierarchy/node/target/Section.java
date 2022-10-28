@@ -55,8 +55,6 @@ public enum Section {
                 expressionStopPos.apply(windowWidth, windowHeight),
                 false
         );
-
-        System.out.println(this + " start-" + pos1 + " stop-" + pos2);
     }
 
     public static void updateFrames(int windowWidth, int windowHeight) {

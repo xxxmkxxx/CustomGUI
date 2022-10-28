@@ -14,7 +14,7 @@ public class CustomGUIClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
-            TestHud.render();
+
         });
     }
 }

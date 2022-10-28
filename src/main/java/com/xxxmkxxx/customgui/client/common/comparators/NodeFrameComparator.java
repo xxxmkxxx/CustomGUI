@@ -7,6 +7,6 @@ import java.util.Comparator;
 public class NodeFrameComparator implements Comparator<AbstractNode> {
     @Override
     public int compare(AbstractNode o1, AbstractNode o2) {
-        return o1.getFrame().getDiagonal() - o2.getFrame().getDiagonal();
+        return o1.getId() - o2.getId();
     }
 }

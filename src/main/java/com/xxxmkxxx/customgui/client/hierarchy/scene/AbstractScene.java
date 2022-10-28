@@ -3,15 +3,18 @@ package com.xxxmkxxx.customgui.client.hierarchy.scene;
 import com.xxxmkxxx.customgui.client.common.RenderTime;
 import com.xxxmkxxx.customgui.client.common.comparators.NodeFrameComparator;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
-import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AnimationManager;
+import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.TargetManager;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.ui.controls.button.AbstractButton;
 import com.xxxmkxxx.timecontrol.TimeControl;
 import lombok.Getter;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.Set;
+import java.util.TreeSet;
 
 public abstract class AbstractScene implements Scene {
     @Getter
@@ -23,6 +26,7 @@ public abstract class AbstractScene implements Scene {
     protected final TargetManager targetManager;
     @Getter
     protected final AnimationManager animationManager;
+    protected AbstractNode lastNode = null;
 
     public AbstractScene(RendererType type) {
         Arrays.stream(Section.values()).forEach(section -> sections.put(section, new TreeSet<>(new NodeFrameComparator())));
@@ -36,10 +40,12 @@ public abstract class AbstractScene implements Scene {
     @Override
     public void addElement(AbstractNode node) {
         node.initRenderer(type);
+
         Section section = targetManager.defineNodeSection(node);
         sections.get(section).add(node);
+        lastNode = node;
 
-        System.out.println(section + " " + ((AbstractButton)node).getName().getString());
+        System.out.println(section + "- " + ((AbstractButton)node).getName().getString());
     }
 
     @Override
