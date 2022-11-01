@@ -41,6 +41,11 @@ public class TestHud {
         SimpleButton button3 = new SimpleButton.Builder().name("abosdyhba").startPos(new Pos(40, 20)).build();
         SimpleButton button4 = new SimpleButton.Builder().name("io").startPos(POS).build();
 
+        button.addLeftClickAction(() -> {
+            System.out.println(" aboba ahahah");
+        });
+
+
         scene.addElement(button);
         scene.addElement(button2);
         scene.addElement(button3);

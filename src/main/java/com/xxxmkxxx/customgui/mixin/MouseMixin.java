@@ -2,7 +2,7 @@ package com.xxxmkxxx.customgui.mixin;
 
 import com.xxxmkxxx.customgui.client.CustomGUIClient;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
-import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.ClickEvent;
+import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.stage.state.StageState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
@@ -18,6 +18,8 @@ public abstract class MouseMixin {
     @Shadow public abstract boolean wasLeftButtonClicked();
 
     @Shadow @Final private MinecraftClient client;
+
+    @Shadow public abstract boolean wasRightButtonClicked();
 
     @Inject(method = "lockCursor", at = @At(value = "HEAD"), cancellable = true)
     public void lockCursor(CallbackInfo ci) {
@@ -40,12 +42,14 @@ public abstract class MouseMixin {
 
     @Inject(method = "onMouseButton", at = @At(value = "TAIL"))
     public void onMouseButton(long window, int button, int action, int mods, CallbackInfo ci) {
-        /*AbstractNode node = CustomGUIClient.SCREEN_STAGE.getActiveScene().getTargetManager().getCurrentSelection();
+        AbstractNode node = CustomGUIClient.SCREEN_STAGE.getActiveScene().getTargetManager().getCurrentTarget();
 
-        if (node instanceof ClickEvent clickEventHandler) {
-            if (wasLeftButtonClicked()) {
-                clickEventHandler.callAllClickedEvents();
+        if (wasLeftButtonClicked()) {
+            if (node instanceof LeftClickEventHandler handler) {
+                handler.onLeftClick();
             }
-        }*/
+        }
+
+        if (wasRightButtonClicked()) {}
     }
 }

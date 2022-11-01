@@ -1,5 +1,3 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node.events.click;
 
-public interface ClickEventHandler {
-    void onClick();
-}
+public interface ClickEventHandler { }
