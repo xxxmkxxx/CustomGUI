@@ -6,6 +6,8 @@ import com.xxxmkxxx.customgui.client.common.SimpleBuilder;
 import com.xxxmkxxx.customgui.client.geometry.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.geometry.frame.DynamicFrame;
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
+import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
+import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
@@ -14,7 +16,13 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.Text;
 
-public class SimpleButton extends AbstractButton {
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class SimpleButton extends AbstractButton implements LeftClickEventHandler, HoverEventHandler {
+    protected final Queue<Runnable> leftClickActions = new LinkedList<>();
+    protected final Queue<Runnable> hoverActions = new LinkedList<>();
+
     protected SimpleButton(AbstractFrame frame, String name) {
         super(Text.of(name));
         this.frame = frame;
@@ -23,6 +31,24 @@ public class SimpleButton extends AbstractButton {
     @Override
     public void initRenderer(RendererType type) {
         renderer = new RendererFactory().create(type);
+    }
+
+    public void addLeftClickAction(Runnable action) {
+        leftClickActions.add(action);
+    }
+
+    public void addHoverAction(Runnable action) {
+        hoverActions.add(action);
+    }
+
+    @Override
+    public void onLeftClick() {
+        leftClickActions.forEach(Runnable::run);
+    }
+
+    @Override
+    public void onHover() {
+        hoverActions.forEach(Runnable::run);
     }
 
     public static Builder builder() {

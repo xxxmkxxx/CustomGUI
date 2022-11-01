@@ -45,6 +45,10 @@ public class TestHud {
             System.out.println(" aboba ahahah");
         });
 
+        button.addHoverAction(() -> {
+            System.out.println("hovered!!!");
+        });
+
 
         scene.addElement(button);
         scene.addElement(button2);
