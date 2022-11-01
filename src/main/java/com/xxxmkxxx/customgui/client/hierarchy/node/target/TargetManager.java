@@ -10,19 +10,23 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class TargetManager {
     @Getter
-    private AbstractNode currentSelection = AbstractNode.EMPTY_NODE;
+    private AbstractNode currentTarget = AbstractNode.EMPTY_NODE;
     @Getter
-    private AbstractNode lastSelection = AbstractNode.EMPTY_NODE;
+    private AbstractNode lastTarget = AbstractNode.EMPTY_NODE;
 
     private final EnumMap<Section, Set<AbstractNode>> sections;
 
     public void update(int x, int y) {
-        lastSelection = currentSelection;
-        currentSelection = searchTargetNode(x, y, sections);
+        Section section = defineCursorSection(x, y);
+
+        lastTarget = currentTarget;
+        currentTarget = searchTargetNode(x, y, sections.get(section));
+
+        System.out.println(currentTarget);
     }
 
-    private AbstractNode searchTargetNode(int x, int y, EnumMap<Section, Set<AbstractNode>> sections) {
-        for (AbstractNode node : sections.get(defineCursorSection(x, y))) {
+    private AbstractNode searchTargetNode(int x, int y, Set<AbstractNode> nodes) {
+        for (AbstractNode node : nodes) {
             if (node.getFrame().checkPosBelongs(x, y)) return node;
         }
 

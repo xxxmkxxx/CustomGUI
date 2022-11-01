@@ -7,7 +7,6 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AnimationManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.TargetManager;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
-import com.xxxmkxxx.customgui.client.ui.controls.button.AbstractButton;
 import com.xxxmkxxx.timecontrol.TimeControl;
 import lombok.Getter;
 
@@ -40,12 +39,9 @@ public abstract class AbstractScene implements Scene {
     @Override
     public void addElement(AbstractNode node) {
         node.initRenderer(type);
-
         Section section = targetManager.defineNodeSection(node);
         sections.get(section).add(node);
         lastNode = node;
-
-        System.out.println(section + "- " + ((AbstractButton)node).getName().getString());
     }
 
     @Override

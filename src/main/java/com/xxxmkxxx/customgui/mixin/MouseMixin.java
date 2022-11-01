@@ -40,12 +40,12 @@ public abstract class MouseMixin {
 
     @Inject(method = "onMouseButton", at = @At(value = "TAIL"))
     public void onMouseButton(long window, int button, int action, int mods, CallbackInfo ci) {
-        AbstractNode node = CustomGUIClient.SCREEN_STAGE.getActiveScene().getTargetManager().getCurrentSelection();
+        /*AbstractNode node = CustomGUIClient.SCREEN_STAGE.getActiveScene().getTargetManager().getCurrentSelection();
 
         if (node instanceof ClickEvent clickEventHandler) {
             if (wasLeftButtonClicked()) {
                 clickEventHandler.callAllClickedEvents();
             }
-        }
+        }*/
     }
 }
