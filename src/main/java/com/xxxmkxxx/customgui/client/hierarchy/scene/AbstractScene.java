@@ -25,7 +25,6 @@ public abstract class AbstractScene implements Scene {
     protected final TargetManager targetManager;
     @Getter
     protected final AnimationManager animationManager;
-    protected AbstractNode lastNode = null;
 
     public AbstractScene(RendererType type) {
         Arrays.stream(Section.values()).forEach(section -> sections.put(section, new TreeSet<>(new NodeFrameComparator())));
@@ -41,7 +40,6 @@ public abstract class AbstractScene implements Scene {
         node.initRenderer(type);
         Section section = targetManager.defineNodeSection(node);
         sections.get(section).add(node);
-        lastNode = node;
     }
 
     @Override

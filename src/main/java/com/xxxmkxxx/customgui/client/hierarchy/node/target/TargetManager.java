@@ -2,6 +2,7 @@ package com.xxxmkxxx.customgui.client.hierarchy.node.target;
 
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHandler;
+import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.ResetHoverEventHandler;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -23,8 +24,14 @@ public class TargetManager {
         lastTarget = currentTarget;
         currentTarget = searchTargetNode(x, y, sections.get(section));
 
-        if (currentTarget instanceof HoverEventHandler handler && lastTarget != currentTarget) {
-            handler.onHover();
+        if (lastTarget != currentTarget) {
+            if (currentTarget instanceof HoverEventHandler handler) {
+                handler.onHover();
+            }
+
+            if (lastTarget instanceof ResetHoverEventHandler handler) {
+                handler.onResetHover();
+            }
         }
     }
 
