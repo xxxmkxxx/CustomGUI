@@ -1,11 +1,11 @@
-package com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere;
+package com.xxxmkxxx.customgui.client.hierarchy.node.events.click;
 
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.AbstractEvent;
 
-public class HoverEvent extends AbstractEvent<HoverEventHandler> {
+public class LeftClickEvent extends AbstractEvent<LeftClickEventHandler> {
     @Override
     public void callHandler(AbstractNode node) {
-        handlers.get(node).onHover();
+        handlers.get(node).onLeftClick();
     }
 }

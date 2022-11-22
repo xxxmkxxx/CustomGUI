@@ -1,5 +1,7 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node.events.click;
 
-public interface LeftClickEventHandler extends ClickEventHandler {
+import com.xxxmkxxx.customgui.client.hierarchy.node.events.EventHandler;
+
+public interface LeftClickEventHandler extends EventHandler {
     void onLeftClick();
 }
