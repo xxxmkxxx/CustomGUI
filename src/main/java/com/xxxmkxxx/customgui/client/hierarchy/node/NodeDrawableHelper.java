@@ -148,4 +148,15 @@ public class NodeDrawableHelper extends DrawableHelper {
 
         BufferRenderer.draw(bufferBuilder);
     }
+
+    public void drawFrameAroundFrame(MatrixStack matrix, AbstractFrame frame, int color) {
+        //Top line
+        drawHorizontalLine(matrix, frame.getStartPos().x(), frame.getStopPos().x(), frame.getStartPos().y(), color);
+        //Down line
+        drawHorizontalLine(matrix, frame.getStartPos().x(), frame.getStopPos().x(), frame.getStopPos().y(), color);
+        //Left line
+        drawVerticalLine(matrix, frame.getStartPos().x(), frame.getStartPos().y(), frame.getStopPos().y(), color);
+        //Right line
+        drawVerticalLine(matrix, frame.getStopPos().x(), frame.getStartPos().y(), frame.getStopPos().y(), color);
+    }
 }
