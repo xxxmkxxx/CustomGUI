@@ -9,7 +9,6 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 @Getter
@@ -17,7 +16,6 @@ import net.minecraft.text.Text;
 public class TextField extends AbstractField {
     private TextField() {
         this.frame = new DynamicFrame(0, 0, 18, 18, false);
-
     }
 
     @Override

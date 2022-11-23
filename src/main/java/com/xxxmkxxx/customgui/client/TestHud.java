@@ -4,10 +4,12 @@ import com.xxxmkxxx.customgui.client.geometry.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.scene.SimpleScene;
 import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.RectangularSlotContainer;
+import com.xxxmkxxx.customgui.client.ui.controls.field.InputField;
 import com.xxxmkxxx.customgui.client.ui.controls.field.TextField;
 import com.xxxmkxxx.customgui.client.ui.controls.slot.SimpleSlot;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -18,7 +20,7 @@ import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class TestHud {
-    private static final Pos POS = new Pos(10, 10);
+    private static final Pos POS = new Pos(100, 100);
     private static final Pos POS2 = new Pos(200, 200);
     private static final int COLOR = 0xAF3C3B36;
     private static final SimpleSlot.Factory SIMPLE_SLOT_FACTORY = new SimpleSlot.Factory(18, 18, COLOR, new TestInventory());
@@ -35,10 +37,19 @@ public class TestHud {
 
     public static void render() {
         SimpleScene scene = new SimpleScene(RendererType.SCREEN);
+        MinecraftClient client = MinecraftClient.getInstance();
 
         TextField textField = TextField.builder().text("Max loh").textColor(0xFF1ac9c7).pos(POS2).build();
 
+        String text = "test";
+        InputField inputField = InputField.builder(
+                POS,
+                client.textRenderer.getWidth(text),
+                client.textRenderer.fontHeight
+        ).promptText(text).build();
+
         scene.addElement(textField);
+        scene.addElement(inputField);
 
         CustomGUIClient.SCREEN_STAGE.setActiveScene(scene);
     }

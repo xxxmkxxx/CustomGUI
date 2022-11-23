@@ -8,7 +8,6 @@ import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.util.math.MatrixStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -31,7 +30,6 @@ public abstract class AbstractNode implements Node {
     protected NodeState<AbstractNode> state = States.DISPLAYED;
     @SuppressWarnings("rawtypes")
     protected NodeRenderer renderer;
-    protected boolean isTarget;
 
     protected AbstractNode() {
         id = generateId();
