@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 public abstract class AbstractField extends AbstractNode implements Field {
     @Setter
-    private int textColor;
+    protected int textColor;
     protected StringBuilder text = new StringBuilder();
+    protected int textSize;
 }
