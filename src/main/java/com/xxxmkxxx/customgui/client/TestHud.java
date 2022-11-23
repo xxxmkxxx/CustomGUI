@@ -1,13 +1,10 @@
 package com.xxxmkxxx.customgui.client;
 
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
-import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AnimationManager;
-import com.xxxmkxxx.customgui.client.hierarchy.node.animation.standard.StandardButtonAnimation;
-import com.xxxmkxxx.customgui.client.hierarchy.node.events.EventBus;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.scene.SimpleScene;
 import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.RectangularSlotContainer;
-import com.xxxmkxxx.customgui.client.ui.controls.button.SimpleButton;
+import com.xxxmkxxx.customgui.client.ui.controls.field.TextField;
 import com.xxxmkxxx.customgui.client.ui.controls.slot.SimpleSlot;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -39,29 +36,9 @@ public class TestHud {
     public static void render() {
         SimpleScene scene = new SimpleScene(RendererType.SCREEN);
 
-        SimpleButton button = new SimpleButton.Builder().name("aboba").startPos(POS2).build();
-        SimpleButton button2 = new SimpleButton.Builder().name("fe").startPos(new Pos(50, 50)).build();
-        SimpleButton button3 = new SimpleButton.Builder().name("abosdyhba").startPos(new Pos(40, 20)).build();
-        SimpleButton button4 = new SimpleButton.Builder().name("io").startPos(POS).build();
+        TextField textField = TextField.builder().text("Max loh").textColor(0xFF1ac9c7).pos(POS2).build();
 
-        StandardButtonAnimation buttonAnimation = new StandardButtonAnimation(button.getName().getString(), button);
-
-        button.setLeftClickAction(() -> System.out.println("ahahah aboba"));
-
-        button.setHoverAction(() -> {
-            System.out.println("oh hover!");
-            scene.getAnimationManager().addStickyAnimation(buttonAnimation, 1);
-        });
-
-        button.setResetHoverAction(() -> {
-            System.out.println("not hover(");
-            scene.getAnimationManager().deleteStickyAnimation(buttonAnimation);
-        });
-
-        scene.addElement(button);
-        scene.addElement(button2);
-        scene.addElement(button3);
-        scene.addElement(button4);
+        scene.addElement(textField);
 
         CustomGUIClient.SCREEN_STAGE.setActiveScene(scene);
     }

@@ -15,12 +15,9 @@ import net.minecraft.text.Text;
 @Getter
 @SuppressWarnings("unused")
 public class TextField extends AbstractField {
-    private Text text;
-    @Setter
-    private int textColor;
-
     private TextField() {
         this.frame = new DynamicFrame(0, 0, 18, 18, false);
+
     }
 
     @Override
@@ -28,10 +25,10 @@ public class TextField extends AbstractField {
         this.renderer = new RendererFactory().create(type);
     }
 
-    public void setText(Text text) {
+    public void setText(String text) {
         Validator.checkNullObject(text);
-        ((DynamicFrame)this.frame).setStopPos(text.getString().length() * 3, frame.getStopPos().y());
-        this.text = text;
+        ((DynamicFrame)this.frame).setStopPos(text.length() * 3, frame.getStopPos().y());
+        this.text = new StringBuilder(text);
     }
 
     public static Builder builder() {
@@ -41,13 +38,7 @@ public class TextField extends AbstractField {
     public static class Builder implements SimpleBuilder<TextField> {
         private final TextField textField = new TextField();
 
-        public Builder text(String str) {
-            textField.setText(Text.of(str));
-
-            return this;
-        }
-
-        public Builder text(Text text) {
+        public Builder text(String text) {
             textField.setText(text);
 
             return this;
@@ -92,7 +83,7 @@ public class TextField extends AbstractField {
         private void render(TextField field) {
             CustomGUIClient.NODE_DRAWABLE_HELPER.drawText(
                     field.getMatrixStack(),
-                    field.getText(),
+                    Text.of(field.getText().toString()),
                     field.getFrame().getStartPos(),
                     field.getTextColor()
             );
