@@ -159,4 +159,8 @@ public class NodeDrawableHelper extends DrawableHelper {
         //Right line
         drawVerticalLine(matrix, frame.getStopPos().x(), frame.getStartPos().y(), frame.getStopPos().y(), color);
     }
+
+    public void drawVerticalLine(MatrixStack matrix, Pos startPos, Pos stopPos, int color) {
+        drawVerticalLine(matrix, startPos.x(), startPos.y(), stopPos.y(), color);
+    }
 }
