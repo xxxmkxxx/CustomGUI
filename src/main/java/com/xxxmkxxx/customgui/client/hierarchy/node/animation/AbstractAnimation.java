@@ -1,21 +1,17 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node.animation;
 
+import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import lombok.Getter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public abstract class AbstractAnimation implements Animation {
+public abstract class AbstractAnimation<N extends AbstractNode> implements Animation<N> {
     @Getter
-    private final String name;
-    @Getter
-    protected final List<AnimationFrameTimeStamp> frames = new ArrayList<>();
-
-    public AbstractAnimation(String name) {
-        this.name = name;
-    }
+    protected final List<AnimationFrameTimeStamp<N>> frames = new ArrayList<>();
 
     @Override
-    public void addFrame(long timeUnit, AnimationFrame frame) {
-        frames.add(new AnimationFrameTimeStamp(timeUnit, frame));
+    public void addFrame(long timeUnit, AnimationFrame<N> frame) {
+        frames.add(new AnimationFrameTimeStamp<>(timeUnit, frame));
     }
 }

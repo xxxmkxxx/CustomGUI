@@ -1,5 +1,6 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node.animation;
 
+import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.timecontrol.TimeControl;
 import com.xxxmkxxx.timecontrol.common.SimpleTask;
 import lombok.RequiredArgsConstructor;
@@ -8,26 +9,30 @@ import lombok.RequiredArgsConstructor;
 public class AnimationManager {
     private final TimeControl timeControl;
 
-    public void addSimpleAnimation(AbstractAnimation animation, int amountAnimationCycles) {
+    public <N extends AbstractNode> void addSimpleAnimation(N node, String animationName, AbstractAnimation<N> animation, int amountAnimationCycles) {
+        long startTick = 0;
+
         for (int i = 0; i < amountAnimationCycles; i++) {
-            addAnimation(animation, animation.getFrames().size());
+            startTick = addAnimation(node, animationName, animation, animation.getFrames().size(), startTick);
         }
+
+        clearFrame(startTick, animationName);
     }
 
-    public void addStickyAnimation(AbstractAnimation animation, int indexStickyFrame) {
-        addAnimation(animation, indexStickyFrame);
+    public void addStickyAnimation(AbstractNode node, String animationName, AbstractAnimation<AbstractNode> animation, int indexStickyFrame) {
+        addAnimation(node, animationName, animation, indexStickyFrame, 0);
     }
 
-    public void deleteStickyAnimation(AbstractAnimation animation) {
-        timeControl.getTicker().removeTask(animation.getName());
+    public void deleteStickyAnimation(String animationName) {
+        timeControl.getTicker().removeTask(animationName);
     }
 
-    private void scheduleFrame(long tick, String name, AnimationFrame frame) {
+    private <N extends AbstractNode> void scheduleFrame(long tick, String animationName, AnimationFrame<N> frame, N node) {
         timeControl.getScheduler().addTask(
                 tick,
-                new SimpleTask(name, () -> {
-                    timeControl.getTickerController().TICKER().removeTask(name);
-                    timeControl.getTickerController().createTickerTask(name, () -> frame.display());
+                new SimpleTask(animationName, () -> {
+                    timeControl.getTickerController().TICKER().removeTask(animationName);
+                    timeControl.getTickerController().createTickerTask(animationName, () -> frame.display(node));
                 })
         );
     }
@@ -42,14 +47,18 @@ public class AnimationManager {
         );
     }
 
-    private void addAnimation(AbstractAnimation animation, int amountAnimationFrames) {
-        int lastTick = 0;
+    private <N extends AbstractNode> long addAnimation(N node, String animationName, AbstractAnimation<N> animation, int amountAnimationFrames, long startTick) {
+        for (int i = 0; i < amountAnimationFrames; i++) {
+            AnimationFrameTimeStamp<N> animationFrameTimeStamp = animation.getFrames().get(i);
 
-        for (int i = 0; i <= amountAnimationFrames; i++) {
-            AnimationFrameTimeStamp stamp = animation.getFrames().get(i);
-            scheduleFrame(lastTick += stamp.timeUnit(), animation.getName(), stamp.frame());
+            scheduleFrame(
+                    startTick + animationFrameTimeStamp.timeUnit(),
+                    animationName,
+                    animationFrameTimeStamp.frame(),
+                    node
+            );
         }
 
-        clearFrame(lastTick, animation.getName());
+        return startTick + animation.getFrames().get(amountAnimationFrames - 1).timeUnit();
     }
 }

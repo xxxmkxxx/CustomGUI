@@ -1,8 +1,8 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node.animation;
 
-@FunctionalInterface
-public interface AnimationFrame {
-    void display();
+import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 
-    AnimationFrame EMPTY = () -> {};
+@FunctionalInterface
+public interface AnimationFrame<N extends AbstractNode> {
+    void display(N node);
 }
