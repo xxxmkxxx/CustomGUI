@@ -1,6 +1,10 @@
 package com.xxxmkxxx.customgui.client;
 
+import com.xxxmkxxx.customgui.client.common.util.Utils;
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
+import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AnimationManager;
+import com.xxxmkxxx.customgui.client.hierarchy.node.animation.standard.button.StandardButtonAnimations;
+import com.xxxmkxxx.customgui.client.hierarchy.node.animation.standard.inputfield.StandardFieldAnimations;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.scene.SimpleScene;
 import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.RectangularSlotContainer;
@@ -14,13 +18,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.text.Text;
 
 import java.util.Arrays;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class TestHud {
-    private static final Pos POS = new Pos(100, 100);
+    private static final Pos POS = new Pos(10, 10);
     private static final Pos POS2 = new Pos(200, 200);
     private static final int COLOR = 0xAF3C3B36;
     private static final SimpleSlot.Factory SIMPLE_SLOT_FACTORY = new SimpleSlot.Factory(18, 18, COLOR, new TestInventory());
@@ -37,18 +42,24 @@ public class TestHud {
 
     public static void render() {
         SimpleScene scene = new SimpleScene(RendererType.SCREEN);
-        MinecraftClient client = MinecraftClient.getInstance();
+        AnimationManager animationManager = scene.getAnimationManager();
 
         TextField textField = TextField.builder().text("Max loh").textColor(0xFF1ac9c7).pos(POS2).build();
 
-        String text = "test";
-        InputField inputField = InputField.builder(
-                POS,
-                client.textRenderer.getWidth(text),
-                client.textRenderer.fontHeight
-        ).promptText(text).build();
+        String text = "";
+        InputField inputField = InputField.builder(POS2, 18, Utils.getTextHeight())
+                .promptText(text)
+                .build();
 
-        scene.addElement(textField);
+        inputField.setLeftClickAction(() -> {
+            animationManager.addSimpleAnimation(
+                    inputField,
+                    "aboba",
+                    StandardFieldAnimations.LEFT_CLICK.getAnimation(),
+                    10
+            );
+        });
+
         scene.addElement(inputField);
 
         CustomGUIClient.SCREEN_STAGE.setActiveScene(scene);

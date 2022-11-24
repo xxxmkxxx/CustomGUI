@@ -3,21 +3,25 @@ package com.xxxmkxxx.customgui.client.ui.controls.field;
 import com.xxxmkxxx.customgui.client.CustomGUIClient;
 import com.xxxmkxxx.customgui.client.common.SimpleBuilder;
 import com.xxxmkxxx.customgui.client.geometry.frame.DynamicFrame;
+import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
+import com.xxxmkxxx.customgui.client.hierarchy.node.events.EventBus;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
+import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.text.Text;
 
-@Setter
+@Getter @Setter
 public class InputField extends AbstractField implements LeftClickEventHandler {
     private String promptText;
     private int promptTextColor = 0xAF647f8f;
+    private Runnable leftClickAction = () -> {};
 
     public InputField(Pos startPos, int width, int height) {
-        this.frame = new DynamicFrame(startPos, width, height, false);
+        this.frame = new StaticFrame(startPos, width, height, false);
     }
 
     @Override
@@ -25,13 +29,18 @@ public class InputField extends AbstractField implements LeftClickEventHandler {
         this.renderer = new RendererFactory().create(type);
     }
 
+    @Override
+    public void onLeftClick() {
+        leftClickAction.run();
+    }
+
     public static Builder builder(Pos startPos, int width, int height) {
         return new Builder(startPos, width, height);
     }
 
-    @Override
-    public void onLeftClick() {
-
+    public void setLeftClickAction(Runnable leftClickAction) {
+        this.leftClickAction = leftClickAction;
+        EventBus.LEFT_CLICK_EVENT.addHandler(this, this);
     }
 
     public static class Builder implements SimpleBuilder<InputField> {
@@ -64,12 +73,6 @@ public class InputField extends AbstractField implements LeftClickEventHandler {
         }
 
         private void render(InputField inputField) {
-            CustomGUIClient.NODE_DRAWABLE_HELPER.drawFrameAroundFrame(
-                    inputField.getMatrixStack(),
-                    inputField.getFrame(),
-                    0xFF0a171f
-            );
-
             CustomGUIClient.NODE_DRAWABLE_HELPER.fillFrame(
                     inputField.getMatrixStack(),
                     inputField.getFrame(),
@@ -78,9 +81,9 @@ public class InputField extends AbstractField implements LeftClickEventHandler {
 
             CustomGUIClient.NODE_DRAWABLE_HELPER.drawText(
                     inputField.getMatrixStack(),
-                    Text.of(inputField.getText().toString()),
+                    Text.of(inputField.getPromptText()),
                     inputField.getFrame().getStartPos(),
-                    inputField.getTextColor()
+                    0xFFf50707
             );
         }
     }
