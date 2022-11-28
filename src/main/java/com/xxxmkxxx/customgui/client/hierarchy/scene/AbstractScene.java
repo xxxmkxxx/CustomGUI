@@ -2,6 +2,7 @@ package com.xxxmkxxx.customgui.client.hierarchy.scene;
 
 import com.xxxmkxxx.customgui.client.common.RenderTime;
 import com.xxxmkxxx.customgui.client.common.comparators.NodeFrameComparator;
+import com.xxxmkxxx.customgui.client.hierarchy.node.KeyboardManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AnimationManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
@@ -25,6 +26,8 @@ public abstract class AbstractScene implements Scene {
     protected final TargetManager targetManager;
     @Getter
     protected final AnimationManager animationManager;
+    @Getter
+    protected final KeyboardManager keyboardManager;
 
     public AbstractScene(RendererType type) {
         Arrays.stream(Section.values()).forEach(section -> sections.put(section, new TreeSet<>(new NodeFrameComparator())));
@@ -33,6 +36,7 @@ public abstract class AbstractScene implements Scene {
         this.type = type;
         this.targetManager = new TargetManager(this.sections);
         this.animationManager = new AnimationManager(renderTimeControl);
+        this.keyboardManager = new KeyboardManager(targetManager);
     }
 
     @Override
