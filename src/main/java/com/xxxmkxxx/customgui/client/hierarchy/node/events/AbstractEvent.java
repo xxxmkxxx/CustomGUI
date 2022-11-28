@@ -11,12 +11,17 @@ public abstract class AbstractEvent<H extends EventHandler> implements Event<H> 
     public abstract void callHandler(AbstractNode node, Object ... args);
 
     @Override
-    public void callAllHandlers() {
-        handlers.forEach((node, handlers) -> callHandler(node));
+    public void callAllHandlers(Object ... args) {
+        handlers.forEach((node, handlers) -> callHandler(node, args));
     }
 
     @Override
     public void addHandler(AbstractNode node, H handler) {
         handlers.put(node, handler);
+    }
+
+    @Override
+    public void removeHandler(AbstractNode node) {
+        handlers.remove(node);
     }
 }

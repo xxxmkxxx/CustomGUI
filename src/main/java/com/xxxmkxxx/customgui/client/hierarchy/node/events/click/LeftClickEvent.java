@@ -5,7 +5,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.events.AbstractEvent;
 
 public class LeftClickEvent extends AbstractEvent<LeftClickEventHandler> {
     @Override
-    public void callHandler(AbstractNode node) {
+    public void callHandler(AbstractNode node, Object ... args) {
         handlers.get(node).onLeftClick();
     }
 }

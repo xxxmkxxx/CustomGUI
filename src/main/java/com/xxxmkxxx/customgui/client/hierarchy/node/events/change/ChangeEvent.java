@@ -1,11 +1,11 @@
-package com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere;
+package com.xxxmkxxx.customgui.client.hierarchy.node.events.change;
 
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.AbstractEvent;
 
-public class ResetHoverEvent extends AbstractEvent<ResetHoverEventHandler> {
+public class ChangeEvent extends AbstractEvent<ChangeEventHandler> {
     @Override
     public void callHandler(AbstractNode node, Object ... args) {
-        handlers.get(node).onResetHover();
+        handlers.get(node).onChange();
     }
 }
