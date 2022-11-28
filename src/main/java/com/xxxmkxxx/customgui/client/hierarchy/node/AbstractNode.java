@@ -30,7 +30,7 @@ public abstract class AbstractNode implements Node {
     protected NodeState<AbstractNode> state = States.DISPLAYED;
     @SuppressWarnings("rawtypes")
     protected NodeRenderer renderer;
-
+    protected RendererType rendererType;
     protected AbstractNode() {
         id = generateId();
     }
@@ -48,7 +48,10 @@ public abstract class AbstractNode implements Node {
         state = States.HIDED;
     }
 
-    public abstract void initRenderer(RendererType type);
+    @Override
+    public void initRenderer(RendererType type) {
+        this.rendererType = type;
+    }
 
     @Override
     public boolean equals(Object o) {
