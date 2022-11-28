@@ -26,7 +26,7 @@ public class TextField extends AbstractField {
     public void setText(String text) {
         Validator.checkNullObject(text);
         ((DynamicFrame)this.frame).setStopPos(text.length() * 3, frame.getStopPos().y());
-        this.text = new StringBuilder(text);
+        this.textBuilder = new StringBuilder(text);
     }
 
     public static Builder builder() {
@@ -81,7 +81,7 @@ public class TextField extends AbstractField {
         private void render(TextField field) {
             CustomGUIClient.NODE_DRAWABLE_HELPER.drawText(
                     field.getMatrixStack(),
-                    Text.of(field.getText().toString()),
+                    Text.of(field.getTextBuilder().toString()),
                     field.getFrame().getStartPos(),
                     field.getTextColor()
             );

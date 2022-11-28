@@ -1,8 +1,10 @@
 package com.xxxmkxxx.customgui.mixin;
 
 import com.xxxmkxxx.customgui.client.CustomGUIClient;
+import com.xxxmkxxx.customgui.client.hierarchy.node.events.input.character.KeyboardCharInputEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
+import com.xxxmkxxx.customgui.client.hierarchy.scene.AbstractScene;
 import com.xxxmkxxx.customgui.client.hierarchy.stage.state.StageState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
@@ -42,7 +44,8 @@ public abstract class MouseMixin {
 
     @Inject(method = "onMouseButton", at = @At(value = "TAIL"))
     public void onMouseButton(long window, int button, int action, int mods, CallbackInfo ci) {
-        AbstractNode node = CustomGUIClient.SCREEN_STAGE.getActiveScene().getTargetManager().getCurrentTarget();
+        AbstractScene scene = CustomGUIClient.SCREEN_STAGE.getActiveScene();
+        AbstractNode node = scene.getTargetManager().getCurrentTarget();
 
         if (wasLeftButtonClicked()) {
             if (node instanceof LeftClickEventHandler handler) {

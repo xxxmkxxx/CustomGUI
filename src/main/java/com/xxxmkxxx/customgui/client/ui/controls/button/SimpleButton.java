@@ -14,7 +14,6 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
-import com.xxxmkxxx.customgui.client.ui.controls.field.TextField;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.Text;

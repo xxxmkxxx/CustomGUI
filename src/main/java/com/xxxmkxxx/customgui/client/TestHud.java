@@ -3,7 +3,6 @@ package com.xxxmkxxx.customgui.client;
 import com.xxxmkxxx.customgui.client.common.util.Utils;
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AnimationManager;
-import com.xxxmkxxx.customgui.client.hierarchy.node.animation.standard.button.StandardButtonAnimations;
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.standard.inputfield.StandardFieldAnimations;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.scene.SimpleScene;
@@ -13,12 +12,10 @@ import com.xxxmkxxx.customgui.client.ui.controls.field.TextField;
 import com.xxxmkxxx.customgui.client.ui.controls.slot.SimpleSlot;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.text.Text;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +32,7 @@ public class TestHud {
                     {0, 1, 2, 3, 4, 5, 6},
                     {7, 8, 9, 10, 11, 12, 13},
                     {14, 15, 16, 17, 18, 19, 20},
-                    {21, 22, 23, 24, 25, 26, 27},
+                    {21, 22, 23, 24, 25, 26, 27}
             }
     );
     private static final RectangularSlotContainer<SimpleSlot> SLOT_CONTAINER = BUILDER.amountRows(4).rowSize(7).build();
