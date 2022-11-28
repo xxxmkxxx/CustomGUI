@@ -5,9 +5,11 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHand
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.ResetHoverEventHandler;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.EnumMap;
 import java.util.Set;
+import java.util.function.Function;
 
 @RequiredArgsConstructor
 public class TargetManager {
@@ -15,6 +17,8 @@ public class TargetManager {
     private AbstractNode currentTarget = AbstractNode.EMPTY_NODE;
     @Getter
     private AbstractNode lastTarget = AbstractNode.EMPTY_NODE;
+    @Getter @Setter
+    private AbstractNode activeNode = AbstractNode.EMPTY_NODE;
 
     private final EnumMap<Section, Set<AbstractNode>> sections;
 
