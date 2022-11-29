@@ -2,6 +2,7 @@ package com.xxxmkxxx.customgui.client.hierarchy.node.events;
 
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.KeyboardManager;
+import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AbstractAnimation;
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AnimationManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.TargetManager;
 
@@ -26,6 +27,27 @@ public class ActionBuilder {
 
     public ActionBuilder activeNode(AbstractNode node) {
         actions.add(() -> targetManager.setActiveNode(node));
+        return this;
+    }
+
+    public <N extends AbstractNode> ActionBuilder addSimpleAnimation(String animationName, AbstractAnimation<N> animation, N node, int amountAnimationCycles) {
+        actions.add(() -> {
+            animationManager.addSimpleAnimation(node, animationName, animation, amountAnimationCycles);
+        });
+        return this;
+    }
+
+    public <N extends AbstractNode> ActionBuilder addStickyAnimation(String animationName, AbstractAnimation<N> animation, N node, int stickyAnimationFrameIndex) {
+        actions.add(() -> {
+            animationManager.addStickyAnimation(node, animationName, animation, stickyAnimationFrameIndex);
+        });
+        return this;
+    }
+
+    public ActionBuilder deleteStickyAnimation(String animationName) {
+        actions.add(() -> {
+            animationManager.deleteStickyAnimation(animationName);
+        });
         return this;
     }
 
