@@ -1,14 +1,18 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node.animation.standard.button;
 
+import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AbstractAnimation;
-import com.xxxmkxxx.customgui.client.ui.controls.button.AbstractButton;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Getter
 @RequiredArgsConstructor
 public enum StandardButtonAnimations {
-    LEFT_CLICK(new StandardLeftClickButtonAnimation());
+    LEFT_CLICK(new StandardLeftClickButtonAnimation()),
+    HOVER(new StandardButtonHoverAnimation());
 
-    private final AbstractAnimation<AbstractButton> animation;
+    private final AbstractAnimation<? extends AbstractNode> animation;
+
+    @SuppressWarnings("unchecked")
+    public <N extends AbstractNode> AbstractAnimation<N> getAnimation() {
+        return (AbstractAnimation<N>) animation;
+    }
 }
