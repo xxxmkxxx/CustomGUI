@@ -6,7 +6,10 @@ import com.xxxmkxxx.customgui.client.common.SimpleBuilder;
 import com.xxxmkxxx.customgui.client.geometry.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.geometry.frame.DynamicFrame;
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
+import com.xxxmkxxx.customgui.client.hierarchy.node.animation.standard.button.StandardButtonAnimations;
+import com.xxxmkxxx.customgui.client.hierarchy.node.events.ActionBuilder;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.EventBus;
+import com.xxxmkxxx.customgui.client.hierarchy.node.events.EventManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.ResetHoverEventHandler;
@@ -18,14 +21,47 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.Text;
 
+@SuppressWarnings("unused")
 public class SimpleButton extends AbstractButton implements LeftClickEventHandler, HoverEventHandler, ResetHoverEventHandler {
-    protected Runnable leftClickAction = () -> {};
-    protected Runnable hoverAction = () -> {};
-    protected Runnable resetHoverAction = () -> {};
+    protected Runnable leftClickAction;
+    protected Runnable hoverAction;
+    protected Runnable resetHoverAction;
 
+    @SuppressWarnings("CodeBlock2Expr")
     protected SimpleButton(AbstractFrame frame, String name) {
         super(Text.of(name));
         this.frame = frame;
+        this.leftClickAction = () -> {
+            EventManager.sendAction(
+                    rendererType,
+                    ActionBuilder.of()
+                            .addSimpleAnimation(
+                                    "standard_left_click_button_animation",
+                                    StandardButtonAnimations.LEFT_CLICK.getAnimation(),
+                                    this,
+                                    1
+                            )
+            );
+        };
+        this.hoverAction = () -> {
+            EventManager.sendAction(
+                    rendererType,
+                    ActionBuilder.of()
+                            .addStickyAnimation(
+                                    "standard_hover_animation",
+                                    StandardButtonAnimations.HOVER.getAnimation(),
+                                    this,
+                                    1
+                            )
+            );
+        };
+        this.resetHoverAction = () -> {
+            EventManager.sendAction(
+                    rendererType,
+                    ActionBuilder.of()
+                            .deleteStickyAnimation("standard_hover_animation")
+            );
+        };
     }
 
     @Override
@@ -45,6 +81,7 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
 
     @Override
     public void initRenderer(RendererType type) {
+        super.initRenderer(type);
         renderer = new RendererFactory().create(type);
     }
 
@@ -100,7 +137,7 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
     }
 
     public static class RendererFactory implements NodeRendererFactory<SimpleButton> {
-        private ParametrizedSelfDestructionMethod<SimpleButton> initFrameMethod = new ParametrizedSelfDestructionMethod<>();
+        private final ParametrizedSelfDestructionMethod<SimpleButton> initFrameMethod = new ParametrizedSelfDestructionMethod<>();
 
         public RendererFactory() {
             initFrameMethod.setAction(button -> {

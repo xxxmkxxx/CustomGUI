@@ -7,6 +7,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.animation.standard.inputfiel
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.scene.SimpleScene;
 import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.RectangularSlotContainer;
+import com.xxxmkxxx.customgui.client.ui.controls.button.SimpleButton;
 import com.xxxmkxxx.customgui.client.ui.controls.field.InputField;
 import com.xxxmkxxx.customgui.client.ui.controls.field.TextField;
 import com.xxxmkxxx.customgui.client.ui.controls.slot.SimpleSlot;
@@ -42,9 +43,10 @@ public class TestHud {
         AnimationManager animationManager = scene.getAnimationManager();
 
         TextField textField = TextField.builder().text("Max loh").textColor(0xFF1ac9c7).pos(POS2).build();
+        SimpleButton button = SimpleButton.builder().startPos(POS2).name("button").build();
 
         String text = "";
-        InputField inputField = InputField.builder(POS2, 18, Utils.getTextHeight())
+        InputField inputField = InputField.builder(POS, 18, Utils.getTextHeight())
                 .promptText(text)
                 .build();
 
@@ -58,6 +60,7 @@ public class TestHud {
         });
 
         scene.addElement(inputField);
+        scene.addElement(button);
 
         CustomGUIClient.SCREEN_STAGE.setActiveScene(scene);
     }
