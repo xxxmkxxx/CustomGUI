@@ -19,7 +19,7 @@ public class AnimationManager {
         clearFrame(startTick, animationName);
     }
 
-    public void addStickyAnimation(AbstractNode node, String animationName, AbstractAnimation<AbstractNode> animation, int indexStickyFrame) {
+    public <N extends AbstractNode> void addStickyAnimation(N node, String animationName, AbstractAnimation<N> animation, int indexStickyFrame) {
         addAnimation(node, animationName, animation, indexStickyFrame, 0);
     }
 
