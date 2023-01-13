@@ -2,6 +2,7 @@ package com.xxxmkxxx.customgui.client.hierarchy.node;
 
 import com.xxxmkxxx.customgui.client.geometry.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
+import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
@@ -10,6 +11,8 @@ import lombok.Setter;
 import net.minecraft.client.util.math.MatrixStack;
 
 import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Getter
 public abstract class AbstractNode implements Node {
@@ -23,6 +26,8 @@ public abstract class AbstractNode implements Node {
     };
 
     protected AbstractFrame frame = new StaticFrame(0, 0, 18, 18, false);
+    @Getter
+    protected Section section = Section.MIXED;
     @Setter
     protected Style style = new Style();
     @Setter
@@ -48,9 +53,16 @@ public abstract class AbstractNode implements Node {
         state = States.HIDED;
     }
 
-    @Override
     public void initRenderer(RendererType type) {
         this.rendererType = type;
+    }
+
+    public void initSection(Function<AbstractNode, Section> initMethod) {
+        this.section = initMethod.apply(this);
+    }
+
+    public void init(Consumer<AbstractNode> initMethod) {
+        initMethod.accept(this);
     }
 
     @Override

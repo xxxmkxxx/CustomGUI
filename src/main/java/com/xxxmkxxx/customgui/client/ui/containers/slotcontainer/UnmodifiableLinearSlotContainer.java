@@ -5,6 +5,8 @@ import com.xxxmkxxx.customgui.client.common.Validator;
 import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
+import com.xxxmkxxx.customgui.client.hierarchy.node.Node;
+import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.TargetManager;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
@@ -15,6 +17,8 @@ import lombok.Getter;
 
 import javax.naming.OperationNotSupportedException;
 import java.util.Arrays;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Getter
 @SuppressWarnings("unused")
@@ -39,6 +43,22 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
         }
 
         renderer = new RendererFactory<T>().create(type);
+    }
+
+    @Override
+    public void initSection(Function<AbstractNode, Section> initMethod) {
+        super.initSection(initMethod);
+
+        for (int i = 0; i < size - 1; i++) {
+            ((AbstractSlot)slots[i]).initSection(initMethod);
+        }
+    }
+
+    @Override
+    public void init(Consumer<AbstractNode> initMethod) {
+        for (int i = 0; i < size - 1; i++) {
+            ((AbstractSlot)slots[i]).init(initMethod);
+        }
     }
 
     @Override

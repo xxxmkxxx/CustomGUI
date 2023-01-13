@@ -5,6 +5,7 @@ import com.xxxmkxxx.customgui.client.common.Validator;
 import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
+import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.TargetManager;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
@@ -15,6 +16,8 @@ import lombok.Getter;
 
 import javax.naming.OperationNotSupportedException;
 import java.util.Arrays;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Getter
 @SuppressWarnings("unused")
@@ -37,6 +40,22 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
         Arrays.stream(rows).forEach(container -> container.initRenderer(type));
 
         renderer = new SquareSlotContainer.RendererFactory<T>().create(type);
+    }
+
+    @Override
+    public void initSection(Function<AbstractNode, Section> initMethod) {
+        super.initSection(initMethod);
+
+        for (int i = 0; i < amountRows - 1; i++) {
+            rows[i].initSection(initMethod);
+        }
+    }
+
+    @Override
+    public void init(Consumer<AbstractNode> initMethod) {
+        for (int i = 0; i < amountRows - 1; i++) {
+            rows[i].init(initMethod);
+        }
     }
 
     @Override
@@ -91,7 +110,7 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
 
         public RectangularSlotContainer<T> build() {
             checkIndexes(amountRows, rowSize, indexes);
-            return new RectangularSlotContainer<>(offset, pos, factory, amountRows, rowSize, initRows(indexes, amountRows, rowSize, offset, pos, factory));
+            return new RectangularSlotContainer<>(offset, pos, factory, rowSize, amountRows, initRows(indexes, amountRows, rowSize, offset, pos, factory));
         }
 
         protected void checkIndexes(int amountRows, int rowSize, int[][] indexes) {
