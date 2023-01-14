@@ -2,7 +2,6 @@ package com.xxxmkxxx.customgui.client.ui.controls.slot;
 
 import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
