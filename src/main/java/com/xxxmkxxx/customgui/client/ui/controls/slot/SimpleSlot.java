@@ -54,7 +54,6 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
     @Override
     public void onLeftClick() {
         leftClickAction.run();
-        System.out.println(this);
     }
 
     @Override

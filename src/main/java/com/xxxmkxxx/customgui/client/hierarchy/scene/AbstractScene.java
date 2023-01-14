@@ -2,9 +2,8 @@ package com.xxxmkxxx.customgui.client.hierarchy.scene;
 
 import com.xxxmkxxx.customgui.client.common.RenderTime;
 import com.xxxmkxxx.customgui.client.common.comparators.NodeFrameComparator;
-import com.xxxmkxxx.customgui.client.hierarchy.node.KeyboardManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
-import com.xxxmkxxx.customgui.client.hierarchy.node.Node;
+import com.xxxmkxxx.customgui.client.hierarchy.node.KeyboardManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AnimationManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.TargetManager;
@@ -43,10 +42,7 @@ public abstract class AbstractScene implements Scene {
         this.animationManager = new AnimationManager(renderTimeControl);
         this.keyboardManager = new KeyboardManager(targetManager);
         this.INIT_NODE_SECTION_METHOD = targetManager::defineNodeSection;
-        this.INIT_NODE_METHOD = node -> {
-            System.out.println(node);
-            sections.get(node.getSection()).add(node);
-        };
+        this.INIT_NODE_METHOD = node -> sections.get(node.getSection()).add(node);
     }
 
     @Override
