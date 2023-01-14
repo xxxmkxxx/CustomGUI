@@ -46,14 +46,14 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
     public void initSection(Function<AbstractNode, Section> initMethod) {
         super.initSection(initMethod);
 
-        for (int i = 0; i < amountRows - 1; i++) {
+        for (int i = 0; i < amountRows; i++) {
             rows[i].initSection(initMethod);
         }
     }
 
     @Override
     public void init(Consumer<AbstractNode> initMethod) {
-        for (int i = 0; i < amountRows - 1; i++) {
+        for (int i = 0; i < amountRows; i++) {
             rows[i].init(initMethod);
         }
     }

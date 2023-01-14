@@ -49,14 +49,14 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
     public void initSection(Function<AbstractNode, Section> initMethod) {
         super.initSection(initMethod);
 
-        for (int i = 0; i < size - 1; i++) {
+        for (int i = 0; i < size; i++) {
             ((AbstractSlot)slots[i]).initSection(initMethod);
         }
     }
 
     @Override
     public void init(Consumer<AbstractNode> initMethod) {
-        for (int i = 0; i < size - 1; i++) {
+        for (int i = 0; i < size; i++) {
             ((AbstractSlot)slots[i]).init(initMethod);
         }
     }
