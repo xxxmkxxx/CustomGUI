@@ -5,6 +5,7 @@ import com.xxxmkxxx.customgui.client.common.Validator;
 import com.xxxmkxxx.customgui.client.geometry.frame.DynamicFrame;
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
+import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.TargetManager;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
@@ -16,6 +17,8 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Getter
 @SuppressWarnings("unused")
@@ -32,6 +35,17 @@ public class LinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlot
     public void initRenderer(RendererType type) {
         slots.forEach(slot -> slot.initRenderer(type));
         renderer = new RendererFactory<T>().create(type);
+    }
+
+    @Override
+    public void initSection(Function<AbstractNode, Section> initMethod) {
+        super.initSection(initMethod);
+        slots.forEach(initMethod::apply);
+    }
+
+    @Override
+    public void init(Consumer<AbstractNode> initMethod) {
+        slots.forEach(initMethod);
     }
 
     @Override
