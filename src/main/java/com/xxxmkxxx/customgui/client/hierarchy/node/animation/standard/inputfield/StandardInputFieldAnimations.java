@@ -2,13 +2,14 @@ package com.xxxmkxxx.customgui.client.hierarchy.node.animation.standard.inputfie
 
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AbstractAnimation;
 import com.xxxmkxxx.customgui.client.ui.controls.field.AbstractField;
+import com.xxxmkxxx.customgui.client.ui.controls.field.InputField;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum StandardFieldAnimations {
+public enum StandardInputFieldAnimations {
     LEFT_CLICK(new StandardLeftClickInputFieldAnimation());
 
-    private final AbstractAnimation<AbstractField> animation;
+    private final AbstractAnimation<InputField> animation;
 }
