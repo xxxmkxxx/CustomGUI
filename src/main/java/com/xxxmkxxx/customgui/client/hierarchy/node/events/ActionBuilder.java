@@ -44,9 +44,23 @@ public class ActionBuilder {
         return this;
     }
 
+    public <N extends AbstractNode> ActionBuilder addCyclicAnimation(String animationName, AbstractAnimation<N> animation, N node) {
+        actions.add(() -> {
+            animationManager.addCyclicAnimation(node, animationName, animation);
+        });
+        return this;
+    }
+
     public ActionBuilder deleteStickyAnimation(String animationName) {
         actions.add(() -> {
             animationManager.deleteStickyAnimation(animationName);
+        });
+        return this;
+    }
+
+    public <N extends AbstractNode> ActionBuilder deleteCyclicAnimation(String animationName, AbstractAnimation<N> animation) {
+        actions.add(() -> {
+            animationManager.deleteCyclicAnimation(animationName);
         });
         return this;
     }
