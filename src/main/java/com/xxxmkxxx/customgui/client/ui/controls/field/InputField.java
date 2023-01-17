@@ -2,9 +2,13 @@ package com.xxxmkxxx.customgui.client.ui.controls.field;
 
 import com.xxxmkxxx.customgui.client.CustomGUIClient;
 import com.xxxmkxxx.customgui.client.common.SimpleBuilder;
+import com.xxxmkxxx.customgui.client.common.util.Utils;
 import com.xxxmkxxx.customgui.client.geometry.frame.DynamicFrame;
+import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
+import com.xxxmkxxx.customgui.client.hierarchy.node.animation.standard.button.StandardLeftClickButtonAnimation;
+import com.xxxmkxxx.customgui.client.hierarchy.node.animation.standard.inputfield.StandardInputFieldAnimations;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.ActionBuilder;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.EventManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.input.character.KeyboardCharInputEventHandler;
@@ -15,7 +19,10 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.events.input.key.KeyboardKey
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
+import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
@@ -24,11 +31,13 @@ import org.lwjgl.glfw.GLFW;
 public class InputField extends AbstractField implements LeftClickEventHandler, ChangeEventHandler, KeyboardCharInputEventHandler, KeyboardKeyInputEventHandler {
     private String promptText;
     private int promptTextColor = 0xAF647f8f;
+    private InputCursor inputCursor;
     private Runnable leftClickAction = () -> {};
     private Runnable changeAction = () -> {};
 
-    public InputField(Pos startPos, int width, int height) {
+    protected InputField(Pos startPos, int width, int height) {
         this.frame = new DynamicFrame(startPos, width, height, false);
+        this.inputCursor = new InputCursor(startPos, this.style, width, height, 1, 0xAFbd1313);
     }
 
     @Override
@@ -42,7 +51,11 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
         leftClickAction.run();
         EventManager.sendAction(
                 rendererType,
-                ActionBuilder.of().unblockKeyboard().activeNode(this)
+                ActionBuilder.of().unblockKeyboard().activeNode(this).addCyclicAnimation(
+                        "standard_input_field_left_click_animation",
+                        StandardInputFieldAnimations.LEFT_CLICK.getAnimation(),
+                        this
+                )
         );
 
         EventBus.KEYBOARD_CHAR_INPUT_EVENT.addHandler(this, this);
@@ -58,7 +71,10 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
     public void onCharInput(char symbol) {
         textBuilder.append(symbol);
         text = textBuilder.toString();
-        System.out.println(symbol);
+        inputCursor.setPos(new Pos(
+                inputCursor.getPos().x() + Utils.getTextWidth(Text.of(String.valueOf(symbol))),
+                inputCursor.getPos().y()
+        ));
         onChange();
     }
 
@@ -87,16 +103,87 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
                 return () -> {
                     EventManager.sendAction(
                             rendererType,
-                            ActionBuilder.of().blockKeyboard().activeNode(EMPTY_NODE)
+                            ActionBuilder.of()
+                                    .blockKeyboard()
+                                    .deleteCyclicAnimation(
+                                            "standard_input_field_left_click_animation",
+                                            StandardInputFieldAnimations.LEFT_CLICK.getAnimation()
+                                    )
+                                    .activeNode(EMPTY_NODE)
                     );
 
                     EventBus.KEYBOARD_CHAR_INPUT_EVENT.removeHandler(this);
                     EventBus.KEYBOARD_KEY_INPUT_EVENT.removeHandler(this);
-
-                    System.out.println(text);
+                };
+            }
+            case GLFW.GLFW_KEY_ESCAPE: {
+                return () -> {
+                    EventManager.sendAction(
+                            rendererType,
+                            ActionBuilder.of()
+                                    .blockKeyboard()
+                                    .deleteCyclicAnimation(
+                                            "standard_input_field_left_click_animation",
+                                            StandardInputFieldAnimations.LEFT_CLICK.getAnimation()
+                                    )
+                                    .activeNode(EMPTY_NODE)
+                    );
                 };
             }
             default: return () -> {};
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    public static class InputCursor {
+        private Pos pos = new Pos(5, 5);
+        private int width = 1;
+        private int height = 7;
+        private StaticFrame frame = new StaticFrame(pos, width, height, false);
+        private Style style;
+        private int flashingSpeed = 1;
+        private int color = 0xFF000000;
+
+        public void setPos(Pos pos) {
+            this.pos = pos;
+            changeFrame();
+        }
+
+        public void setWidth(int width) {
+            this.width = width;
+            changeFrame();
+        }
+
+        public void setHeight(int height) {
+            this.height = height;
+            changeFrame();
+        }
+
+        public void setStyle(Style style) {
+            this.style = style;
+        }
+
+        public void setFlashingSpeed(int flashingSpeed) {
+            this.flashingSpeed = flashingSpeed;
+        }
+
+        public void setColor(int color) {
+            this.color = color;
+        }
+
+        private void changeFrame() {
+            frame = new StaticFrame(pos, width, height, false);
+        }
+
+        public InputCursor(Pos pos, Style style, int width, int height, int flashingSpeed, int color) {
+            this.pos = pos;
+            this.style = style;
+            this.width = width;
+            this.height = height;
+            this.flashingSpeed = flashingSpeed;
+            this.color = color;
+            this.frame = new StaticFrame(pos, width, height, false);
         }
     }
 
