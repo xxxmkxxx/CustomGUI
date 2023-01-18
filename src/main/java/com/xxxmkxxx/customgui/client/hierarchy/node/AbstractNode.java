@@ -2,6 +2,7 @@ package com.xxxmkxxx.customgui.client.hierarchy.node;
 
 import com.xxxmkxxx.customgui.client.geometry.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
+import com.xxxmkxxx.customgui.client.geometry.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
@@ -65,6 +66,65 @@ public abstract class AbstractNode implements Node {
         initMethod.accept(this);
     }
 
+    public AbstractNode arrangeRelatively(AbstractNode node, Position position, int indent) {
+        switch (position) {
+            case RIGHT -> {
+                Pos startPos = new Pos(
+                        node.getFrame().getStopPos().x() + indent,
+                        node.getFrame().getStartPos().y()
+                );
+
+                Pos stopPos = new Pos(
+                        node.getFrame().getStopPos().x() + frame.getWidth() + indent,
+                        node.getFrame().getStartPos().y() + frame.getHeight()
+                );
+
+                this.frame = new StaticFrame(startPos, stopPos, false);
+            }
+            case LEFT -> {
+                Pos startPos = new Pos(
+                        node.getFrame().getStartPos().x() - frame.getWidth() - indent,
+                        node.getFrame().getStartPos().y()
+                );
+
+                Pos stopPos = new Pos(
+                        node.getFrame().getStartPos().x() - indent,
+                        node.getFrame().getStartPos().y() + frame.getHeight()
+                );
+
+                this.frame = new StaticFrame(startPos, stopPos, false);
+            }
+            case BOTTOM -> {
+                Pos startPos = new Pos(
+                        node.getFrame().getStartPos().x(),
+                        node.getFrame().getStopPos().y() + indent
+                );
+
+                Pos stopPos = new Pos(
+                        node.getFrame().getStartPos().x() + frame.getWidth(),
+                        node.getFrame().getStopPos().y() + frame.getHeight() + indent
+                );
+
+                this.frame = new StaticFrame(startPos, stopPos, false);
+            }
+            case TOP -> {
+                Pos startPos = new Pos(
+                        node.getFrame().getStartPos().x(),
+                        node.getFrame().getStartPos().y() - frame.getHeight() - indent
+                );
+
+                Pos stopPos = new Pos(
+                        node.getFrame().getStartPos().x() + frame.getWidth(),
+                        node.getFrame().getStartPos().y() - indent
+                );
+
+                this.frame = new StaticFrame(startPos, stopPos, false);
+            }
+        }
+
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -76,5 +136,9 @@ public abstract class AbstractNode implements Node {
     @Override
     public int hashCode() {
         return Objects.hash(id, frame);
+    }
+
+    public enum Position {
+        LEFT, RIGHT, TOP, BOTTOM
     }
 }
