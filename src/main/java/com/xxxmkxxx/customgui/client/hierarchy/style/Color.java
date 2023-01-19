@@ -7,16 +7,21 @@ import lombok.Setter;
 
 @Getter @Setter
 @Builder
+@AllArgsConstructor
 public class Color {
     @Builder.Default
-    private String hexColor = Default.BLACK.getHex();
+    private String hexValue = DefaultColor.BLACK.getColor().getHexValue();
+
 
     @Getter
-    @AllArgsConstructor
-    public enum Default {
+    public enum DefaultColor {
         BLACK("000000"), RED("ff0000"), BLUE("001aff"),
         GREEN("50eb58"), YELLOW("ddff00"), ORANGE("ff9900");
 
-        private final String hex;
+        DefaultColor(String hex) {
+            this.color = new Color(hex);
+        }
+
+        private final Color color;
     }
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class Shadow {
+    private Color color;
     private Direction direction;
 
     public enum Direction {
