@@ -8,7 +8,6 @@ import lombok.Setter;
 @Getter
 public class AbstractText extends AbstractNode implements Text {
     @Setter
-    protected int textColor;
     protected net.minecraft.text.Text text = net.minecraft.text.Text.of("");
     protected int textSize;
     protected Pos startPos = new Pos(5, 5);

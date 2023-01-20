@@ -2,6 +2,7 @@ package com.xxxmkxxx.customgui.client.ui.controls.text;
 
 import com.xxxmkxxx.customgui.client.CustomGUIClient;
 import com.xxxmkxxx.customgui.client.common.util.Utils;
+import com.xxxmkxxx.customgui.client.geometry.frame.DynamicFrame;
 import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.EventBus;
@@ -24,7 +25,7 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
 
     private SimpleText(Pos startPos, Text text) {
         this.text = text;
-        this.frame = new StaticFrame(startPos, Utils.getTextWidth(text), Utils.getTextHeight(), false);
+        this.frame = new DynamicFrame(startPos, Utils.getTextWidth(text), Utils.getTextHeight(), false);
     }
 
     public void setLeftClickAction(Runnable leftClickAction) {

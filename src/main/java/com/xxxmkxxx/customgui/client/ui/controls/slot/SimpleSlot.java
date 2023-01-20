@@ -4,6 +4,8 @@ import com.xxxmkxxx.customgui.client.CustomGUIClient;
 import com.xxxmkxxx.customgui.client.common.ParametrizedSelfDestructionMethod;
 import com.xxxmkxxx.customgui.client.common.inventory.InventoryType;
 import com.xxxmkxxx.customgui.client.common.inventory.AbstractInventory;
+import com.xxxmkxxx.customgui.client.common.util.Utils;
+import com.xxxmkxxx.customgui.client.geometry.frame.DynamicFrame;
 import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.EventBus;
@@ -15,6 +17,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Background;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import com.xxxmkxxx.customgui.client.ui.controls.text.SimpleText;
 import com.xxxmkxxx.customgui.networking.packages.Packages;
 import io.netty.buffer.Unpooled;
 import lombok.Getter;
@@ -26,6 +29,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -35,6 +39,7 @@ import java.util.function.Consumer;
 @Getter
 @SuppressWarnings("unused")
 public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, HoverEventHandler, ResetHoverEventHandler {
+    private SimpleText amountItemsText;
     protected Runnable leftClickAction;
     protected Runnable hoverAction;
     protected Runnable resetHoverAction;
@@ -44,11 +49,33 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
         this.leftClickAction = () -> {};
         this.hoverAction = () -> {};
         this.resetHoverAction = () -> {};
+        this.amountItemsText = SimpleText.builder().build();
+        amountItemsText.setStyle(this.getStyle());
+        updateAmountItemsText(inventory.getStack(index), frame);
+    }
+
+    public void updateAmountItemsText(ItemStack itemStack, StaticFrame frame) {
+        Text amount = Text.of(Integer.toString(itemStack.getCount()));
+
+        Pos startPos = new Pos(
+                frame.getStopPos().x() - Utils.getTextWidth(amount),
+                frame.getStopPos().y() - Utils.getTextHeight()
+        );
+
+        Pos stopPos = new Pos(
+                startPos.x() + Utils.getTextWidth(amount),
+                frame.getStopPos().y() + Utils.getTextHeight()
+        );
+
+        ((DynamicFrame) amountItemsText.getFrame()).setStartPos(startPos);
+        ((DynamicFrame) amountItemsText.getFrame()).setStopPos(stopPos);
+        amountItemsText.setText(amount);
     }
 
     @Override
     public void initRenderer(RendererType type) {
         super.initRenderer(type);
+        amountItemsText.initRenderer(type);
         this.renderer = new RendererFactory().create(type);
     }
 
@@ -183,6 +210,8 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
             if (itemStack == ItemStack.EMPTY) return;
             if (slot.isStandardItem()) standardImageRenderMethod.accept(slot);
             else customImageRenderMethod.accept(slot);
+
+            slot.getAmountItemsText().getRenderer().render(slot.getAmountItemsText());
         }
     }
 }
