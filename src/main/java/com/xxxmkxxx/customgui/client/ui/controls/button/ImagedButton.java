@@ -15,6 +15,8 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
+import com.xxxmkxxx.customgui.client.hierarchy.style.Background;
+import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import com.xxxmkxxx.customgui.client.ui.controls.image.AbstractImage;
 import com.xxxmkxxx.customgui.client.ui.controls.image.SimpleImage;
 import lombok.Getter;
@@ -82,7 +84,11 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
 
     public static class RendererFactory implements NodeRendererFactory<ImagedButton> {
         private final ParametrizedSelfDestructionMethod<ImagedButton> initFrameMethod = new ParametrizedSelfDestructionMethod<>();
+        private final ParametrizedSelfDestructionMethod<ImagedButton> initBackgroundMethod = new ParametrizedSelfDestructionMethod<>();
+        private Consumer<ImagedButton> renderBackgroundMethod = (button) -> {};
+        private Consumer<ImagedButton> renderTextMethod = (button) -> {};
 
+        @SuppressWarnings("DuplicatedCode")
         public RendererFactory() {
             initFrameMethod.setAction(button -> {
                 int textWidthWithIndent = Utils.getTextWidth(button.getName()) + button.getStyle().getIndent().getRight();
@@ -99,6 +105,20 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
 
                 ((DynamicFrame)button.getFrame()).setStopPos(stopPos);
             });
+            initBackgroundMethod.setAction(button -> {
+                renderBackgroundMethod = Background.chooseBackground(button.getStyle().getBackground().getType());
+            });
+            renderTextMethod = (button) -> {
+                Style style = button.getStyle();
+
+                CustomGUIClient.NODE_DRAWABLE_HELPER.drawText(
+                        style.getMatrixStack(),
+                        button.getName(),
+                        button.getFrame().getStartPos().x() + button.getStyle().getIndent().getLeft(),
+                        button.getFrame().getStartPos().y() + button.getStyle().getIndent().getTop(),
+                        style.getHexColor()
+                );
+            };
         }
 
         @Override
@@ -108,20 +128,10 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
 
         private void render(ImagedButton imagedButton) {
             initFrameMethod.execute(imagedButton);
+            initBackgroundMethod.execute(imagedButton);
 
-            CustomGUIClient.NODE_DRAWABLE_HELPER.fillFrame(
-                    imagedButton.getMatrixStack(),
-                    imagedButton.getFrame(),
-                    0xA02071c7
-            );
-
-            CustomGUIClient.NODE_DRAWABLE_HELPER.drawText(
-                    imagedButton.getMatrixStack(),
-                    imagedButton.getName(),
-                    imagedButton.getFrame().getStartPos().x() + imagedButton.getStyle().getIndent().getLeft(),
-                    imagedButton.getFrame().getStartPos().y() + imagedButton.getStyle().getIndent().getTop(),
-                    0xFF000000
-            );
+            renderBackgroundMethod.accept(imagedButton);
+            renderTextMethod.accept(imagedButton);
 
             imagedButton.getImage().getRenderer().render(imagedButton.getImage());
         }

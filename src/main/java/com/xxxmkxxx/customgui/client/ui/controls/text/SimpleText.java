@@ -14,6 +14,8 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import lombok.Getter;
 import net.minecraft.text.Text;
 
+import java.util.function.Consumer;
+
 @Getter
 public class SimpleText extends AbstractText implements LeftClickEventHandler, HoverEventHandler, ResetHoverEventHandler {
     private Runnable leftClickAction = () -> {};
@@ -66,6 +68,18 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
     }
 
     public static class RendererFactory implements NodeRendererFactory<SimpleText> {
+        private Consumer<SimpleText> textRenderMethod = simpleText -> {};
+
+        public RendererFactory() {
+            this.textRenderMethod = simpleText -> {
+                CustomGUIClient.NODE_DRAWABLE_HELPER.drawText(
+                        simpleText.getStyle().getMatrixStack(),
+                        simpleText.getText(),
+                        simpleText.getFrame().getStartPos(),
+                        simpleText.getStyle().getHexColor()
+                );
+            };
+        }
 
         @Override
         public NodeRenderer<SimpleText> create(RendererType type) {
@@ -73,12 +87,7 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
         }
 
         private void render(SimpleText simpleText) {
-            CustomGUIClient.NODE_DRAWABLE_HELPER.drawText(
-                    simpleText.getMatrixStack(),
-                    simpleText.getText(),
-                    simpleText.getFrame().getStartPos(),
-                    simpleText.getTextColor()
-            );
+            textRenderMethod.accept(simpleText);
         }
     }
 

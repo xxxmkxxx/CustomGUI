@@ -12,6 +12,8 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import net.minecraft.util.Identifier;
 
+import java.util.function.Consumer;
+
 public class SimpleImage extends AbstractImage implements LeftClickEventHandler, HoverEventHandler, ResetHoverEventHandler {
     private Runnable leftClickAction = () -> {};
     private Runnable hoverAction = () -> {};
@@ -63,6 +65,13 @@ public class SimpleImage extends AbstractImage implements LeftClickEventHandler,
     }
 
     public static class RendererFactory implements NodeRendererFactory<SimpleImage> {
+        Consumer<SimpleImage> imageRenderMethod = simpleImage -> {
+            CustomGUIClient.NODE_DRAWABLE_HELPER.drawTexture(
+                    simpleImage.getStyle().getMatrixStack(),
+                    simpleImage.getFrame(),
+                    simpleImage.getImageIdentifier()
+            );
+        };
 
         @Override
         public NodeRenderer<SimpleImage> create(RendererType type) {
@@ -70,11 +79,7 @@ public class SimpleImage extends AbstractImage implements LeftClickEventHandler,
         }
 
         private void render(SimpleImage simpleImage) {
-            CustomGUIClient.NODE_DRAWABLE_HELPER.drawTexture(
-                    simpleImage.getMatrixStack(),
-                    simpleImage.getFrame(),
-                    simpleImage.getImageIdentifier()
-            );
+            imageRenderMethod.accept(simpleImage);
         }
     }
 

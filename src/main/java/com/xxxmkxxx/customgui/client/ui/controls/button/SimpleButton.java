@@ -16,10 +16,13 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.ResetHoverEven
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
+import com.xxxmkxxx.customgui.client.hierarchy.style.Background;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.Text;
+
+import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
 public class SimpleButton extends AbstractButton implements LeftClickEventHandler, HoverEventHandler, ResetHoverEventHandler {
@@ -28,9 +31,10 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
     protected Runnable resetHoverAction;
 
     @SuppressWarnings("CodeBlock2Expr")
-    protected SimpleButton(AbstractFrame frame, String name) {
+    protected SimpleButton(AbstractFrame frame, String name, Style style) {
         super(Text.of(name));
         this.frame = frame;
+        this.style = style;
         this.leftClickAction = () -> {
             EventManager.sendAction(
                     rendererType,
@@ -104,7 +108,7 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
         return new Builder();
     }
 
-    public static class Builder implements SimpleBuilder<SimpleButton> {
+    public static class Builder {
         private String buttonName = "";
         private Pos startPos = new Pos(0, 0);
         private Style style = new Style();
@@ -126,10 +130,9 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
             return this;
         }
 
-        @Override
         public SimpleButton build() {
             DynamicFrame frame = new DynamicFrame(startPos, 0, 0, false);
-            SimpleButton button = new SimpleButton(frame, buttonName);
+            SimpleButton button = new SimpleButton(frame, buttonName, style);
             button.setStyle(style);
 
             return button;
@@ -138,6 +141,10 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
 
     public static class RendererFactory implements NodeRendererFactory<SimpleButton> {
         private final ParametrizedSelfDestructionMethod<SimpleButton> initFrameMethod = new ParametrizedSelfDestructionMethod<>();
+        private final ParametrizedSelfDestructionMethod<SimpleButton> initBackgroundMethod = new ParametrizedSelfDestructionMethod<>();
+
+        private Consumer<SimpleButton> renderBackgroundMethod = (button) -> {};
+        private Consumer<SimpleButton> renderTextMethod = (button) -> {};
 
         public RendererFactory() {
             initFrameMethod.setAction(button -> {
@@ -152,6 +159,20 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
 
                 ((DynamicFrame)button.getFrame()).setStopPos(stopPos);
             });
+            initBackgroundMethod.setAction(button -> {
+                renderBackgroundMethod = Background.chooseBackground(button.getStyle().getBackground().getType());
+            });
+            renderTextMethod = (button) -> {
+                Style style = button.getStyle();
+
+                CustomGUIClient.NODE_DRAWABLE_HELPER.drawText(
+                        style.getMatrixStack(),
+                        button.getName(),
+                        button.getFrame().getStartPos().x() + button.getStyle().getIndent().getLeft(),
+                        button.getFrame().getStartPos().y() + button.getStyle().getIndent().getTop(),
+                        style.getHexColor()
+                );
+            };
         }
 
         @Override
@@ -161,20 +182,10 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
 
         private void render(SimpleButton button) {
             initFrameMethod.execute(button);
+            initBackgroundMethod.execute(button);
 
-            CustomGUIClient.NODE_DRAWABLE_HELPER.fillFrame(
-                    button.getMatrixStack(),
-                    button.getFrame(),
-                    0xA02071c7
-            );
-
-            CustomGUIClient.NODE_DRAWABLE_HELPER.drawText(
-                    button.getMatrixStack(),
-                    button.getName(),
-                    button.getFrame().getStartPos().x() + button.getStyle().getIndent().getLeft(),
-                    button.getFrame().getStartPos().y() + button.getStyle().getIndent().getTop(),
-                    0xFF000000
-            );
+            renderBackgroundMethod.accept(button);
+            renderTextMethod.accept(button);
         }
     }
 }

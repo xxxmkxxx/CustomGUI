@@ -1,6 +1,7 @@
 package com.xxxmkxxx.customgui.client.ui.controls.field;
 
 import com.xxxmkxxx.customgui.client.CustomGUIClient;
+import com.xxxmkxxx.customgui.client.common.ParametrizedSelfDestructionMethod;
 import com.xxxmkxxx.customgui.client.common.SimpleBuilder;
 import com.xxxmkxxx.customgui.client.common.util.Utils;
 import com.xxxmkxxx.customgui.client.geometry.frame.DynamicFrame;
@@ -19,7 +20,9 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.events.input.key.KeyboardKey
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
+import com.xxxmkxxx.customgui.client.hierarchy.style.Background;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import com.xxxmkxxx.customgui.client.ui.controls.button.SimpleButton;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,17 +30,18 @@ import lombok.Setter;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.function.Consumer;
+
 @Getter @Setter
 public class InputField extends AbstractField implements LeftClickEventHandler, ChangeEventHandler, KeyboardCharInputEventHandler, KeyboardKeyInputEventHandler {
     private String promptText;
-    private int promptTextColor = 0xAF647f8f;
     private InputCursor inputCursor;
     private Runnable leftClickAction = () -> {};
     private Runnable changeAction = () -> {};
 
     protected InputField(Pos startPos, int width, int height) {
         this.frame = new DynamicFrame(startPos, width, height, false);
-        this.inputCursor = new InputCursor(startPos, this.style, width, height, 1, 0xAFbd1313);
+        this.inputCursor = new InputCursor(startPos, this.style, width, height, 1);
     }
 
     @Override
@@ -148,9 +152,9 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
         private int width = 1;
         private int height = 7;
         private StaticFrame frame = new StaticFrame(pos, width, height, false);
+        private int flashingSpeed;
         private Style style;
-        private int flashingSpeed = 1;
-        private int color = 0xFF000000;
+
 
         public void setPos(Pos pos) {
             this.pos = pos;
@@ -175,21 +179,16 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
             this.flashingSpeed = flashingSpeed;
         }
 
-        public void setColor(int color) {
-            this.color = color;
-        }
-
         private void changeFrame() {
             frame = new StaticFrame(pos, width, height, false);
         }
 
-        public InputCursor(Pos pos, Style style, int width, int height, int flashingSpeed, int color) {
+        public InputCursor(Pos pos, Style style, int width, int height, int flashingSpeed) {
             this.pos = pos;
             this.style = style;
             this.width = width;
             this.height = height;
             this.flashingSpeed = flashingSpeed;
-            this.color = color;
             this.frame = new StaticFrame(pos, width, height, false);
         }
     }
@@ -206,11 +205,6 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
             return this;
         }
 
-        public Builder promptTextColor(int color) {
-            inputField.setPromptTextColor(color);
-            return this;
-        }
-
         @Override
         public InputField build() {
             return inputField;
@@ -218,24 +212,34 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
     }
 
     public static class RendererFactory implements NodeRendererFactory<InputField> {
+        private final ParametrizedSelfDestructionMethod<InputField> initBackgroundMethod = new ParametrizedSelfDestructionMethod<>();
+        private Consumer<InputField> backgroundRendererMethod = inputField -> {};
+        private Consumer<InputField> textRendererMethod = inputField -> {};
+
+        public RendererFactory() {
+            initBackgroundMethod.setAction(inputField -> {
+                backgroundRendererMethod = Background.chooseBackground(inputField.getStyle().getBackground().getType());
+            });
+            textRendererMethod = inputField -> {
+                CustomGUIClient.NODE_DRAWABLE_HELPER.drawText(
+                        inputField.getStyle().getMatrixStack(),
+                        Text.of(inputField.getText()),
+                        inputField.getFrame().getStartPos(),
+                        inputField.getStyle().getHexColor()
+                );
+            };
+        }
+
         @Override
         public NodeRenderer<InputField> create(RendererType type) {
             return this::render;
         }
 
         private void render(InputField inputField) {
-            CustomGUIClient.NODE_DRAWABLE_HELPER.fillFrame(
-                    inputField.getMatrixStack(),
-                    inputField.getFrame(),
-                    0xAF4b4e4f
-            );
+            initBackgroundMethod.execute(inputField);
 
-            CustomGUIClient.NODE_DRAWABLE_HELPER.drawText(
-                    inputField.getMatrixStack(),
-                    Text.of(inputField.getText()),
-                    inputField.getFrame().getStartPos(),
-                    0xFFf50707
-            );
+            backgroundRendererMethod.accept(inputField);
+            textRendererMethod.accept(inputField);
         }
     }
 }

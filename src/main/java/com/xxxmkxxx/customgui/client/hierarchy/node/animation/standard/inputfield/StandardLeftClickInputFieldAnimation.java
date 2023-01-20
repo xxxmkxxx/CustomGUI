@@ -14,7 +14,7 @@ public class StandardLeftClickInputFieldAnimation extends AbstractAnimation<Inpu
                     field.getMatrixStack(),
                     field.getInputCursor().getFrame().getStartPos(),
                     field.getInputCursor().getFrame().getStopPos(),
-                    field.getInputCursor().getColor()
+                    field.getInputCursor().getStyle().getHexColor()
             );
         });
         addFrame(timeUnit+=10, field -> {});
