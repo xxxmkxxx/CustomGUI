@@ -31,13 +31,8 @@ public abstract class MouseMixin {
 
     @Inject(method = "onCursorPos", at = @At(value = "TAIL"))
     public void onCursorPos(long window, double x, double y, CallbackInfo ci) {
-        int xPos = (int) x / 2;
-        int yPos = (int) y / 2;
-
-        if (client.getWindow().isFullscreen()) {
-            xPos = (int) x / 4;
-            yPos = (int) y / 4;
-        }
+        int xPos = (int) (x * this.client.getWindow().getScaledWidth() / this.client.getWindow().getWidth());
+        int yPos = (int)(y * (double)this.client.getWindow().getScaledHeight() / (double)this.client.getWindow().getHeight());
 
         CustomGUIClient.SCREEN_STAGE.onCursorUpdate(xPos, yPos);
     }
