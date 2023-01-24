@@ -4,16 +4,16 @@ import com.xxxmkxxx.customgui.client.common.Validator;
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
 
 public class DynamicFrame extends AbstractFrame {
-    public DynamicFrame(int xPos, int yPos, int width, int height, boolean startInCenter) {
-        super(xPos, yPos, width, height, startInCenter);
+    public DynamicFrame(int xPos, int yPos, int width, int height) {
+        super(xPos, yPos, width, height);
     }
 
     public DynamicFrame(Pos startPos, int width, int height, boolean startInCenter) {
-        super(startPos, width, height, startInCenter);
+        super(startPos, width, height);
     }
 
     public DynamicFrame(Pos startPos, Pos stopPos, boolean startInCenter) {
-        super(startPos, stopPos, startInCenter);
+        super(startPos, stopPos);
     }
 
     public void setStartPos(Pos startPos) {

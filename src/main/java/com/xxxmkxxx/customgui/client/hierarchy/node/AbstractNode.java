@@ -26,7 +26,7 @@ public abstract class AbstractNode implements Node {
         }
     };
 
-    protected AbstractFrame frame = new StaticFrame(0, 0, 18, 18, false);
+    protected AbstractFrame frame = new StaticFrame(0, 0, 18, 18);
     @Getter
     protected Section section = Section.MIXED;
     @Setter

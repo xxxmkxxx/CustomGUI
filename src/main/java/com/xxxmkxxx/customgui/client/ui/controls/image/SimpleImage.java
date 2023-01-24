@@ -85,7 +85,7 @@ public class SimpleImage extends AbstractImage implements LeftClickEventHandler,
 
     public static class Builder {
         private Identifier imageIdentifier = new Identifier("modid");
-        private AbstractFrame frame = new DynamicFrame(5, 5, 10, 10, false);
+        private AbstractFrame frame = new DynamicFrame(5, 5, 10, 10);
 
         public Builder identifier(Identifier imageIdentifier) {
             this.imageIdentifier = imageIdentifier;

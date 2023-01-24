@@ -13,32 +13,22 @@ public abstract class AbstractFrame implements Frame {
     protected int diagonal;
     protected int width;
     protected int height;
-    protected boolean startInCenter;
 
-    protected AbstractFrame(int xPos, int yPos, int width, int height, boolean startInCenter) {
+    protected AbstractFrame(int xPos, int yPos, int width, int height) {
         this.width = width;
         this.height = height;
-        this.startInCenter = startInCenter;
-
-        if (startInCenter) {
-            this.startPos = new Pos(xPos - width / 2, yPos - height / 2);
-            this.stopPos = new Pos(xPos + width / 2, yPos + height / 2);
-        } else {
-            this.startPos = new Pos(xPos, yPos);
-            this.stopPos = new Pos(xPos + width, yPos + height);
-        }
-
+        this.startPos = new Pos(xPos, yPos);
+        this.stopPos = new Pos(xPos + width, yPos + height);
         this.diagonal = Pos.calculateSegmentLength(startPos, stopPos);
     }
 
-    protected AbstractFrame(Pos startPos, int width, int height, boolean startInCenter) {
-        this(startPos.x(), startPos.y(), width, height, startInCenter);
+    protected AbstractFrame(Pos startPos, int width, int height) {
+        this(startPos.x(), startPos.y(), width, height);
     }
 
-    protected AbstractFrame(Pos startPos, Pos stopPos, boolean startInCenter) {
+    protected AbstractFrame(Pos startPos, Pos stopPos) {
         this.startPos = startPos;
         this.stopPos = stopPos;
-        this.startInCenter = startInCenter;
         this.width = stopPos.x() - startPos.x();
         this.height = stopPos.y() - startPos.y();
         this.diagonal = Pos.calculateSegmentLength(startPos, stopPos);
@@ -81,11 +71,11 @@ public abstract class AbstractFrame implements Frame {
         if (this == o) return true;
         if (!(o instanceof AbstractFrame)) return false;
         AbstractFrame that = (AbstractFrame) o;
-        return width == that.width && height == that.height && startInCenter == that.startInCenter && startPos.equals(that.startPos) && stopPos.equals(that.stopPos);
+        return width == that.width && height == that.height && startPos.equals(that.startPos) && stopPos.equals(that.stopPos);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(startPos, stopPos, width, height, startInCenter);
+        return Objects.hash(startPos, stopPos, width, height);
     }
 }

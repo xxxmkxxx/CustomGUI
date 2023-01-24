@@ -2,7 +2,6 @@ package com.xxxmkxxx.customgui.client.ui.controls.slot;
 
 import com.xxxmkxxx.customgui.client.CustomGUIClient;
 import com.xxxmkxxx.customgui.client.common.ParametrizedSelfDestructionMethod;
-import com.xxxmkxxx.customgui.client.common.inventory.InventoryType;
 import com.xxxmkxxx.customgui.client.common.inventory.AbstractInventory;
 import com.xxxmkxxx.customgui.client.common.util.Utils;
 import com.xxxmkxxx.customgui.client.geometry.frame.DynamicFrame;
@@ -18,22 +17,15 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Background;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import com.xxxmkxxx.customgui.client.ui.controls.text.SimpleText;
-import com.xxxmkxxx.customgui.networking.packages.Packages;
-import io.netty.buffer.Unpooled;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 
 @Getter
