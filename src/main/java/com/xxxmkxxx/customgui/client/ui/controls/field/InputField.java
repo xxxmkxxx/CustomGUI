@@ -155,7 +155,6 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
         private int flashingSpeed;
         private Style style;
 
-
         public void setPos(Pos pos) {
             this.pos = pos;
             changeFrame();
