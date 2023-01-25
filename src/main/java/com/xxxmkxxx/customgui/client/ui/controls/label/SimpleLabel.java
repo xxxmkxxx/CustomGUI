@@ -1,7 +1,7 @@
 package com.xxxmkxxx.customgui.client.ui.controls.label;
 
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
-import com.xxxmkxxx.customgui.client.hierarchy.node.events.EventBus;
+import com.xxxmkxxx.customgui.client.common.event.EventBus;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.ResetHoverEventHandler;

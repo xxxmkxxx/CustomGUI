@@ -6,12 +6,10 @@ import com.xxxmkxxx.customgui.client.common.util.Utils;
 import com.xxxmkxxx.customgui.client.geometry.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.geometry.frame.DynamicFrame;
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
-import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
-import com.xxxmkxxx.customgui.client.hierarchy.node.events.EventBus;
+import com.xxxmkxxx.customgui.client.common.event.EventBus;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.ResetHoverEventHandler;
-import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
@@ -20,13 +18,10 @@ import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import com.xxxmkxxx.customgui.client.ui.controls.image.AbstractImage;
 import com.xxxmkxxx.customgui.client.ui.controls.image.SimpleImage;
 import lombok.Getter;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class ImagedButton extends AbstractButton implements LeftClickEventHandler, HoverEventHandler, ResetHoverEventHandler {
     @Getter

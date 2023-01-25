@@ -5,7 +5,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractEvent<H extends EventHandler> implements Event<H> {
+public abstract class AbstractNodevent<H extends NodeEventHandler> implements NodeEvent<H> {
     protected Map<AbstractNode, H> handlers = new HashMap<>();
 
     public abstract void callHandler(AbstractNode node, Object ... args);

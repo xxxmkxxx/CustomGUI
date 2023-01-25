@@ -1,7 +1,7 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node.events.change;
 
-import com.xxxmkxxx.customgui.client.hierarchy.node.events.EventHandler;
+import com.xxxmkxxx.customgui.client.hierarchy.node.events.NodeEventHandler;
 
-public interface ChangeEventHandler extends EventHandler {
+public interface ChangeEventHandler extends NodeEventHandler {
     void onChange();
 }

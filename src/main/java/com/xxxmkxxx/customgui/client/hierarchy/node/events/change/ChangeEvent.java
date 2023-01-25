@@ -1,9 +1,9 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node.events.change;
 
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
-import com.xxxmkxxx.customgui.client.hierarchy.node.events.AbstractEvent;
+import com.xxxmkxxx.customgui.client.hierarchy.node.events.AbstractNodevent;
 
-public class ChangeEvent extends AbstractEvent<ChangeEventHandler> {
+public class ChangeEvent extends AbstractNodevent<ChangeEventHandler> {
     @Override
     public void callHandler(AbstractNode node, Object ... args) {
         handlers.get(node).onChange();

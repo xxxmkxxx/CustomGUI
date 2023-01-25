@@ -7,7 +7,7 @@ import com.xxxmkxxx.customgui.client.common.util.Utils;
 import com.xxxmkxxx.customgui.client.geometry.frame.DynamicFrame;
 import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
 import com.xxxmkxxx.customgui.client.geometry.position.Pos;
-import com.xxxmkxxx.customgui.client.hierarchy.node.events.EventBus;
+import com.xxxmkxxx.customgui.client.common.event.EventBus;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.ResetHoverEventHandler;

@@ -1,6 +1,6 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node;
 
-import com.xxxmkxxx.customgui.client.hierarchy.node.events.EventBus;
+import com.xxxmkxxx.customgui.client.common.event.EventBus;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.TargetManager;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

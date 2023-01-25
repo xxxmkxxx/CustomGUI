@@ -1,4 +1,4 @@
-package com.xxxmkxxx.customgui.client.hierarchy.node.events;
+package com.xxxmkxxx.customgui.client.common.event;
 
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.input.character.KeyboardCharInputEvent;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.input.key.KeyboardKeyInputEvent;
