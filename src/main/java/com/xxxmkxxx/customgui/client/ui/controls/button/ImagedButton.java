@@ -1,12 +1,8 @@
 package com.xxxmkxxx.customgui.client.ui.controls.button;
 
-import com.xxxmkxxx.customgui.client.CustomGUIClient;
 import com.xxxmkxxx.customgui.client.common.ParametrizedSelfDestructionMethod;
-import com.xxxmkxxx.customgui.client.common.util.Utils;
-import com.xxxmkxxx.customgui.client.geometry.frame.AbstractFrame;
-import com.xxxmkxxx.customgui.client.geometry.frame.DynamicFrame;
-import com.xxxmkxxx.customgui.client.geometry.position.Pos;
 import com.xxxmkxxx.customgui.client.common.event.EventBus;
+import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.ResetHoverEventHandler;
@@ -15,11 +11,11 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Background;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.ui.controls.image.AbstractImage;
-import com.xxxmkxxx.customgui.client.ui.controls.image.SimpleImage;
+import com.xxxmkxxx.customgui.client.ui.controls.text.SimpleText;
 import lombok.Getter;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 import java.util.function.Consumer;
 
@@ -30,10 +26,24 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
     protected Runnable hoverAction = () -> {};
     protected Runnable resetHoverAction = () -> {};
 
-    private ImagedButton(Pos pos, Text name, AbstractImage image) {
-        super(name);
-        this.frame = new DynamicFrame(pos, 1, 1, false);
+    private ImagedButton(Pos startPos, Text text, AbstractImage image, Style style) {
+        super(startPos, SimpleText.builder().pos(startPos).text(text).build());
+        this.style = style;
         this.image = image;
+        initFrame(image);
+    }
+
+    private void initFrame(AbstractImage image) {
+        this.frame.setStopPos(new Pos(
+                frame.getStopPos().x() + image.getFrame().getWidth() + image.getStyle().getIndent().getRight(),
+                frame.getStopPos().y() + image.getFrame().getHeight() + image.getStyle().getIndent().getBottom()
+        ));
+    }
+
+    @Override
+    public void init(Consumer<AbstractNode> initMethod) {
+        super.init(initMethod);
+        image.init(initMethod);
     }
 
     public void setLeftClickAction(Runnable leftClickAction) {
@@ -78,42 +88,14 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
     }
 
     public static class RendererFactory implements NodeRendererFactory<ImagedButton> {
-        private final ParametrizedSelfDestructionMethod<ImagedButton> initFrameMethod = new ParametrizedSelfDestructionMethod<>();
         private final ParametrizedSelfDestructionMethod<ImagedButton> initBackgroundMethod = new ParametrizedSelfDestructionMethod<>();
         private Consumer<ImagedButton> renderBackgroundMethod = (button) -> {};
-        private Consumer<ImagedButton> renderTextMethod = (button) -> {};
 
         @SuppressWarnings("DuplicatedCode")
         public RendererFactory() {
-            initFrameMethod.setAction(button -> {
-                int textWidthWithIndent = Utils.getTextWidth(button.getName()) + button.getStyle().getIndent().getRight();
-                int textHeightWithIndent = Utils.getTextHeight() + button.getStyle().getIndent().getBottom();
-                int imageWidth = button.getImage().getFrame().getWidth();
-                int imageHeight = button.getImage().getFrame().getHeight();
-                int stopPosX = imageWidth > textWidthWithIndent ? imageWidth : textWidthWithIndent;
-                int stopPosY = imageHeight > textHeightWithIndent ? imageHeight : textHeightWithIndent;
-
-                Pos stopPos = new Pos(
-                        button.getFrame().getStartPos().x() + stopPosX,
-                        button.getFrame().getStartPos().y() + stopPosY
-                );
-
-                ((DynamicFrame)button.getFrame()).setStopPos(stopPos);
-            });
             initBackgroundMethod.setAction(button -> {
                 renderBackgroundMethod = Background.chooseBackground(button.getStyle().getBackground().getType());
             });
-            renderTextMethod = (button) -> {
-                Style style = button.getStyle();
-
-                CustomGUIClient.NODE_DRAWABLE_HELPER.drawText(
-                        style.getMatrixStack(),
-                        button.getName(),
-                        button.getFrame().getStartPos().x() + button.getStyle().getIndent().getLeft(),
-                        button.getFrame().getStartPos().y() + button.getStyle().getIndent().getTop(),
-                        style.getHexColor()
-                );
-            };
         }
 
         @Override
@@ -122,23 +104,28 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
         }
 
         private void render(ImagedButton imagedButton) {
-            initFrameMethod.execute(imagedButton);
             initBackgroundMethod.execute(imagedButton);
 
             renderBackgroundMethod.accept(imagedButton);
-            renderTextMethod.accept(imagedButton);
 
             imagedButton.getImage().getRenderer().render(imagedButton.getImage());
+            imagedButton.getText().getRenderer().render(imagedButton.getText());
         }
     }
 
     public static class Builder {
-        private Pos pos = new Pos(5, 5);
-        private Text text = Text.of("");
+        private Pos startPos = Pos.DEFAULT_POS;
+        private Text text = Text.of("button");
+        private Style style = Style.DEFAULT_STYLE;
         private AbstractImage image;
 
-        public Builder pos(Pos pos) {
-            this.pos = pos;
+        public Builder style(Style style) {
+            this.style = style;
+            return this;
+        }
+
+        public Builder pos(Pos startPos) {
+            this.startPos = startPos;
             return this;
         }
 
@@ -157,13 +144,8 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
             return this;
         }
 
-        public Builder image(Identifier imageIdentifier, AbstractFrame frame) {
-            this.image = SimpleImage.builder().identifier(imageIdentifier).frame(frame).build();
-            return this;
-        }
-
         public ImagedButton build() {
-            return new ImagedButton(pos, text, image);
+            return new ImagedButton(startPos, text, image, style);
         }
     }
 }

@@ -1,8 +1,7 @@
 package com.xxxmkxxx.customgui.client.ui.controls.image;
 
-import com.xxxmkxxx.customgui.client.CustomGUIClient;
-import com.xxxmkxxx.customgui.client.geometry.frame.AbstractFrame;
-import com.xxxmkxxx.customgui.client.geometry.frame.DynamicFrame;
+import com.xxxmkxxx.customgui.CustomGUI;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.common.event.EventBus;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHandler;
@@ -10,6 +9,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.ResetHoverEven
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
+import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Consumer;
@@ -19,9 +19,8 @@ public class SimpleImage extends AbstractImage implements LeftClickEventHandler,
     private Runnable hoverAction = () -> {};
     private Runnable  resetHoverAction = () -> {};
 
-    private SimpleImage(Identifier imageIdentifier, AbstractFrame frame) {
-        this.imageIdentifier = imageIdentifier;
-        this.frame = frame;
+    protected SimpleImage(Pos startPos, int width, int height, Identifier imageIdentifier) {
+        super(startPos, width, height, imageIdentifier);
     }
 
     public void setLeftClickAction(Runnable leftClickAction) {
@@ -66,7 +65,7 @@ public class SimpleImage extends AbstractImage implements LeftClickEventHandler,
 
     public static class RendererFactory implements NodeRendererFactory<SimpleImage> {
         Consumer<SimpleImage> imageRenderMethod = simpleImage -> {
-            CustomGUIClient.NODE_DRAWABLE_HELPER.drawTexture(
+            CustomGUI.NODE_DRAWABLE_HELPER.drawTexture(
                     simpleImage.getStyle().getMatrixStack(),
                     simpleImage.getFrame(),
                     simpleImage.getImageIdentifier()
@@ -85,20 +84,32 @@ public class SimpleImage extends AbstractImage implements LeftClickEventHandler,
 
     public static class Builder {
         private Identifier imageIdentifier = new Identifier("modid");
-        private AbstractFrame frame = new DynamicFrame(5, 5, 10, 10);
+        private int width = 10;
+        private int height = 10;
+        private Pos startPos = Pos.DEFAULT_POS;
 
         public Builder identifier(Identifier imageIdentifier) {
             this.imageIdentifier = imageIdentifier;
             return this;
         }
 
-        public Builder frame(AbstractFrame frame) {
-            this.frame = frame;
+        public Builder startPos(Pos pos) {
+            this.startPos = pos;
+            return this;
+        }
+
+        public Builder width(int width) {
+            this.width = width;
+            return this;
+        }
+
+        public Builder height(int height) {
+            this.height = height;
             return this;
         }
 
         public SimpleImage build() {
-            return new SimpleImage(imageIdentifier, frame);
+            return new SimpleImage(startPos, width, height, imageIdentifier);
         }
     }
 }

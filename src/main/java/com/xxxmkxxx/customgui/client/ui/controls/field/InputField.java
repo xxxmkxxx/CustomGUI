@@ -1,12 +1,11 @@
 package com.xxxmkxxx.customgui.client.ui.controls.field;
 
-import com.xxxmkxxx.customgui.client.CustomGUIClient;
+import com.xxxmkxxx.customgui.CustomGUI;
 import com.xxxmkxxx.customgui.client.common.ParametrizedSelfDestructionMethod;
 import com.xxxmkxxx.customgui.client.common.SimpleBuilder;
 import com.xxxmkxxx.customgui.client.common.util.Utils;
-import com.xxxmkxxx.customgui.client.geometry.frame.DynamicFrame;
-import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
-import com.xxxmkxxx.customgui.client.geometry.position.Pos;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
+import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.standard.inputfield.StandardInputFieldAnimations;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.ActionBuilder;
@@ -37,7 +36,7 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
     private Runnable changeAction = () -> {};
 
     protected InputField(Pos startPos, int width, int height) {
-        this.frame = new DynamicFrame(startPos, width, height, false);
+        this.frame = new SimpleFrame(startPos, width, height);
         this.inputCursor = new InputCursor(startPos, this.style, width, height, 1);
     }
 
@@ -148,7 +147,7 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
         private Pos pos = new Pos(5, 5);
         private int width = 1;
         private int height = 7;
-        private StaticFrame frame = new StaticFrame(pos, width, height, false);
+        private SimpleFrame frame = new SimpleFrame(pos, width, height);
         private int flashingSpeed;
         private Style style;
 
@@ -176,7 +175,7 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
         }
 
         private void changeFrame() {
-            frame = new StaticFrame(pos, width, height, false);
+            frame = new SimpleFrame(pos, width, height);
         }
 
         public InputCursor(Pos pos, Style style, int width, int height, int flashingSpeed) {
@@ -185,7 +184,7 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
             this.width = width;
             this.height = height;
             this.flashingSpeed = flashingSpeed;
-            this.frame = new StaticFrame(pos, width, height, false);
+            this.frame = new SimpleFrame(pos, width, height);
         }
     }
 
@@ -217,7 +216,7 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
                 backgroundRendererMethod = Background.chooseBackground(inputField.getStyle().getBackground().getType());
             });
             textRendererMethod = inputField -> {
-                CustomGUIClient.NODE_DRAWABLE_HELPER.drawText(
+                CustomGUI.NODE_DRAWABLE_HELPER.drawText(
                         inputField.getStyle().getMatrixStack(),
                         Text.of(inputField.getText()),
                         inputField.getFrame().getStartPos(),

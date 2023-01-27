@@ -1,9 +1,6 @@
 package com.xxxmkxxx.customgui.client.ui.controls.text;
 
-import com.xxxmkxxx.customgui.client.CustomGUIClient;
-import com.xxxmkxxx.customgui.client.common.util.Utils;
-import com.xxxmkxxx.customgui.client.geometry.frame.DynamicFrame;
-import com.xxxmkxxx.customgui.client.geometry.position.Pos;
+import com.xxxmkxxx.customgui.CustomGUI;
 import com.xxxmkxxx.customgui.client.common.event.EventBus;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHandler;
@@ -11,6 +8,8 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.ResetHoverEven
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
+import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import lombok.Getter;
 import net.minecraft.text.Text;
 
@@ -22,9 +21,9 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
     private Runnable hoverAction = () -> {};
     private Runnable  resetHoverAction = () -> {};
 
-    private SimpleText(Pos startPos, Text text) {
-        this.text = text;
-        this.frame = new DynamicFrame(startPos, Utils.getTextWidth(text), Utils.getTextHeight(), false);
+    protected SimpleText(Pos startPos, Text text, Style style) {
+        super(startPos, text);
+        this.style = style;
     }
 
     public void setLeftClickAction(Runnable leftClickAction) {
@@ -68,11 +67,11 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
     }
 
     public static class RendererFactory implements NodeRendererFactory<SimpleText> {
-        private Consumer<SimpleText> textRenderMethod = simpleText -> {};
+        private Consumer<SimpleText> textRenderMethod;
 
         public RendererFactory() {
             this.textRenderMethod = simpleText -> {
-                CustomGUIClient.NODE_DRAWABLE_HELPER.drawText(
+                CustomGUI.NODE_DRAWABLE_HELPER.drawText(
                         simpleText.getStyle().getMatrixStack(),
                         simpleText.getText(),
                         simpleText.getFrame().getStartPos(),
@@ -92,8 +91,14 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
     }
 
     public static class Builder {
-        private Pos startPos = new Pos(5, 5);
-        private Text text = Text.of("");
+        private Pos startPos = Pos.DEFAULT_POS;
+        private Text text = Text.of("text");
+        private Style style = Style.DEFAULT_STYLE;
+
+        public Builder style(Style style) {
+            this.style = style;
+            return this;
+        }
 
         public Builder text(String text) {
             this.text = Text.of(text);
@@ -116,7 +121,7 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
         }
 
         public SimpleText build() {
-            return new SimpleText(startPos, text);
+            return new SimpleText(startPos, text, style);
         }
     }
 }

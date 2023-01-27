@@ -1,12 +1,11 @@
 package com.xxxmkxxx.customgui.client.ui.controls.slot;
 
-import com.xxxmkxxx.customgui.client.CustomGUIClient;
+import com.xxxmkxxx.customgui.CustomGUI;
 import com.xxxmkxxx.customgui.client.common.ParametrizedSelfDestructionMethod;
 import com.xxxmkxxx.customgui.client.common.inventory.AbstractInventory;
 import com.xxxmkxxx.customgui.client.common.util.Utils;
-import com.xxxmkxxx.customgui.client.geometry.frame.DynamicFrame;
-import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
-import com.xxxmkxxx.customgui.client.geometry.position.Pos;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
+import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.common.event.EventBus;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHandler;
@@ -31,37 +30,17 @@ import java.util.function.Consumer;
 @Getter
 @SuppressWarnings("unused")
 public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, HoverEventHandler, ResetHoverEventHandler {
-    private SimpleText amountItemsText;
     protected Runnable leftClickAction;
     protected Runnable hoverAction;
     protected Runnable resetHoverAction;
 
-    protected SimpleSlot(int index, AbstractInventory inventory, StaticFrame frame) {
+    protected SimpleSlot(int index, AbstractInventory inventory, SimpleFrame frame) {
         super(index, inventory, frame);
         this.leftClickAction = () -> {};
         this.hoverAction = () -> {};
         this.resetHoverAction = () -> {};
-        this.amountItemsText = SimpleText.builder().build();
-        amountItemsText.setStyle(this.getStyle());
+        this.amountItemsText = SimpleText.builder().style(style).build();
         updateAmountItemsText(inventory.getStack(index), frame);
-    }
-
-    public void updateAmountItemsText(ItemStack itemStack, StaticFrame frame) {
-        Text amount = Text.of(Integer.toString(itemStack.getCount()));
-
-        Pos startPos = new Pos(
-                frame.getStopPos().x() - Utils.getTextWidth(amount),
-                frame.getStopPos().y() - Utils.getTextHeight()
-        );
-
-        Pos stopPos = new Pos(
-                startPos.x() + Utils.getTextWidth(amount),
-                frame.getStopPos().y() + Utils.getTextHeight()
-        );
-
-        ((DynamicFrame) amountItemsText.getFrame()).setStartPos(startPos);
-        ((DynamicFrame) amountItemsText.getFrame()).setStopPos(stopPos);
-        amountItemsText.setText(amount);
     }
 
     @Override
@@ -121,7 +100,7 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
 
         @Override
         public SimpleSlot create(int index, Pos pos) {
-            SimpleSlot slot = new SimpleSlot(index, inventory, new StaticFrame(pos, width, height, false));
+            SimpleSlot slot = new SimpleSlot(index, inventory, new SimpleFrame(pos, width, height));
             slot.setLeftClickAction(() -> leftClickAction.accept(inventory.getStack(index)));
             slot.setHoverAction(hoverAction);
             slot.setResetHoverAction(resetHoverAction);
@@ -174,13 +153,13 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
                     backgroundRenderMethod = Background.chooseBackground(simpleSlot.getStyle().getBackground().getType());
                 });
             standardImageRenderMethod = simpleSlot -> {
-                CustomGUIClient.NODE_DRAWABLE_HELPER.drawTexture(
+                CustomGUI.NODE_DRAWABLE_HELPER.drawTexture(
                         simpleSlot.getItemStack(),
                         simpleSlot.getFrame()
                 );
             };
             customImageRenderMethod = simpleSlot -> {
-                CustomGUIClient.NODE_DRAWABLE_HELPER.drawTexture(
+                CustomGUI.NODE_DRAWABLE_HELPER.drawTexture(
                         simpleSlot.getMatrixStack(),
                         simpleSlot.getFrame(),
                         simpleSlot.getItemAtlas(simpleSlot.getItemStack().getItem())
