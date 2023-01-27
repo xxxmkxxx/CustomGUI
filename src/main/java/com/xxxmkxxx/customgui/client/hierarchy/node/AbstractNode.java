@@ -1,12 +1,12 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node;
 
-import com.xxxmkxxx.customgui.client.geometry.frame.AbstractFrame;
-import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
-import com.xxxmkxxx.customgui.client.geometry.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
+import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.util.math.MatrixStack;
@@ -26,7 +26,7 @@ public abstract class AbstractNode implements Node {
         }
     };
 
-    protected AbstractFrame frame = new StaticFrame(0, 0, 18, 18);
+    protected AbstractFrame frame = AbstractFrame.DEFAULT_FRAME;
     @Getter
     protected Section section = Section.MIXED;
     @Setter
@@ -66,6 +66,10 @@ public abstract class AbstractNode implements Node {
         initMethod.accept(this);
     }
 
+    public void scaling(double widthScaleValue, double heightScaleValue) {
+        frame.scaling(widthScaleValue, heightScaleValue);
+    }
+
     public AbstractNode arrangeRelatively(AbstractNode node, Position position, int indent) {
         switch (position) {
             case RIGHT -> {
@@ -79,7 +83,7 @@ public abstract class AbstractNode implements Node {
                         node.getFrame().getStartPos().y() + frame.getHeight()
                 );
 
-                this.frame = new StaticFrame(startPos, stopPos, false);
+                this.frame = new SimpleFrame(startPos, stopPos);
             }
             case LEFT -> {
                 Pos startPos = new Pos(
@@ -92,7 +96,7 @@ public abstract class AbstractNode implements Node {
                         node.getFrame().getStartPos().y() + frame.getHeight()
                 );
 
-                this.frame = new StaticFrame(startPos, stopPos, false);
+                this.frame = new SimpleFrame(startPos, stopPos);
             }
             case BOTTOM -> {
                 Pos startPos = new Pos(
@@ -105,7 +109,7 @@ public abstract class AbstractNode implements Node {
                         node.getFrame().getStopPos().y() + frame.getHeight() + indent
                 );
 
-                this.frame = new StaticFrame(startPos, stopPos, false);
+                this.frame = new SimpleFrame(startPos, stopPos);
             }
             case TOP -> {
                 Pos startPos = new Pos(
@@ -118,7 +122,7 @@ public abstract class AbstractNode implements Node {
                         node.getFrame().getStartPos().y() - indent
                 );
 
-                this.frame = new StaticFrame(startPos, stopPos, false);
+                this.frame = new SimpleFrame(startPos, stopPos);
             }
         }
 

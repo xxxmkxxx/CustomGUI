@@ -2,8 +2,8 @@ package com.xxxmkxxx.customgui.client.hierarchy.node;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.xxxmkxxx.customgui.client.geometry.frame.AbstractFrame;
-import com.xxxmkxxx.customgui.client.geometry.position.Pos;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
+import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;

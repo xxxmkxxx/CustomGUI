@@ -1,6 +1,6 @@
 package com.xxxmkxxx.customgui.client.ui.containers.slotcontainer;
 
-import com.xxxmkxxx.customgui.client.geometry.position.Pos;
+import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.ui.controls.slot.AbstractSlot;
 import com.xxxmkxxx.customgui.client.ui.controls.slot.SlotFactory;

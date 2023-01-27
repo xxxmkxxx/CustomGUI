@@ -1,6 +1,7 @@
-package com.xxxmkxxx.customgui.client.geometry.position;
+package com.xxxmkxxx.customgui.client.hierarchy.window.position;
 
 public record Pos(int x, int y) {
+    public static Pos DEFAULT_POS = new Pos(10, 10);
     public int calculateSegmentLength(Pos secondPos) {
         return calculateSegmentLength(this, secondPos);
     }

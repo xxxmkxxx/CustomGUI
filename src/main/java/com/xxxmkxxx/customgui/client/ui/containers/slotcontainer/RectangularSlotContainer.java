@@ -2,11 +2,10 @@ package com.xxxmkxxx.customgui.client.ui.containers.slotcontainer;
 
 import com.xxxmkxxx.customgui.client.common.SimpleBuilder;
 import com.xxxmkxxx.customgui.client.common.Validator;
-import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
-import com.xxxmkxxx.customgui.client.geometry.position.Pos;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
+import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
-import com.xxxmkxxx.customgui.client.hierarchy.node.target.TargetManager;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
@@ -32,7 +31,7 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
         this.amountRows = amountRows;
         this.rows = rows;
         UnmodifiableLinearSlotContainer<T> container = rows[rows.length - 1];
-        this.frame = new StaticFrame(pos, container.getSlot(container.getSize() - 1).getFrame().getStopPos(), false);
+        this.frame = new SimpleFrame(pos, container.getSlot(container.getSize() - 1).getFrame().getStopPos());
     }
 
     @Override

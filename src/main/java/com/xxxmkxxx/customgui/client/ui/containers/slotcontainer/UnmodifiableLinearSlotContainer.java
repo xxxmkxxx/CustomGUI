@@ -2,12 +2,10 @@ package com.xxxmkxxx.customgui.client.ui.containers.slotcontainer;
 
 import com.xxxmkxxx.customgui.client.common.SimpleBuilder;
 import com.xxxmkxxx.customgui.client.common.Validator;
-import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
-import com.xxxmkxxx.customgui.client.geometry.position.Pos;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
+import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
-import com.xxxmkxxx.customgui.client.hierarchy.node.Node;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
-import com.xxxmkxxx.customgui.client.hierarchy.node.target.TargetManager;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
@@ -31,7 +29,7 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
         super(offset, factory);
         this.size = indexes.length;
         this.slots = initSlots(indexes, offset, pos, factory);
-        this.frame = new StaticFrame(pos, ((T)slots[slots.length - 1]).getFrame().getStopPos(), false);
+        this.frame = new SimpleFrame(pos, ((T)slots[slots.length - 1]).getFrame().getStopPos());
     }
 
     @Override

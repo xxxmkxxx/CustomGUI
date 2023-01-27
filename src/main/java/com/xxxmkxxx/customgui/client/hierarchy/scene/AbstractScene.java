@@ -8,13 +8,12 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AnimationManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.TargetManager;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
+import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
 import com.xxxmkxxx.timecontrol.TimeControl;
 import lombok.Getter;
 
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -22,7 +21,7 @@ public abstract class AbstractScene implements Scene {
     @Getter
     protected final TimeControl renderTimeControl;
     @Getter
-    protected final RendererType type;
+    protected RendererType type;
     protected final EnumMap<Section, Set<AbstractNode>> sections = new EnumMap<>(Section.class);
     @Getter
     protected final TargetManager targetManager;
@@ -61,5 +60,11 @@ public abstract class AbstractScene implements Scene {
 
     public void updateTarget(int x, int y) {
         targetManager.update(x, y);
+    }
+
+    public List<AbstractNode> getAllNodes() {
+        List<AbstractNode> nodes = new ArrayList<>(sections.size() * 5);
+        sections.forEach((section, abstractNodes) -> nodes.addAll(abstractNodes));
+        return nodes;
     }
 }

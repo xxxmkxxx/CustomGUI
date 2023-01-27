@@ -1,8 +1,8 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node.target;
 
-import com.xxxmkxxx.customgui.client.geometry.frame.AbstractFrame;
-import com.xxxmkxxx.customgui.client.geometry.frame.StaticFrame;
-import com.xxxmkxxx.customgui.client.geometry.position.Pos;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
+import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -50,10 +50,9 @@ public enum Section {
         Pos pos1 = expressionStartPos.apply(windowWidth, windowHeight);
         Pos pos2 = expressionStopPos.apply(windowWidth, windowHeight);
 
-        frame = new StaticFrame(
+        frame = new SimpleFrame(
                 expressionStartPos.apply(windowWidth, windowHeight),
-                expressionStopPos.apply(windowWidth, windowHeight),
-                false
+                expressionStopPos.apply(windowWidth, windowHeight)
         );
     }
 

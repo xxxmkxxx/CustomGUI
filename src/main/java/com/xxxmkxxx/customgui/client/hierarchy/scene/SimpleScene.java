@@ -3,9 +3,7 @@ package com.xxxmkxxx.customgui.client.hierarchy.scene;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 
 public class SimpleScene extends AbstractScene {
     public SimpleScene(RendererType type) {

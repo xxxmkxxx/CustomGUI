@@ -6,4 +6,5 @@ public interface Stage {
     void render();
     void setActiveScene(AbstractScene scene);
     void clearScene();
+    void init();
 }

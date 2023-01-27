@@ -2,11 +2,10 @@ package com.xxxmkxxx.customgui.client.ui.containers.slotcontainer;
 
 import com.xxxmkxxx.customgui.client.common.SimpleBuilder;
 import com.xxxmkxxx.customgui.client.common.Validator;
-import com.xxxmkxxx.customgui.client.geometry.frame.DynamicFrame;
-import com.xxxmkxxx.customgui.client.geometry.position.Pos;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
+import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
-import com.xxxmkxxx.customgui.client.hierarchy.node.target.TargetManager;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
@@ -27,7 +26,7 @@ public class LinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlot
 
     protected LinearSlotContainer(int offset, Pos startPos, SlotFactory<T> factory) {
         super(offset, factory);
-        this.frame = new DynamicFrame(startPos, 0, 0, false);
+        this.frame = new SimpleFrame(startPos, 0, 0);
         this.currentSlotPos = startPos;
     }
 
@@ -54,7 +53,7 @@ public class LinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlot
         slots.add(slot);
 
         currentSlotPos = new Pos(slot.getFrame().getStopPos().x() + offset, frame.getStartPos().y());
-        ((DynamicFrame)frame).setStopPos(currentSlotPos);
+        frame.setStopPos(currentSlotPos);
     }
 
     @Override
