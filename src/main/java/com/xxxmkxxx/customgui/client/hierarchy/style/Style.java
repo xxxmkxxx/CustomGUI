@@ -6,6 +6,15 @@ import net.minecraft.client.util.math.MatrixStack;
 
 @Getter @Setter
 public class Style {
+    public static final Style DEFAULT_STYLE = new Style();
+
+    static {
+        DEFAULT_STYLE.setColor(Color.DefaultColor.BLACK.getColor());
+        DEFAULT_STYLE.setOpacity(new Opacity(100));
+        DEFAULT_STYLE.setBackground(Background.builder().type(Background.Type.COLORED).color(Color.DefaultColor.BLUE.getColor()).build());
+        DEFAULT_STYLE.setIndent(new Indent(1, 1, 1, 1));
+    }
+
     private MatrixStack matrixStack = new MatrixStack();
     private Color color = Color.builder().build();
     private Opacity opacity = new Opacity(100);
