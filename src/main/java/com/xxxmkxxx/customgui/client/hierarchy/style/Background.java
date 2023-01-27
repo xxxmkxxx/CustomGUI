@@ -1,7 +1,6 @@
 package com.xxxmkxxx.customgui.client.hierarchy.style;
 
-import com.xxxmkxxx.customgui.client.CustomGUIClient;
-import com.xxxmkxxx.customgui.client.common.ParametrizedSelfDestructionMethod;
+import com.xxxmkxxx.customgui.CustomGUI;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,13 +24,13 @@ public class Background {
     @Builder.Default
     private Identifier identifier = new Identifier("modid");
 
-    public static  <N extends AbstractNode> Consumer<N> chooseBackground(Type type) {
+    public static <N extends AbstractNode> Consumer<N> chooseBackground(Type type) {
         Consumer<N> renderMethod = (node) -> {};
 
         switch (type) {
             case IMAGED -> {
                 renderMethod = node -> {
-                    CustomGUIClient.NODE_DRAWABLE_HELPER.drawTexture(
+                    CustomGUI.NODE_DRAWABLE_HELPER.drawTexture(
                             node.getStyle().getMatrixStack(),
                             node.getFrame(),
                             node.getStyle().getBackground().getIdentifier()
@@ -40,7 +39,7 @@ public class Background {
             }
             case COLORED -> {
                 renderMethod = node -> {
-                    CustomGUIClient.NODE_DRAWABLE_HELPER.fillFrame(
+                    CustomGUI.NODE_DRAWABLE_HELPER.fillFrame(
                             node.getStyle().getMatrixStack(),
                             node.getFrame(),
                             node.getStyle().getHexBackgroundColor()

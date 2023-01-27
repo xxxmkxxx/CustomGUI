@@ -1,6 +1,7 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node.events;
 
-import com.xxxmkxxx.customgui.client.CustomGUIClient;
+import com.xxxmkxxx.customgui.client.common.Config;
+import com.xxxmkxxx.customgui.client.common.Register;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.stage.AbstractStage;
 
@@ -22,9 +23,9 @@ public class EventManager {
 
     private static AbstractStage changeStage(RendererType type) {
         switch (type) {
-            case SCREEN: return CustomGUIClient.SCREEN_STAGE;
-            case HUD: return CustomGUIClient.HUD_STAGE;
-            default: return CustomGUIClient.HUD_STAGE;
+            case SCREEN: return Register.getGUI(Config.getGuiName()).getScreenStage();
+            case HUD: return Register.getGUI(Config.getGuiName()).getHudStage();
+            default: return Register.getGUI(Config.getGuiName()).getHudStage();
         }
     }
 }

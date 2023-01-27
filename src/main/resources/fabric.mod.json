@@ -12,9 +12,6 @@
   "entrypoints": {
     "client": [
       "com.xxxmkxxx.customgui.client.CustomGUIClient"
-    ],
-    "main": [
-      "com.xxxmkxxx.customgui.CustomGUI"
     ]
   },
   "mixins": [

@@ -1,14 +1,14 @@
 package com.xxxmkxxx.customgui.client.ui.containers.pane;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.xxxmkxxx.customgui.client.CustomGUIClient;
+import com.xxxmkxxx.customgui.CustomGUI;
 import com.xxxmkxxx.customgui.client.common.SimpleBuilder;
 import com.xxxmkxxx.customgui.client.common.Validator;
-import com.xxxmkxxx.customgui.client.geometry.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.MinecraftClient;
@@ -96,7 +96,7 @@ public class SimplePane extends AbstractPane {
 
         @SuppressWarnings("unchecked")
         private void render(SimplePane simplePane) {
-            CustomGUIClient.NODE_DRAWABLE_HELPER.fillFrame(
+            CustomGUI.NODE_DRAWABLE_HELPER.fillFrame(
                     simplePane.getMatrixStack(),
                     simplePane.getFrame(),
                     simplePane.getColor()
@@ -111,7 +111,7 @@ public class SimplePane extends AbstractPane {
 
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            CustomGUIClient.NODE_DRAWABLE_HELPER.gradientFillFrame(
+            CustomGUI.NODE_DRAWABLE_HELPER.gradientFillFrame(
                     simplePane.getMatrixStack(),
                     0, 0,
                     width, height
