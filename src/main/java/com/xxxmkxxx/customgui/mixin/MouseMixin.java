@@ -1,9 +1,6 @@
 package com.xxxmkxxx.customgui.mixin;
 
-import com.xxxmkxxx.customgui.client.CustomGUIClient;
-import com.xxxmkxxx.customgui.client.common.Config;
-import com.xxxmkxxx.customgui.client.common.Register;
-import com.xxxmkxxx.customgui.client.hierarchy.node.events.input.character.KeyboardCharInputEventHandler;
+import com.xxxmkxxx.customgui.CustomGUI;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.scene.AbstractScene;
@@ -27,8 +24,7 @@ public abstract class MouseMixin {
 
     @Inject(method = "lockCursor", at = @At(value = "HEAD"), cancellable = true)
     public void lockCursor(CallbackInfo ci) {
-        if (Register.getGUI(Config.getGuiName()).getScreenStage().getState() == StageState.RENDERING)
-            ci.cancel();
+        if (CustomGUI.getInstance().getScreenStage().getState() == StageState.RENDERING) ci.cancel();
     }
 
     @Inject(method = "onCursorPos", at = @At(value = "TAIL"))
@@ -36,12 +32,12 @@ public abstract class MouseMixin {
         int xPos = (int) (x * this.client.getWindow().getScaledWidth() / this.client.getWindow().getWidth());
         int yPos = (int) (y * this.client.getWindow().getScaledHeight() / this.client.getWindow().getHeight());
 
-        Register.getGUI(Config.getGuiName()).getScreenStage().onCursorUpdate(xPos, yPos);
+        CustomGUI.getInstance().getScreenStage().onCursorUpdate(xPos, yPos);
     }
 
     @Inject(method = "onMouseButton", at = @At(value = "TAIL"))
     public void onMouseButton(long window, int button, int action, int mods, CallbackInfo ci) {
-        AbstractScene scene = Register.getGUI(Config.getGuiName()).getScreenStage().getActiveScene();
+        AbstractScene scene = CustomGUI.getInstance().getScreenStage().getActiveScene();
         AbstractNode node = scene.getTargetManager().getCurrentTarget();
 
         if (wasLeftButtonClicked()) {

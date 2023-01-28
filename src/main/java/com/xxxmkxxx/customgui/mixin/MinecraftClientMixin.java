@@ -1,9 +1,10 @@
 package com.xxxmkxxx.customgui.mixin;
 
-import com.xxxmkxxx.customgui.client.common.Config;
-import com.xxxmkxxx.customgui.client.common.Register;
+import com.xxxmkxxx.customgui.CustomGUI;
+import com.xxxmkxxx.customgui.client.common.initializer.Initializers;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.RunArgs;
 import net.minecraft.client.util.Window;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,10 +17,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MinecraftClientMixin {
     @Shadow @Final private Window window;
 
-    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;thread:Ljava/lang/Thread;", shift = At.Shift.AFTER, ordinal = 0), method = "run")
-    private void onStart(CallbackInfo ci) {
+    @Inject(at = @At(value = "TAIL"), method = "<init>")
+    public void init(RunArgs args, CallbackInfo ci) {
         Section.updateFrames(window.getWidth(), window.getHeight());
-        Register.init();
-        Register.getGUI(Config.getGuiName()).init();
+        CustomGUI.CustomGUIInitializer.init(window);
+    }
+
+    @Inject(at = @At(value = "TAIL"), method = "tick")
+    private void tick(CallbackInfo ci) {
+        Initializers.CUSTOM_GUI_INITIALIZER.initAll(window);
     }
 }

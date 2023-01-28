@@ -4,8 +4,8 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.stage.state.StageState;
 
 public class HudStage extends AbstractStage {
-    public HudStage() {
-        super(RendererType.HUD);
+    public HudStage(int width, int height, int scaledWidth, int scaledHeight) {
+        super(RendererType.HUD, width, height, scaledWidth, scaledHeight);
         state = StageState.SLEEPING;
     }
 

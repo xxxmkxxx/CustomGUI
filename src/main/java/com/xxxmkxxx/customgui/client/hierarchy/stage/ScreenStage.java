@@ -4,8 +4,8 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.stage.state.StageState;
 
 public class ScreenStage extends AbstractStage {
-    public ScreenStage() {
-        super(RendererType.SCREEN);
+    public ScreenStage(int width, int height, int scaledWidth, int scaledHeight) {
+        super(RendererType.SCREEN, width, height, scaledWidth, scaledHeight);
         state = StageState.SLEEPING;
     }
 

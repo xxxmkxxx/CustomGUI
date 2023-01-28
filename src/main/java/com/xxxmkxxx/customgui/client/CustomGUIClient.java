@@ -1,8 +1,8 @@
 package com.xxxmkxxx.customgui.client;
 
 import com.xxxmkxxx.customgui.CustomGUI;
-import com.xxxmkxxx.customgui.client.common.Config;
-import com.xxxmkxxx.customgui.client.common.Register;
+import com.xxxmkxxx.customgui.client.common.inventory.AbstractInventory;
+import com.xxxmkxxx.customgui.client.common.inventory.InventoryType;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.scene.SimpleScene;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Background;
@@ -14,18 +14,76 @@ import com.xxxmkxxx.customgui.client.ui.controls.button.ImagedButton;
 import com.xxxmkxxx.customgui.client.ui.controls.button.SimpleButton;
 import com.xxxmkxxx.customgui.client.ui.controls.image.SimpleImage;
 import com.xxxmkxxx.customgui.client.ui.controls.slot.SimpleSlot;
-import com.xxxmkxxx.customgui.client.ui.controls.slot.SlotFactory;
 import com.xxxmkxxx.customgui.client.ui.controls.text.SimpleText;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class CustomGUIClient implements ClientModInitializer {
+    private static AbstractInventory inventory = new AbstractInventory(InventoryType.ENTITY) {
+        private final List<ItemStack> items = Arrays.asList(
+                ItemStack.EMPTY, new ItemStack(Items.BARREL,5), new ItemStack(Items.ACACIA_PLANKS, 10),
+                new ItemStack(Items.BLUE_GLAZED_TERRACOTTA, 8), new ItemStack(Items.END_STONE_BRICKS, 1)
+        );
+
+        @Override
+        public int size() {
+            return items.size();
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
+
+        @Override
+        public ItemStack getStack(int slot) {
+            return items.get(slot);
+        }
+
+        @Override
+        public ItemStack removeStack(int slot, int amount) {
+            return ItemStack.EMPTY;
+        }
+
+        @Override
+        public ItemStack removeStack(int slot) {
+            return ItemStack.EMPTY;
+        }
+
+        @Override
+        public void setStack(int slot, ItemStack stack) {
+
+        }
+
+        @Override
+        public void markDirty() {
+
+        }
+
+        @Override
+        public boolean canPlayerUse(PlayerEntity player) {
+            return true;
+        }
+
+        @Override
+        public void clear() {
+
+        }
+    };
+
     @Override
     public void onInitializeClient() {
-            CustomGUI customGUI = new CustomGUI();
-            Register.register(Config.getGuiName(), customGUI);
+        ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
+            CustomGUI customGUI = CustomGUI.getInstance();
 
             customGUI.addGUIBlock("test", (hudStage, screenStage) -> {
                 SimpleScene scene = new SimpleScene(RendererType.SCREEN);
@@ -79,11 +137,14 @@ public class CustomGUIClient implements ClientModInitializer {
             customGUI.addGUIBlock("test2", (hudStage, screenStage) -> {
                 SimpleScene scene = new SimpleScene(RendererType.SCREEN);
 
-                SimpleSlot.Factory slotFactory = SimpleSlot.
+                SimpleSlot.Factory slotFactory = SimpleSlot.factoryBuilder(18, 18,inventory).build();
+
+                scene.addElement(slotFactory.create(2, new Pos(50, 50)));
 
                 return scene;
             });
 
-            customGUI.setActiveScene("test", customGUI.getScreenStage());
+            customGUI.setActiveScene("test2", RendererType.SCREEN);
+        });
     }
 }

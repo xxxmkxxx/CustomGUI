@@ -8,7 +8,8 @@ import com.xxxmkxxx.customgui.client.hierarchy.stage.state.StageState;
 import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.client.MinecraftClient;
+
+import java.util.ArrayList;
 
 public abstract class AbstractStage implements Stage {
     protected final RendererType type;
@@ -19,9 +20,10 @@ public abstract class AbstractStage implements Stage {
     @Getter @Setter
     protected StageState state;
 
-    public AbstractStage(RendererType type) {
+    public AbstractStage(RendererType type, int width, int height, int scaledWidth, int scaledHeight) {
         this.type = type;
-        this.window = new Window();
+        this.window = new Window(new ArrayList<>(), width, height, scaledWidth, scaledHeight);
+        EventBus.RESIZE_WINDOW_EVENT.addHandler(window, window);
     }
 
     @Override
@@ -36,21 +38,5 @@ public abstract class AbstractStage implements Stage {
     public void clearScene() {
         activeScene = null;
         state.prev(this);
-    }
-
-    @Override
-    public void init() {
-        initWindow();
-    }
-
-    private void initWindow() {
-        net.minecraft.client.util.Window win = MinecraftClient.getInstance().getWindow();
-
-        window.setWindowWidth(win.getWidth());
-        window.setWindowHeight(win.getHeight());
-        window.setScaledWindowWidth(win.getScaledWidth());
-        window.setScaledWindowHeight(win.getScaledHeight());
-
-        EventBus.RESIZE_WINDOW_EVENT.addHandler(window, window);
     }
 }

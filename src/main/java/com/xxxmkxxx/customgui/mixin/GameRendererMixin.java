@@ -1,9 +1,6 @@
 package com.xxxmkxxx.customgui.mixin;
 
 import com.xxxmkxxx.customgui.CustomGUI;
-import com.xxxmkxxx.customgui.client.CustomGUIClient;
-import com.xxxmkxxx.customgui.client.common.Config;
-import com.xxxmkxxx.customgui.client.common.Register;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import org.spongepowered.asm.mixin.Final;
@@ -22,8 +19,8 @@ public class GameRendererMixin {
     @Inject(method = "render", at = @At(value = "TAIL"))
     public void render(float tickDelta, long startTime, boolean tick, CallbackInfo ci) {
         if (tick && client.world != null) {
-            Register.getGUI(Config.getGuiName()).getHudStage().render();
-            Register.getGUI(Config.getGuiName()).getScreenStage().render();
+            CustomGUI.getInstance().getHudStage().render();
+            CustomGUI.getInstance().getScreenStage().render();
         }
     }
 }
