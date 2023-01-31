@@ -6,6 +6,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.events.AbstractNodeEvent;
 public class KeyboardKeyInputEvent extends AbstractNodeEvent<KeyboardKeyInputEventHandler> {
     @Override
     public void callHandler(AbstractNode node, Object... args) {
-        handlers.get(node).onKeyInput((Integer) args[0]);
+        KeyboardKeyInputEventHandler handler;
+        if ((handler = handlers.get(node)) != null) handler.onKeyInput((Integer) args[0]);
     }
 }
