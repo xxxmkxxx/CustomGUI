@@ -1,4 +1,4 @@
-package com.xxxmkxxx.customgui.client.hierarchy.node.target;
+package com.xxxmkxxx.customgui.client.hierarchy.window;
 
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
@@ -10,7 +10,7 @@ import java.util.function.BiFunction;
 
 @RequiredArgsConstructor
 @SuppressWarnings("all")
-public enum Section {
+public enum WindowSection {
     TOP(
             (width, height) -> new Pos(0, 0),
             (width, height) -> new Pos(width, height / 5)
@@ -57,8 +57,8 @@ public enum Section {
     }
 
     public static void updateFrames(int windowWidth, int windowHeight) {
-        for (Section section : values()) {
-            section.initFrame(windowWidth, windowHeight);
+        for (WindowSection windowSection : values()) {
+            windowSection.initFrame(windowWidth, windowHeight);
         }
     }
 }

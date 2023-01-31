@@ -5,7 +5,7 @@ import com.xxxmkxxx.customgui.client.common.Validator;
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
-import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
+import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
@@ -42,7 +42,7 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
     }
 
     @Override
-    public void initSection(Function<AbstractNode, Section> initMethod) {
+    public void initSection(Function<AbstractNode, WindowSection> initMethod) {
         super.initSection(initMethod);
 
         for (int i = 0; i < amountRows; i++) {

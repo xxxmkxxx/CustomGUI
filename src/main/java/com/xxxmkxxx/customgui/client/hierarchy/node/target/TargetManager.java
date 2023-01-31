@@ -3,13 +3,13 @@ package com.xxxmkxxx.customgui.client.hierarchy.node.target;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.ResetHoverEventHandler;
+import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.util.EnumMap;
 import java.util.Set;
-import java.util.function.Function;
 
 @RequiredArgsConstructor
 public class TargetManager {
@@ -20,13 +20,13 @@ public class TargetManager {
     @Getter @Setter
     private AbstractNode activeNode = AbstractNode.EMPTY_NODE;
 
-    private final EnumMap<Section, Set<AbstractNode>> sections;
+    private final EnumMap<WindowSection, Set<AbstractNode>> sections;
 
     public void update(int x, int y) {
-        Section section = defineCursorSection(x, y);
+        WindowSection windowSection = defineCursorSection(x, y);
 
         lastTarget = currentTarget;
-        currentTarget = searchTargetNode(x, y, sections.get(section));
+        currentTarget = searchTargetNode(x, y, sections.get(windowSection));
 
         if (lastTarget != currentTarget) {
             if (currentTarget instanceof HoverEventHandler handler) {
@@ -47,19 +47,19 @@ public class TargetManager {
         return AbstractNode.EMPTY_NODE;
     }
 
-    private Section defineCursorSection(int x, int y) {
-        for (Section section : Section.values()) {
-            if (section.getFrame().checkPosBelongs(x, y)) return section;
+    private WindowSection defineCursorSection(int x, int y) {
+        for (WindowSection windowSection : WindowSection.values()) {
+            if (windowSection.getFrame().checkPosBelongs(x, y)) return windowSection;
         }
 
-        return Section.MIXED;
+        return WindowSection.MIXED;
     }
 
-    public Section defineNodeSection(AbstractNode node) {
-        for (Section section : Section.values()) {
-            if (section.getFrame().isFrameBelong(node.getFrame())) return section;
+    public WindowSection defineNodeSection(AbstractNode node) {
+        for (WindowSection windowSection : WindowSection.values()) {
+            if (windowSection.getFrame().isFrameBelong(node.getFrame())) return windowSection;
         }
 
-        return Section.MIXED;
+        return WindowSection.MIXED;
     }
 }

@@ -1,6 +1,6 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node;
 
-import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
+import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
@@ -17,20 +17,20 @@ import java.util.function.Function;
 
 @Getter
 public abstract class AbstractNode implements Node {
-    private static int currentIdNumber = 0;
-    private final int id;
     public static final AbstractNode EMPTY_NODE = new AbstractNode() {
         @Override
         public void initRenderer(RendererType type) {
 
         }
     };
+    private static int currentIdNumber = 0;
+    private final int id;
 
     protected AbstractFrame frame = AbstractFrame.DEFAULT_FRAME;
     @Getter
-    protected Section section = Section.MIXED;
+    protected WindowSection windowSection = WindowSection.MIXED;
     @Setter
-    protected Style style = new Style();
+    protected Style style = Style.DEFAULT_STYLE;
     @Setter
     protected MatrixStack matrixStack = new MatrixStack();
     protected NodeState<AbstractNode> state = States.DISPLAYED;
@@ -51,15 +51,15 @@ public abstract class AbstractNode implements Node {
 
     @Override
     public void display() {
-        state = States.HIDED;
+        state = States.DISPLAYED;
     }
 
     public void initRenderer(RendererType type) {
         this.rendererType = type;
     }
 
-    public void initSection(Function<AbstractNode, Section> initMethod) {
-        this.section = initMethod.apply(this);
+    public void initSection(Function<AbstractNode, WindowSection> initMethod) {
+        this.windowSection = initMethod.apply(this);
     }
 
     public void init(Consumer<AbstractNode> initMethod) {
