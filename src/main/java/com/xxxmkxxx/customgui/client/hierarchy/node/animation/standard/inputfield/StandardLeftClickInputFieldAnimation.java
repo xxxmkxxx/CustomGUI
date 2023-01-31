@@ -1,23 +1,15 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node.animation.standard.inputfield;
 
-import com.xxxmkxxx.customgui.CustomGUI;
-import com.xxxmkxxx.customgui.client.CustomGUIClient;
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AbstractAnimation;
-import com.xxxmkxxx.customgui.client.ui.controls.field.AbstractField;
 import com.xxxmkxxx.customgui.client.ui.controls.field.InputField;
 
 public class StandardLeftClickInputFieldAnimation extends AbstractAnimation<InputField> {
     public StandardLeftClickInputFieldAnimation() {
         long timeUnit = 0;
         addFrame(timeUnit+=10, field -> {});
-        addFrame(timeUnit+=20, field -> {
-            CustomGUI.NODE_DRAWABLE_HELPER.drawVerticalLine(
-                    field.getMatrixStack(),
-                    field.getInputCursor().getFrame().getStartPos(),
-                    field.getInputCursor().getFrame().getStopPos(),
-                    field.getInputCursor().getStyle().getHexColor()
-            );
-        });
-        addFrame(timeUnit+=10, field -> {});
+        addFrame(timeUnit+=1, field -> field.getInputCursor().display());
+        addFrame(timeUnit+=1, field -> {});
+        addFrame(timeUnit+=40, field -> field.getInputCursor().hide());
+        addFrame(timeUnit+=1, field -> {});
     }
 }
