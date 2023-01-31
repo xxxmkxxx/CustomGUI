@@ -2,12 +2,15 @@ package com.xxxmkxxx.customgui.client.hierarchy.window.frame;
 
 import com.xxxmkxxx.customgui.client.common.Validator;
 import com.xxxmkxxx.customgui.client.common.event.EventBus;
+import com.xxxmkxxx.customgui.client.common.util.Utils;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.Objects;
 
 @Getter
+@ToString
 public abstract class AbstractFrame implements Frame {
     public static final AbstractFrame DEFAULT_FRAME = new AbstractFrame(10, 10, 10, 10) {};
     protected Pos initialStartPos;
@@ -17,6 +20,8 @@ public abstract class AbstractFrame implements Frame {
     protected int diagonal;
     protected int width;
     protected int height;
+    protected int lastWidthScaleValue;
+    protected int lastHeightScaleValue;
 
     protected AbstractFrame(int xPos, int yPos, int width, int height) {
         this.width = width;
@@ -26,6 +31,8 @@ public abstract class AbstractFrame implements Frame {
         this.startPos = initialStartPos;
         this.stopPos = initialStopPos;
         this.diagonal = Pos.calculateSegmentLength(startPos, stopPos);
+        this.lastWidthScaleValue = 1;
+        this.lastHeightScaleValue = 1;
     }
 
     protected AbstractFrame(Pos startPos, int width, int height) {
@@ -40,36 +47,42 @@ public abstract class AbstractFrame implements Frame {
         this.startPos = initialStartPos;
         this.stopPos = initialStopPos;
         this.diagonal = Pos.calculateSegmentLength(startPos, stopPos);
+        this.lastWidthScaleValue = 1;
+        this.lastHeightScaleValue = 1;
     }
 
     public void scaling(double widthScaleValue, double heightScaleValue) {
-        System.out.println("initStart " + initialStartPos.x() + " " + initialStartPos.y());
-        System.out.println("initStop " + initialStopPos.x() + " " + initialStopPos.y());
+        lastWidthScaleValue = Utils.nonNullValue((int) widthScaleValue);
+        lastHeightScaleValue = Utils.nonNullValue((int) heightScaleValue);
 
         startPos = new Pos(
-                (int) (initialStartPos.x() * widthScaleValue),
-                (int) (initialStartPos.y() * heightScaleValue)
+                Utils.nonNullValue((int) (initialStartPos.x() * widthScaleValue)),
+                Utils.nonNullValue((int) (initialStartPos.y() * heightScaleValue))
         );
 
         stopPos = new Pos(
-                (int) (initialStopPos.x() * widthScaleValue),
-                (int) (initialStopPos.y() * heightScaleValue)
+                Utils.nonNullValue((int) (initialStopPos.x() * widthScaleValue)),
+                Utils.nonNullValue((int) (initialStopPos.y() * heightScaleValue))
         );
-
-        System.out.println("start " + startPos.x() + " " + startPos.y());
-        System.out.println("stop " + stopPos.x() + " " + stopPos.y());
-        System.out.println("======================");
     }
 
     public void setStartPos(Pos startPos) {
         Validator.checkNullObject(startPos);
         this.initialStartPos = startPos;
+        this.startPos = new Pos(
+                Utils.nonNullValue(initialStartPos.x() * lastWidthScaleValue),
+                Utils.nonNullValue(initialStartPos.y() * lastHeightScaleValue)
+        );
         updateFields();
         EventBus.CHANGE_FRAME_EVENT.callHandler(this);
     }
 
     public void setStartPos(int xStartPos, int yStartPos) {
         this.initialStartPos = new Pos(xStartPos, yStartPos);
+        this.startPos = new Pos(
+                Utils.nonNullValue(initialStartPos.x() * lastWidthScaleValue),
+                Utils.nonNullValue(initialStartPos.y() * lastHeightScaleValue)
+        );
         updateFields();
         EventBus.CHANGE_FRAME_EVENT.callHandler(this);
     }
@@ -77,12 +90,20 @@ public abstract class AbstractFrame implements Frame {
     public void setStopPos(Pos stopPos) {
         Validator.checkNullObject(stopPos);
         this.initialStopPos = stopPos;
+        this.stopPos = new Pos(
+                Utils.nonNullValue(initialStopPos.x() * lastWidthScaleValue),
+                Utils.nonNullValue(initialStopPos.y() * lastHeightScaleValue)
+        );
         updateFields();
         EventBus.CHANGE_FRAME_EVENT.callHandler(this);
     }
 
     public void setStopPos(int xStopPos, int yStopPos) {
         this.initialStopPos = new Pos(xStopPos, yStopPos);
+        this.stopPos = new Pos(
+                Utils.nonNullValue(initialStopPos.x() * lastWidthScaleValue),
+                Utils.nonNullValue(initialStopPos.y() * lastHeightScaleValue)
+        );
         updateFields();
         EventBus.CHANGE_FRAME_EVENT.callHandler(this);
     }
