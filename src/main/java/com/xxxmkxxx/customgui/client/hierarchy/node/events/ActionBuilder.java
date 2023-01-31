@@ -58,7 +58,7 @@ public class ActionBuilder {
         return this;
     }
 
-    public <N extends AbstractNode> ActionBuilder deleteCyclicAnimation(String animationName, AbstractAnimation<N> animation) {
+    public <N extends AbstractNode> ActionBuilder deleteCyclicAnimation(String animationName) {
         actions.add(() -> {
             animationManager.deleteCyclicAnimation(animationName);
         });

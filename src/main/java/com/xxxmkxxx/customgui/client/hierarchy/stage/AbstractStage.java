@@ -6,10 +6,9 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.scene.AbstractScene;
 import com.xxxmkxxx.customgui.client.hierarchy.stage.state.StageState;
 import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
+import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSectionNodes;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.ArrayList;
 
 public abstract class AbstractStage implements Stage {
     protected final RendererType type;
@@ -22,14 +21,14 @@ public abstract class AbstractStage implements Stage {
 
     public AbstractStage(RendererType type, int width, int height, int scaledWidth, int scaledHeight) {
         this.type = type;
-        this.window = new Window(new ArrayList<>(), width, height, scaledWidth, scaledHeight);
+        this.window = new Window(new WindowSectionNodes(), width, height, scaledWidth, scaledHeight);
         EventBus.RESIZE_WINDOW_EVENT.addHandler(window, window);
     }
 
     @Override
     public void setActiveScene(AbstractScene scene) {
         Validator.checkNullObject(scene);
-        window.setNodes(scene.getAllNodes());
+        window.setWindowSectionNodes(scene.getWindowSectionNodes());
         activeScene = scene;
         state.next(this);
     }
