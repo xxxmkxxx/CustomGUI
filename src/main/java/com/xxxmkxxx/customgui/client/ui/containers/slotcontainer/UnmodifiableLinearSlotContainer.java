@@ -90,7 +90,7 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
 
             result[i] = slot;
 
-            currentPos = new Pos(slot.getFrame().getStopPos().x() + offset, pos.y());
+            currentPos = new Pos(slot.getFrame().getStopPos().getX() + offset, pos.getY());
         }
 
         return result;

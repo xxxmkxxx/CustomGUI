@@ -133,7 +133,7 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
                         .offset(offset)
                         .build();
 
-                currentPos = new Pos(pos.x(), container.getSlot(0).getFrame().getStopPos().y() + offset);
+                currentPos = new Pos(pos.getX(), container.getSlot(0).getFrame().getStopPos().getY() + offset);
             }
 
             return result;

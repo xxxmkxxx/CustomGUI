@@ -10,7 +10,11 @@ public class Utils {
     public static int getTextWidth(Text text) {
         return MinecraftClient.getInstance().textRenderer.getWidth(text);
     }
-    public static int nonNullValue(int value) {
+    public static int nonNullIntValue(int value) {
         return value > 0 ? value : 1;
+    }
+
+    public static int nonNullIntValue(double value) {
+        return nonNullIntValue((int) value);
     }
 }

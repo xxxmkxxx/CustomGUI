@@ -36,8 +36,8 @@ public class NodeDrawableHelper extends DrawableHelper {
     public void gradientFillFrame(MatrixStack matrix, AbstractFrame frame, int colorStart, int colorEnd) {
         gradientFillFrame(
                 matrix,
-                frame.getStartPos().x(), frame.getStartPos().y(),
-                frame.getStopPos().x(), frame.getStopPos().y(),
+                frame.getStartPos().getX(), frame.getStartPos().getY(),
+                frame.getStopPos().getX(), frame.getStopPos().getY(),
                 colorStart, colorEnd
         );
     }
@@ -49,8 +49,8 @@ public class NodeDrawableHelper extends DrawableHelper {
     public void fillFrame(MatrixStack matrix, AbstractFrame frame, int color) {
         fillFrame(
                 matrix,
-                frame.getStartPos().x(), frame.getStartPos().y(),
-                frame.getStopPos().x(), frame.getStopPos().y(),
+                frame.getStartPos().getX(), frame.getStartPos().getY(),
+                frame.getStopPos().getX(), frame.getStopPos().getY(),
                 color
         );
     }
@@ -75,11 +75,13 @@ public class NodeDrawableHelper extends DrawableHelper {
     }
 
     public void drawText(MatrixStack matrix, Text text, Pos pos, int color) {
-        drawText(matrix, text, pos.x(), pos.y(), color);
+        drawText(matrix, text, pos.getX(), pos.getY(), color);
     }
 
     public void drawTexture(ItemStack stack, AbstractFrame frame) {
-        drawTexture(stack, frame.getStartPos(), frame.getWidth(), frame.getHeight());
+        int width = frame.getStopPos().getX() - frame.getStartPos().getX();
+        int height = frame.getStopPos().getY() - frame.getStartPos().getY();
+        drawTexture(stack, frame.getStartPos(), width, height);
     }
 
     public void drawTexture(ItemStack stack, Pos pos, int width, int height) {
@@ -93,7 +95,7 @@ public class NodeDrawableHelper extends DrawableHelper {
 
         MatrixStack matrixStack = RenderSystem.getModelViewStack();
         matrixStack.push();
-        matrixStack.translate(pos.x(), pos.y(), 0);
+        matrixStack.translate(pos.getX(), pos.getY(), 0);
         matrixStack.translate(width / 2.0D, height / 2.0D, 0);
         matrixStack.scale(1.0F, -1.0F, 1.0F);
         matrixStack.scale(width, height, 0);
@@ -129,19 +131,19 @@ public class NodeDrawableHelper extends DrawableHelper {
 
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
         bufferBuilder
-                .vertex(matrix.peek().getPositionMatrix(), frame.getStartPos().x(), frame.getStopPos().y(), 0)
+                .vertex(matrix.peek().getPositionMatrix(), frame.getStartPos().getX(), frame.getStopPos().getY(), 0)
                 .texture(0, 1)
                 .next();
         bufferBuilder
-                .vertex(matrix.peek().getPositionMatrix(), frame.getStopPos().x(), frame.getStopPos().y(), 0)
+                .vertex(matrix.peek().getPositionMatrix(), frame.getStopPos().getX(), frame.getStopPos().getY(), 0)
                 .texture(1, 1)
                 .next();
         bufferBuilder
-                .vertex(matrix.peek().getPositionMatrix(), frame.getStopPos().x(), frame.getStartPos().y(), 0)
+                .vertex(matrix.peek().getPositionMatrix(), frame.getStopPos().getX(), frame.getStartPos().getY(), 0)
                 .texture(1, 0)
                 .next();
         bufferBuilder
-                .vertex(matrix.peek().getPositionMatrix(), frame.getStartPos().x(), frame.getStartPos().y(), 0)
+                .vertex(matrix.peek().getPositionMatrix(), frame.getStartPos().getX(), frame.getStartPos().getY(), 0)
                 .texture(0, 0)
                 .next();
         bufferBuilder.end();
@@ -151,16 +153,16 @@ public class NodeDrawableHelper extends DrawableHelper {
 
     public void drawFrameAroundFrame(MatrixStack matrix, AbstractFrame frame, int color) {
         //Top line
-        drawHorizontalLine(matrix, frame.getStartPos().x(), frame.getStopPos().x(), frame.getStartPos().y(), color);
+        drawHorizontalLine(matrix, frame.getStartPos().getX(), frame.getStopPos().getX(), frame.getStartPos().getY(), color);
         //Down line
-        drawHorizontalLine(matrix, frame.getStartPos().x(), frame.getStopPos().x(), frame.getStopPos().y(), color);
+        drawHorizontalLine(matrix, frame.getStartPos().getX(), frame.getStopPos().getX(), frame.getStopPos().getY(), color);
         //Left line
-        drawVerticalLine(matrix, frame.getStartPos().x(), frame.getStartPos().y(), frame.getStopPos().y(), color);
+        drawVerticalLine(matrix, frame.getStartPos().getX(), frame.getStartPos().getY(), frame.getStopPos().getY(), color);
         //Right line
-        drawVerticalLine(matrix, frame.getStopPos().x(), frame.getStartPos().y(), frame.getStopPos().y(), color);
+        drawVerticalLine(matrix, frame.getStopPos().getX(), frame.getStartPos().getY(), frame.getStopPos().getY(), color);
     }
 
     public void drawVerticalLine(MatrixStack matrix, Pos startPos, Pos stopPos, int color) {
-        drawVerticalLine(matrix, startPos.x(), startPos.y(), stopPos.y(), color);
+        drawVerticalLine(matrix, startPos.getX(), startPos.getY(), stopPos.getY(), color);
     }
 }

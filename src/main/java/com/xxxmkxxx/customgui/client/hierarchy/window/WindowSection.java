@@ -1,10 +1,12 @@
 package com.xxxmkxxx.customgui.client.hierarchy.window;
 
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.Frame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.function.BiFunction;
 
@@ -42,23 +44,28 @@ public enum WindowSection {
     );
 
     @Getter
-    private AbstractFrame frame;
+    private AbstractFrame frame = AbstractFrame.DEFAULT_FRAME;
+    @Getter
     private final BiFunction<Integer, Integer, Pos> expressionStartPos;
+    @Getter
     private final BiFunction<Integer, Integer, Pos> expressionStopPos;
 
-    public void initFrame(int windowWidth, int windowHeight) {
-        Pos pos1 = expressionStartPos.apply(windowWidth, windowHeight);
-        Pos pos2 = expressionStopPos.apply(windowWidth, windowHeight);
-
-        frame = new SimpleFrame(
-                expressionStartPos.apply(windowWidth, windowHeight),
-                expressionStopPos.apply(windowWidth, windowHeight)
-        );
+    public void initFrame(Pos startPos, Pos stopPos) {
+        this.frame = new SimpleFrame(startPos, stopPos);
     }
 
-    public static void updateFrames(int windowWidth, int windowHeight) {
+    public static void initFrames(int windowWidth, int windowHeight) {
         for (WindowSection windowSection : values()) {
-            windowSection.initFrame(windowWidth, windowHeight);
+            windowSection.initFrame(
+                    windowSection.getExpressionStartPos().apply(windowWidth, windowHeight),
+                    windowSection.getExpressionStopPos().apply(windowWidth, windowHeight)
+            );
+        }
+    }
+
+    public static void updateFrames(double widthScaleValue, double heightScaleValue) {
+        for (WindowSection windowSection : values()) {
+            windowSection.getFrame().scaling(widthScaleValue, heightScaleValue);
         }
     }
 }
