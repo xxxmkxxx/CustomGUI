@@ -4,14 +4,12 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.ResetHoverEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
+import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSectionNodes;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.util.EnumMap;
 import java.util.Set;
 
-@RequiredArgsConstructor
 public class TargetManager {
     @Getter
     private AbstractNode currentTarget = AbstractNode.EMPTY_NODE;
@@ -20,13 +18,17 @@ public class TargetManager {
     @Getter @Setter
     private AbstractNode activeNode = AbstractNode.EMPTY_NODE;
 
-    private final EnumMap<WindowSection, Set<AbstractNode>> sections;
+    private final WindowSectionNodes windowSectionNodes;
+
+    public TargetManager(WindowSectionNodes windowSectionNodes) {
+        this.windowSectionNodes = windowSectionNodes;
+    }
 
     public void update(int x, int y) {
         WindowSection windowSection = defineCursorSection(x, y);
 
         lastTarget = currentTarget;
-        currentTarget = searchTargetNode(x, y, sections.get(windowSection));
+        currentTarget = searchTargetNode(x, y, windowSectionNodes.getNodes(windowSection));
 
         if (lastTarget != currentTarget) {
             if (currentTarget instanceof HoverEventHandler handler) {
@@ -40,26 +42,28 @@ public class TargetManager {
     }
 
     private AbstractNode searchTargetNode(int x, int y, Set<AbstractNode> nodes) {
+        AbstractNode targetNode = AbstractNode.EMPTY_NODE;
+
         for (AbstractNode node : nodes) {
-            if (node.getFrame().checkPosBelongs(x, y)) return node;
+            if (node.getFrame().checkPosBelongs(x, y)) {
+                targetNode = node;
+                break;
+            }
         }
 
-        return AbstractNode.EMPTY_NODE;
+        return targetNode;
     }
 
     private WindowSection defineCursorSection(int x, int y) {
+        WindowSection section = WindowSection.MIXED;
+
         for (WindowSection windowSection : WindowSection.values()) {
-            if (windowSection.getFrame().checkPosBelongs(x, y)) return windowSection;
+            if (windowSection.getFrame().checkPosBelongs(x, y)) {
+                section = windowSection;
+                break;
+            }
         }
 
-        return WindowSection.MIXED;
-    }
-
-    public WindowSection defineNodeSection(AbstractNode node) {
-        for (WindowSection windowSection : WindowSection.values()) {
-            if (windowSection.getFrame().isFrameBelong(node.getFrame())) return windowSection;
-        }
-
-        return WindowSection.MIXED;
+        return section;
     }
 }

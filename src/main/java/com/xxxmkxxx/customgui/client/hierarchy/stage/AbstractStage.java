@@ -1,6 +1,7 @@
 package com.xxxmkxxx.customgui.client.hierarchy.stage;
 
 import com.xxxmkxxx.customgui.client.common.Validator;
+import com.xxxmkxxx.customgui.client.common.comparators.NodeFrameComparator;
 import com.xxxmkxxx.customgui.client.common.event.EventBus;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.scene.AbstractScene;
@@ -21,7 +22,7 @@ public abstract class AbstractStage implements Stage {
 
     public AbstractStage(RendererType type, int width, int height, int scaledWidth, int scaledHeight) {
         this.type = type;
-        this.window = new Window(new WindowSectionNodes(), width, height, scaledWidth, scaledHeight);
+        this.window = new Window(width, height, scaledWidth, scaledHeight);
         EventBus.RESIZE_WINDOW_EVENT.addHandler(window, window);
     }
 
