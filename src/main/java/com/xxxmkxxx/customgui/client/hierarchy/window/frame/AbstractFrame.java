@@ -1,6 +1,5 @@
 package com.xxxmkxxx.customgui.client.hierarchy.window.frame;
 
-import com.xxxmkxxx.customgui.client.common.Validator;
 import com.xxxmkxxx.customgui.client.common.event.EventBus;
 import com.xxxmkxxx.customgui.client.common.util.Utils;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
@@ -20,8 +19,8 @@ public abstract class AbstractFrame implements Frame {
     protected int diagonal;
     protected int width;
     protected int height;
-    protected int lastWidthScaleValue;
-    protected int lastHeightScaleValue;
+    protected double lastWidthScaleValue;
+    protected double lastHeightScaleValue;
 
     protected AbstractFrame(int xPos, int yPos, int width, int height) {
         this.width = width;
@@ -36,12 +35,12 @@ public abstract class AbstractFrame implements Frame {
     }
 
     protected AbstractFrame(Pos startPos, int width, int height) {
-        this(startPos.x(), startPos.y(), width, height);
+        this(startPos.getX(), startPos.getY(), width, height);
     }
 
     protected AbstractFrame(Pos startPos, Pos stopPos) {
-        this.width = stopPos.x() - startPos.x();
-        this.height = stopPos.y() - startPos.y();
+        this.width = stopPos.getX() - startPos.getX();
+        this.height = stopPos.getY() - startPos.getY();
         this.initialStartPos = startPos;
         this.initialStopPos = stopPos;
         this.startPos = initialStartPos;
@@ -52,65 +51,57 @@ public abstract class AbstractFrame implements Frame {
     }
 
     public void scaling(double widthScaleValue, double heightScaleValue) {
-        lastWidthScaleValue = Utils.nonNullValue((int) widthScaleValue);
-        lastHeightScaleValue = Utils.nonNullValue((int) heightScaleValue);
+        lastWidthScaleValue = widthScaleValue;
+        lastHeightScaleValue = heightScaleValue;
 
         startPos = new Pos(
-                Utils.nonNullValue((int) (initialStartPos.x() * widthScaleValue)),
-                Utils.nonNullValue((int) (initialStartPos.y() * heightScaleValue))
+                Utils.nonNullIntValue(initialStartPos.getX() * widthScaleValue),
+                Utils.nonNullIntValue(initialStartPos.getY() * heightScaleValue)
         );
 
         stopPos = new Pos(
-                Utils.nonNullValue((int) (initialStopPos.x() * widthScaleValue)),
-                Utils.nonNullValue((int) (initialStopPos.y() * heightScaleValue))
+                Utils.nonNullIntValue(initialStopPos.getX() * widthScaleValue),
+                Utils.nonNullIntValue(initialStopPos.getY() * heightScaleValue)
         );
     }
 
-    public void setStartPos(Pos startPos) {
-        Validator.checkNullObject(startPos);
-        this.initialStartPos = startPos;
+    public void moveStartPos(int xDistance, int yDistance) {
+        this.initialStartPos.moveByXY(xDistance, yDistance);
         this.startPos = new Pos(
-                Utils.nonNullValue(initialStartPos.x() * lastWidthScaleValue),
-                Utils.nonNullValue(initialStartPos.y() * lastHeightScaleValue)
+                Utils.nonNullIntValue(initialStartPos.getX() * lastWidthScaleValue),
+                Utils.nonNullIntValue(initialStartPos.getY() * lastHeightScaleValue)
         );
-        updateFields();
+
+        updateFields(startPos, stopPos);
         EventBus.CHANGE_FRAME_EVENT.callHandler(this);
     }
 
-    public void setStartPos(int xStartPos, int yStartPos) {
-        this.initialStartPos = new Pos(xStartPos, yStartPos);
-        this.startPos = new Pos(
-                Utils.nonNullValue(initialStartPos.x() * lastWidthScaleValue),
-                Utils.nonNullValue(initialStartPos.y() * lastHeightScaleValue)
+    public void moveStartPos(Pos startPos) {
+        moveStartPos(
+                startPos.getX() - this.startPos.getX(),
+                startPos.getY() - this.startPos.getY()
         );
-        updateFields();
-        EventBus.CHANGE_FRAME_EVENT.callHandler(this);
     }
 
-    public void setStopPos(Pos stopPos) {
-        Validator.checkNullObject(stopPos);
-        this.initialStopPos = stopPos;
+    public void moveStopPos(int xDistance, int yDistance) {
+        this.initialStopPos.moveByXY(xDistance, yDistance);
         this.stopPos = new Pos(
-                Utils.nonNullValue(initialStopPos.x() * lastWidthScaleValue),
-                Utils.nonNullValue(initialStopPos.y() * lastHeightScaleValue)
+                Utils.nonNullIntValue(initialStopPos.getX() * lastWidthScaleValue),
+                Utils.nonNullIntValue(initialStopPos.getY() * lastHeightScaleValue)
         );
-        updateFields();
+
+        updateFields(startPos, stopPos);
         EventBus.CHANGE_FRAME_EVENT.callHandler(this);
     }
 
-    public void setStopPos(int xStopPos, int yStopPos) {
-        this.initialStopPos = new Pos(xStopPos, yStopPos);
-        this.stopPos = new Pos(
-                Utils.nonNullValue(initialStopPos.x() * lastWidthScaleValue),
-                Utils.nonNullValue(initialStopPos.y() * lastHeightScaleValue)
-        );
-        updateFields();
-        EventBus.CHANGE_FRAME_EVENT.callHandler(this);
+    public void moveStopPos(Pos stopPos) {
+        moveStopPos(stopPos.getX(), stopPos.getY());
     }
 
-    private void updateFields() {
-        this.width = stopPos.x() - startPos.x();
-        this.height = stopPos.y() - startPos.y();
+    private void updateFields(Pos startPos, Pos stopPos) {
+        this.width = stopPos.getX() - startPos.getX();
+        this.height = stopPos.getY() - startPos.getY();
+        this.diagonal = Pos.calculateSegmentLength(startPos, stopPos);
     }
 
     @Override
@@ -120,22 +111,22 @@ public abstract class AbstractFrame implements Frame {
 
     @Override
     public boolean checkPosBelongs(Pos pos) {
-        return checkPosBelongs(pos.x(), pos.y());
+        return checkPosBelongs(pos.getX(), pos.getY());
     }
 
     public static boolean checkPosBelongs(Pos startPos, Pos stopPos, int xPos, int yPos) {
         boolean xBelongs = false, yBelongs = false;
 
-        if (startPos.x() < stopPos.x()) {
-            xBelongs = xPos >= startPos.x() && xPos <= stopPos.x();
-        } else if (startPos.x() > stopPos.x()) {
-            xBelongs = xPos <= startPos.x() && xPos >= stopPos.x();
+        if (startPos.getX() < stopPos.getX()) {
+            xBelongs = xPos >= startPos.getX() && xPos <= stopPos.getX();
+        } else if (startPos.getX() > stopPos.getX()) {
+            xBelongs = xPos <= startPos.getX() && xPos >= stopPos.getX();
         }
 
-        if (startPos.y() < stopPos.y()) {
-            yBelongs = yPos >= startPos.y() && yPos <= stopPos.y();
-        } else if (startPos.y() > stopPos.y()) {
-            yBelongs = yPos <= startPos.y() && yPos >= stopPos.y();
+        if (startPos.getY() < stopPos.getY()) {
+            yBelongs = yPos >= startPos.getY() && yPos <= stopPos.getY();
+        } else if (startPos.getY() > stopPos.getY()) {
+            yBelongs = yPos <= startPos.getY() && yPos >= stopPos.getY();
         }
 
         return xBelongs && yBelongs;
