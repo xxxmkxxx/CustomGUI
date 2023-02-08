@@ -23,9 +23,8 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
     private Runnable hoverAction = () -> {};
     private Runnable  resetHoverAction = () -> {};
 
-    protected SimpleText(Pos startPos, Text text, Style style) {
+    protected SimpleText(Pos startPos, Text text) {
         super(startPos, text);
-        this.style = style;
     }
 
     public void setLeftClickAction(Runnable leftClickAction) {
@@ -95,7 +94,7 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
     public static class Builder {
         private Pos startPos = Pos.DEFAULT_POS;
         private Text text = Text.of("text");
-        private Style style = Style.DEFAULT_STYLE;
+        private Style style = Style.defaultStyle();
 
         public Builder style(Style style) {
             this.style = style;
@@ -123,7 +122,9 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
         }
 
         public SimpleText build() {
-            return new SimpleText(startPos, text, style);
+            SimpleText simpleText = new SimpleText(startPos, text);
+            simpleText.setStyle(style);
+            return simpleText;
         }
     }
 }
