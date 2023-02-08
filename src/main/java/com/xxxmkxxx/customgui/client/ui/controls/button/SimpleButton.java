@@ -28,9 +28,8 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
     protected Runnable resetHoverAction;
 
     @SuppressWarnings("CodeBlock2Expr")
-    protected SimpleButton(Pos start, String name, Style style) {
+    protected SimpleButton(Pos start, String name) {
         super(start, name);
-        this.style = style;
         this.leftClickAction = () -> {
             EventManager.sendAction(
                     rendererType,
@@ -113,7 +112,7 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
     public static class Builder {
         private String buttonName = "button";
         private Pos startPos = Pos.DEFAULT_POS;
-        private Style style = Style.DEFAULT_STYLE;
+        private Style style = Style.defaultStyle();
 
         public Builder text(String text) {
             this.buttonName = text;
@@ -126,12 +125,18 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
         }
 
         public Builder style(Style style) {
-            this.style = style;
+            try {
+                this.style = (Style) style.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
             return this;
         }
 
         public SimpleButton build() {
-            return new SimpleButton(startPos, buttonName, style);
+            SimpleButton button = new SimpleButton(startPos, buttonName);
+            button.setStyle(style);
+            return button;
         }
     }
 

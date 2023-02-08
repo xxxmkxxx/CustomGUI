@@ -16,7 +16,6 @@ public abstract class AbstractButton extends AbstractNode implements Button {
         this.text = SimpleText.builder()
                 .text(buttonText)
                 .pos(startPos)
-                .style(new Style())
                 .build();
         this.frame = new SimpleFrame(
                 startPos,

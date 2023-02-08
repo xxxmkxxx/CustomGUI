@@ -25,9 +25,8 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
     protected Runnable hoverAction = () -> {};
     protected Runnable resetHoverAction = () -> {};
 
-    private ImagedButton(Pos startPos, Text text, AbstractImage image, Style style) {
+    private ImagedButton(Pos startPos, Text text, AbstractImage image) {
         super(startPos, text.getString());
-        this.style = style;
         this.image = image;
         initFrame(image);
     }
@@ -115,11 +114,15 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
     public static class Builder {
         private Pos startPos = Pos.DEFAULT_POS;
         private Text text = Text.of("button");
-        private Style style = Style.DEFAULT_STYLE;
+        private Style style = Style.defaultStyle();
         private AbstractImage image;
 
         public Builder style(Style style) {
-            this.style = style;
+            try {
+                this.style = (Style) style.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
             return this;
         }
 
@@ -144,7 +147,9 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
         }
 
         public ImagedButton build() {
-            return new ImagedButton(startPos, text, image, style);
+            ImagedButton imagedButton = new ImagedButton(startPos, text, image);
+            imagedButton.setStyle(style);
+            return imagedButton;
         }
     }
 }
