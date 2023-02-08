@@ -39,7 +39,7 @@ public class InputCursor extends AbstractCursor {
 
     public static class Builder {
         private Pos pos = Pos.DEFAULT_POS;
-        private Style style = Style.DEFAULT_STYLE;
+        private Style style = Style.defaultStyle();
         private int width = 1;
         private int height = 7;
 
@@ -59,7 +59,11 @@ public class InputCursor extends AbstractCursor {
         }
 
         public Builder style(Style style) {
-            this.style = style;
+            try {
+                this.style = (Style) style.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
             return this;
         }
 
