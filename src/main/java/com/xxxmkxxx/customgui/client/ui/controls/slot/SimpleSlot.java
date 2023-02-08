@@ -43,13 +43,11 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
         this.resetHoverAction = () -> {};
         this.amountItemsText = SimpleText.builder()
                 .pos(initAmountItemsTextStartPos(Text.of(String.valueOf(inventory.getStack(index).getCount()))))
-                .style(new Style())
                 .build();
         this.image = SimpleImage.builder()
                 .startPos(startPos)
                 .width(width)
                 .height(height)
-                .style(new Style())
                 .build();
 
         updateAmountItemsText(inventory.getStack(index));
@@ -142,10 +140,18 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
         private final int width;
         private final int height;
         private final AbstractInventory inventory;
-        private Style style = Style.DEFAULT_STYLE;
+        private Style style = Style.defaultStyle();
         private Consumer<ItemStack> leftClickAction = (itemStack) -> {};
         private Runnable hoverAction = () -> {};
         private Runnable resetHoverAction = () -> {};
+
+        public void setStyle(Style style) {
+            try {
+                this.style = (Style) style.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         @Override
         public SimpleSlot create(int index, Pos pos) {
