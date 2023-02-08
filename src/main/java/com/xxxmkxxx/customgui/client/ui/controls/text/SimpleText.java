@@ -8,9 +8,11 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.ResetHoverEven
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
+import com.xxxmkxxx.customgui.client.hierarchy.style.Color;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import lombok.Getter;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
@@ -74,7 +76,7 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
                 CustomGUI.NODE_DRAWABLE_HELPER.drawText(
                         simpleText.getStyle().getMatrixStack(),
                         simpleText.getText(),
-                        simpleText.getFrame().getStartPos(),
+                        simpleText.getStartPos(),
                         simpleText.getStyle().getHexColor()
                 );
             };
