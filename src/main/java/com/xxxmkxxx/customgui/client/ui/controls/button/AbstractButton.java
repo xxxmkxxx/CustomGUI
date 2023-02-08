@@ -2,26 +2,25 @@ package com.xxxmkxxx.customgui.client.ui.controls.button;
 
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
-import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
+import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
-import com.xxxmkxxx.customgui.client.ui.controls.text.AbstractText;
+import com.xxxmkxxx.customgui.client.ui.controls.text.SimpleText;
 import lombok.Getter;
 
 @Getter
 public abstract class AbstractButton extends AbstractNode implements Button {
-    protected final AbstractText text;
+    protected final SimpleText text;
 
-    public AbstractButton(Pos startPos, AbstractText text) {
-        this.text = text;
-        this.frame = initFrame(startPos, text);
-    }
-
-    private AbstractFrame initFrame(Pos startPos, AbstractText text) {
-        return new SimpleFrame(
+    public AbstractButton(Pos startPos, String buttonText) {
+        this.text = SimpleText.builder()
+                .text(buttonText)
+                .pos(startPos)
+                .style(new Style())
+                .build();
+        this.frame = new SimpleFrame(
                 startPos,
-                text.getTextWidth() + text.getStyle().getIndent().getLeft() + text.getStyle().getIndent().getRight(),
-                text.getTextHeight() + text.getStyle().getIndent().getTop() + text.getStyle().getIndent().getBottom()
+                text.getFrame().getStopPos()
         );
     }
 

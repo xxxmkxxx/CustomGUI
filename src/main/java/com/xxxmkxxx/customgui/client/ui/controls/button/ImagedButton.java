@@ -13,7 +13,6 @@ import com.xxxmkxxx.customgui.client.hierarchy.style.Background;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.ui.controls.image.AbstractImage;
-import com.xxxmkxxx.customgui.client.ui.controls.text.SimpleText;
 import lombok.Getter;
 import net.minecraft.text.Text;
 
@@ -27,16 +26,16 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
     protected Runnable resetHoverAction = () -> {};
 
     private ImagedButton(Pos startPos, Text text, AbstractImage image, Style style) {
-        super(startPos, SimpleText.builder().pos(startPos).text(text).build());
+        super(startPos, text.getString());
         this.style = style;
         this.image = image;
         initFrame(image);
     }
 
     private void initFrame(AbstractImage image) {
-        this.frame.setStopPos(new Pos(
-                frame.getStopPos().x() + image.getFrame().getWidth() + image.getStyle().getIndent().getRight(),
-                frame.getStopPos().y() + image.getFrame().getHeight() + image.getStyle().getIndent().getBottom()
+        this.frame.moveStopPos(new Pos(
+                frame.getStopPos().getX() + image.getFrame().getWidth() + image.getStyle().getIndent().getRight(),
+                frame.getStopPos().getY() + image.getFrame().getHeight() + image.getStyle().getIndent().getBottom()
         ));
     }
 

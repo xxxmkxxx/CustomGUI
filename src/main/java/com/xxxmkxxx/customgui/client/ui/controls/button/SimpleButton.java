@@ -10,14 +10,13 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.events.EventManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.ResetHoverEventHandler;
-import com.xxxmkxxx.customgui.client.hierarchy.node.target.Section;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Background;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
-import com.xxxmkxxx.customgui.client.ui.controls.text.SimpleText;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -30,7 +29,7 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
 
     @SuppressWarnings("CodeBlock2Expr")
     protected SimpleButton(Pos start, String name, Style style) {
-        super(start, SimpleText.builder().text(name).style(style).pos(start).build());
+        super(start, name);
         this.style = style;
         this.leftClickAction = () -> {
             EventManager.sendAction(
@@ -63,6 +62,11 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
                             .deleteStickyAnimation("standard_hover_animation")
             );
         };
+    }
+
+    @Override
+    public void initSection(Function<AbstractNode, WindowSection> initMethod) {
+        super.initSection(initMethod);
     }
 
     @Override
@@ -158,7 +162,7 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
                     button.getStyle().getHexBackgroundColor()
             );
 
-            button.getText().getRenderer().render(button.getText());
+            button.getText().getState().execute(button.getText(), button.getText().getRenderer());
         }
     }
 }
