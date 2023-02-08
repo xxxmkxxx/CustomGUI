@@ -37,7 +37,6 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
     protected InputField(Pos pos, int width, int height) {
         this.frame = new SimpleFrame(pos, width, height);
         this.text = SimpleText.builder()
-                .style(new Style())
                 .pos(pos)
                 .text("")
                 .build();
@@ -45,7 +44,6 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
                 .pos(pos)
                 .width(1)
                 .height(text.getTextHeight())
-                .style(new Style())
                 .build();
         inputCursor.hide();
     }
@@ -149,16 +147,20 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
     }
 
     public static class Builder {
-        private Style style = Style.DEFAULT_STYLE;
+        private Style style = Style.defaultStyle();
 
         public Builder style(Style style) {
-            this.style = style;
+            try {
+                this.style = (Style) style.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
             return this;
         }
 
         public InputField build(Pos startPos, int width, int height) {
             InputField inputField = new InputField(startPos, width, height);
-
+            inputField.setStyle(style);
             return inputField;
         }
     }
