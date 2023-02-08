@@ -52,8 +52,8 @@ public class LinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlot
         T slot = factory.create(index, currentSlotPos);
         slots.add(slot);
 
-        currentSlotPos = new Pos(slot.getFrame().getStopPos().x() + offset, frame.getStartPos().y());
-        frame.setStopPos(currentSlotPos);
+        currentSlotPos = new Pos(slot.getFrame().getStopPos().getX() + offset, frame.getStartPos().getY());
+        frame.moveStopPos(currentSlotPos);
     }
 
     @Override
