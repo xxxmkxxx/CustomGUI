@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 
 @Getter @Setter
 @Builder
-public class Background {
+public class Background implements Cloneable {
     @Builder.Default
     private MatrixStack matrixStack = new MatrixStack();
     @Builder.Default
@@ -23,6 +23,11 @@ public class Background {
     private Opacity opacity = new Opacity(50);
     @Builder.Default
     private Identifier identifier = new Identifier("modid");
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return new Background(matrixStack, type, (Color) color.clone(), (Opacity) opacity.clone(), identifier);
+    }
 
     public static <N extends AbstractNode> Consumer<N> chooseBackground(Type type) {
         Consumer<N> renderMethod = (node) -> {};

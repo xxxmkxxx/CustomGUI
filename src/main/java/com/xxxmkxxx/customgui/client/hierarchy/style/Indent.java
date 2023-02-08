@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class Indent {
+public class Indent implements Cloneable {
     @Builder.Default
     private int top = 1;
     @Builder.Default
@@ -14,4 +14,9 @@ public class Indent {
     private int right = 1;
     @Builder.Default
     private int left = 1;
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return new Indent(top, bottom, right, left);
+    }
 }

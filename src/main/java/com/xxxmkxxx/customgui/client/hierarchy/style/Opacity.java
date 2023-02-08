@@ -3,14 +3,19 @@ package com.xxxmkxxx.customgui.client.hierarchy.style;
 import lombok.Getter;
 
 @Getter
-public class Opacity {
-    private int percent = 100;
+public class Opacity implements Cloneable {
+    private int percent;
     private final float percentValue = 2.55f;
     private String hex = "FF";
 
     public Opacity(int percent) {
         this.percent = percent;
         setPercent(percent);
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return new Opacity(percent);
     }
 
     public void setPercent(int percent) {

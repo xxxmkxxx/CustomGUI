@@ -8,9 +8,14 @@ import lombok.Setter;
 @Getter @Setter
 @Builder
 @AllArgsConstructor
-public class Color {
+public class Color implements Cloneable {
     @Builder.Default
     private String hexValue = DefaultColor.BLACK.getColor().getHexValue();
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return new Color(hexValue);
+    }
 
 
     @Getter
