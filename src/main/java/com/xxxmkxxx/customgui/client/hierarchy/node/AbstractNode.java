@@ -74,52 +74,52 @@ public abstract class AbstractNode implements Node {
         switch (position) {
             case RIGHT -> {
                 Pos startPos = new Pos(
-                        node.getFrame().getStopPos().x() + indent,
-                        node.getFrame().getStartPos().y()
+                        node.getFrame().getStopPos().getX() + indent,
+                        node.getFrame().getStartPos().getY()
                 );
 
                 Pos stopPos = new Pos(
-                        node.getFrame().getStopPos().x() + frame.getWidth() + indent,
-                        node.getFrame().getStartPos().y() + frame.getHeight()
+                        node.getFrame().getStopPos().getX() + frame.getWidth() + indent,
+                        node.getFrame().getStartPos().getY() + frame.getHeight()
                 );
 
                 this.frame = new SimpleFrame(startPos, stopPos);
             }
             case LEFT -> {
                 Pos startPos = new Pos(
-                        node.getFrame().getStartPos().x() - frame.getWidth() - indent,
-                        node.getFrame().getStartPos().y()
+                        node.getFrame().getStartPos().getX() - frame.getWidth() - indent,
+                        node.getFrame().getStartPos().getY()
                 );
 
                 Pos stopPos = new Pos(
-                        node.getFrame().getStartPos().x() - indent,
-                        node.getFrame().getStartPos().y() + frame.getHeight()
+                        node.getFrame().getStartPos().getX() - indent,
+                        node.getFrame().getStartPos().getY() + frame.getHeight()
                 );
 
                 this.frame = new SimpleFrame(startPos, stopPos);
             }
             case BOTTOM -> {
                 Pos startPos = new Pos(
-                        node.getFrame().getStartPos().x(),
-                        node.getFrame().getStopPos().y() + indent
+                        node.getFrame().getStartPos().getX(),
+                        node.getFrame().getStopPos().getY() + indent
                 );
 
                 Pos stopPos = new Pos(
-                        node.getFrame().getStartPos().x() + frame.getWidth(),
-                        node.getFrame().getStopPos().y() + frame.getHeight() + indent
+                        node.getFrame().getStartPos().getX() + frame.getWidth(),
+                        node.getFrame().getStopPos().getY() + frame.getHeight() + indent
                 );
 
                 this.frame = new SimpleFrame(startPos, stopPos);
             }
             case TOP -> {
                 Pos startPos = new Pos(
-                        node.getFrame().getStartPos().x(),
-                        node.getFrame().getStartPos().y() - frame.getHeight() - indent
+                        node.getFrame().getStartPos().getX(),
+                        node.getFrame().getStartPos().getY() - frame.getHeight() - indent
                 );
 
                 Pos stopPos = new Pos(
-                        node.getFrame().getStartPos().x() + frame.getWidth(),
-                        node.getFrame().getStartPos().y() - indent
+                        node.getFrame().getStartPos().getX() + frame.getWidth(),
+                        node.getFrame().getStartPos().getY() - indent
                 );
 
                 this.frame = new SimpleFrame(startPos, stopPos);
