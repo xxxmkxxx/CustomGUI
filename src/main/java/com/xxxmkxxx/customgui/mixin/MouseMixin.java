@@ -1,6 +1,7 @@
 package com.xxxmkxxx.customgui.mixin;
 
 import com.xxxmkxxx.customgui.CustomGUI;
+import com.xxxmkxxx.customgui.client.common.event.EventBus;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.scene.AbstractScene;
@@ -32,6 +33,7 @@ public abstract class MouseMixin {
         int xPos = (int) (x * this.client.getWindow().getScaledWidth() / this.client.getWindow().getWidth());
         int yPos = (int) (y * this.client.getWindow().getScaledHeight() / this.client.getWindow().getHeight());
 
+        EventBus.MOVE_EVENT.callAllHandlers(x, y);
         CustomGUI.getInstance().getScreenStage().onCursorUpdate(xPos, yPos);
     }
 
