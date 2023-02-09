@@ -1,13 +1,18 @@
 package com.xxxmkxxx.customgui.client.hierarchy.style;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
-@Getter
-@Builder
+@Getter @Setter
+@AllArgsConstructor
 public class Shadow implements Cloneable {
     private Color color;
     private Direction direction;
+
+    @Builder
+    public Shadow() {
+         this.color = Color.builder().build();
+         this.direction = Direction.RIGHT;
+    }
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
