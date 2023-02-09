@@ -5,10 +5,16 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class Pos {
+public class Pos implements Cloneable {
     public static Pos DEFAULT_POS = new Pos(10, 10);
     private int x;
     private int y;
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        super.clone();
+        return new Pos(x, y);
+    }
 
     public Pos moveByX(int distance) {
         x += distance;

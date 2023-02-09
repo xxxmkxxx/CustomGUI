@@ -4,17 +4,20 @@ import com.xxxmkxxx.customgui.client.common.event.EventBus;
 import com.xxxmkxxx.customgui.client.common.util.Utils;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Objects;
 
 @Getter
 @ToString
-public abstract class AbstractFrame implements Frame {
+public abstract class AbstractFrame implements Frame, Cloneable {
     public static final AbstractFrame DEFAULT_FRAME = new AbstractFrame(10, 10, 10, 10) {};
     protected Pos initialStartPos;
     protected Pos initialStopPos;
+    @Setter
     protected Pos startPos;
+    @Setter
     protected Pos stopPos;
     protected int diagonal;
     protected int width;
