@@ -35,12 +35,13 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
     @Override
     @SuppressWarnings("unchecked")
     public void initRenderer(RendererType type) {
+        super.initRenderer(type);
+        renderer = new RendererFactory<T>().create(type);
+
         for (int i = 0; i < size; i++) {
             T slot = (T) slots[i];
             slot.initRenderer(type);
         }
-
-        renderer = new RendererFactory<T>().create(type);
     }
 
     @Override
@@ -56,6 +57,30 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
     public void init(Consumer<AbstractNode> initMethod) {
         for (int i = 0; i < size; i++) {
             ((AbstractSlot)slots[i]).init(initMethod);
+        }
+    }
+
+    @Override
+    public void scaling(double widthScaleValue, double heightScaleValue) {
+        super.scaling(widthScaleValue, heightScaleValue);
+        for (int i = 0; i < size; i++) {
+            ((AbstractSlot)slots[i]).scaling(widthScaleValue, heightScaleValue);
+        }
+    }
+
+    @Override
+    public void hide() {
+        super.hide();
+        for (int i = 0; i < size; i++) {
+            ((AbstractSlot)slots[i]).hide();
+        }
+    }
+
+    @Override
+    public void display() {
+        super.display();
+        for (int i = 0; i < size; i++) {
+            ((AbstractSlot)slots[i]).display();
         }
     }
 
@@ -77,20 +102,20 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
         return (T) slots[index];
     }
 
-    public static Builder<? extends AbstractSlot> builder(Pos pos, SlotFactory<? extends AbstractSlot> factory, int ... indexes) {
+    public static <S extends AbstractSlot> Builder<S> builder(Pos pos, SlotFactory<S> factory, int ... indexes) {
         return new Builder<>(pos, factory, indexes);
     }
 
     private Object[] initSlots(int[] indexes, int offset, Pos pos, SlotFactory<T> factory) {
         Object[] result = new Object[size];
-        Pos currentPos = pos;
+        Pos currentPos = new Pos(pos.getX(), pos.getY());
 
         for (int i = 0; i < size; i++) {
             T slot = factory.create(indexes[i], currentPos);
 
             result[i] = slot;
 
-            currentPos = new Pos(slot.getFrame().getStopPos().getX() + offset, pos.getY());
+            currentPos.moveByX(slot.getFrame().getWidth());
         }
 
         return result;
@@ -133,7 +158,7 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
 
         @SuppressWarnings("unchecked")
         private void render(UnmodifiableLinearSlotContainer<T> container) {
-            Arrays.stream(container.getSlots()).forEach(slot -> ((T)slot).getRenderer().render((T)slot));
+            Arrays.stream(container.getSlots()).forEach(slot -> ((T)slot).getState().execute((T)slot, ((T)slot).getRenderer()));
         }
     }
 }

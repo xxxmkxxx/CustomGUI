@@ -1,20 +1,18 @@
 package com.xxxmkxxx.customgui.client.ui.containers.slotcontainer;
 
-import com.xxxmkxxx.customgui.client.common.SimpleBuilder;
 import com.xxxmkxxx.customgui.client.common.Validator;
-import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
-import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
-import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
+import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
+import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.ui.controls.slot.AbstractSlot;
 import com.xxxmkxxx.customgui.client.ui.controls.slot.SlotFactory;
 import lombok.Getter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -27,33 +25,50 @@ public class LinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlot
     protected LinearSlotContainer(int offset, Pos startPos, SlotFactory<T> factory) {
         super(offset, factory);
         this.frame = new SimpleFrame(startPos, 0, 0);
-        this.currentSlotPos = startPos;
     }
 
     @Override
     public void initRenderer(RendererType type) {
-        slots.forEach(slot -> slot.initRenderer(type));
+        super.initRenderer(type);
         renderer = new RendererFactory<T>().create(type);
+        slots.forEach(slot -> slot.initRenderer(type));
     }
 
     @Override
     public void initSection(Function<AbstractNode, WindowSection> initMethod) {
         super.initSection(initMethod);
-        slots.forEach(initMethod::apply);
+        slots.forEach(slot -> slot.initSection(initMethod));
     }
 
     @Override
     public void init(Consumer<AbstractNode> initMethod) {
-        slots.forEach(initMethod);
+        slots.forEach(slot -> slot.init(initMethod));
+    }
+
+    @Override
+    public void scaling(double widthScaleValue, double heightScaleValue) {
+        super.scaling(widthScaleValue, heightScaleValue);
+        slots.forEach(slot -> slot.scaling(widthScaleValue, heightScaleValue));
+    }
+
+    @Override
+    public void hide() {
+        super.hide();
+        slots.forEach(AbstractNode::hide);
+    }
+
+    @Override
+    public void display() {
+        super.display();
+        slots.forEach(AbstractNode::display);
     }
 
     @Override
     public void addSlot(int index) {
-        T slot = factory.create(index, currentSlotPos);
+        T slot = factory.create(index, new Pos(frame.getStopPos().getX(), frame.getStartPos().getY()));
         slots.add(slot);
 
-        currentSlotPos = new Pos(slot.getFrame().getStopPos().getX() + offset, frame.getStartPos().getY());
-        frame.moveStopPos(currentSlotPos);
+        frame.moveStopPos(slot.getFrame().getWidth(), 0);
     }
 
     @Override
@@ -68,34 +83,16 @@ public class LinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlot
         return slots.get(index);
     }
 
-    public static Builder<? extends AbstractSlot> builder(Pos pos, SlotFactory<? extends AbstractSlot> factory, List<Integer> indexes) {
-        return new Builder<>(pos, factory, indexes);
+    public static <S extends AbstractSlot> Builder<S> builder() {
+        return new Builder<>();
     }
 
-    public static Builder<? extends AbstractSlot> builder(Pos pos, SlotFactory<? extends AbstractSlot> factory, Integer ... indexes) {
-        return new Builder<>(pos, factory, indexes);
-    }
-
-
-    public static class Builder<T extends AbstractSlot> implements SimpleBuilder<LinearSlotContainer<T>> {
-        private final List<Integer> indexes;
-        private final Pos pos;
-        private final SlotFactory<T> factory;
-        private int count = 1;
+    public static class Builder<T extends AbstractSlot> {
+        private Pos pos = Pos.DEFAULT_POS;
         private int offset = 1;
 
-        public Builder(Pos pos, SlotFactory<T> factory, List<Integer> indexes) {
+        public Builder<T> pos(Pos pos) {
             this.pos = pos;
-            this.factory = factory;
-            this.indexes = indexes;
-        }
-
-        public Builder(Pos pos, SlotFactory<T> factory, Integer ... indexes) {
-            this(pos, factory, Arrays.asList(indexes));
-        }
-
-        public Builder<T> count(int count) {
-            this.count = count;
             return this;
         }
 
@@ -104,17 +101,18 @@ public class LinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlot
             return this;
         }
 
-        public LinearSlotContainer<T> build() {
+        public LinearSlotContainer<T> build(SlotFactory<T> factory, List<Integer> indexes) {
             LinearSlotContainer<T> slotContainer = new LinearSlotContainer<>(offset, pos, factory);
 
-            for (int i = 0; i < count; i++) {
-                if (i < indexes.size())
-                    slotContainer.addSlot(indexes.get(i));
-                else
-                    slotContainer.addSlot(Integer.MIN_VALUE);
+            for (int i = 0; i < indexes.size(); i++) {
+                slotContainer.addSlot(indexes.get(i));
             }
 
             return slotContainer;
+        }
+
+        public LinearSlotContainer<T> build(SlotFactory<T> factory, Integer ... indexes) {
+            return build(factory, new ArrayList<>(List.of(indexes)));
         }
     }
 
@@ -126,7 +124,7 @@ public class LinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlot
 
         @SuppressWarnings("unchecked")
         private void render(LinearSlotContainer<T> slotContainer) {
-            slotContainer.getSlots().forEach(slot -> slot.getRenderer().render(slot));
+            slotContainer.getSlots().forEach(slot -> slot.getState().execute(slot, slot.getRenderer()));
         }
     }
 }

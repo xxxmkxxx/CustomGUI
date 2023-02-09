@@ -13,17 +13,13 @@ public class SquareSlotContainer<T extends AbstractSlot> extends RectangularSlot
     }
 
     public static class Builder<T extends AbstractSlot> extends RectangularSlotContainer.Builder<T> {
-        public Builder(Pos pos, SlotFactory<T> factory, int[][] indexes) {
-            super(pos, factory, indexes);
-        }
-
         public Builder<T> size(int size) {
             amountRows(size);
             rowSize(size);
             return this;
         }
 
-        public SquareSlotContainer<T> build() {
+        public SquareSlotContainer<T> build(SlotFactory<T> factory, int[][] indexes) {
             checkIndexes(amountRows, rowSize, indexes);
             return new SquareSlotContainer<>(offset, pos, factory, amountRows, initRows(indexes, amountRows, rowSize, offset, pos, factory));
         }

@@ -1,17 +1,17 @@
 package com.xxxmkxxx.customgui.client.ui.containers.slotcontainer;
 
-import com.xxxmkxxx.customgui.client.common.SimpleBuilder;
 import com.xxxmkxxx.customgui.client.common.Validator;
-import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
-import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
-import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
+import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
+import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.ui.controls.slot.AbstractSlot;
 import com.xxxmkxxx.customgui.client.ui.controls.slot.SlotFactory;
 import lombok.Getter;
+import org.lwjgl.system.CallbackI;
 
 import javax.naming.OperationNotSupportedException;
 import java.util.Arrays;
@@ -36,9 +36,9 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
 
     @Override
     public void initRenderer(RendererType type) {
-        Arrays.stream(rows).forEach(container -> container.initRenderer(type));
-
+        super.initRenderer(type);
         renderer = new SquareSlotContainer.RendererFactory<T>().create(type);
+        Arrays.stream(rows).forEach(container -> container.initRenderer(type));
     }
 
     @Override
@@ -76,18 +76,19 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
         throw new OperationNotSupportedException("SquareSlotContainer cannot be changed!");
     }
 
-    public static class Builder<T extends AbstractSlot> implements SimpleBuilder<RectangularSlotContainer<T>> {
-        protected final Pos pos;
-        protected final SlotFactory<T> factory;
-        protected final int[][] indexes;
+    public static <S extends AbstractSlot> Builder<S> builder() {
+        return new Builder<>();
+    }
+
+    public static class Builder<T extends AbstractSlot> {
+        protected Pos pos = Pos.DEFAULT_POS;
         protected int rowSize = 1;
         protected int amountRows = 1;
         protected int offset = 1;
 
-        public Builder(Pos pos, SlotFactory<T> factory, int[][] indexes) {
+        public Builder<T> pos(Pos pos) {
             this.pos = pos;
-            this.factory = factory;
-            this.indexes = indexes;
+            return this;
         }
 
         public Builder<T> rowSize(int rowSize) {
@@ -107,7 +108,7 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
             return this;
         }
 
-        public RectangularSlotContainer<T> build() {
+        public RectangularSlotContainer<T> build(SlotFactory<T> factory, int[][] indexes) {
             checkIndexes(amountRows, rowSize, indexes);
             return new RectangularSlotContainer<>(offset, pos, factory, rowSize, amountRows, initRows(indexes, amountRows, rowSize, offset, pos, factory));
         }
@@ -125,7 +126,7 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
         @SuppressWarnings("unchecked")
         protected UnmodifiableLinearSlotContainer<T>[] initRows(int[][] indexes, int amountRows, int rowSize, int offset, Pos pos, SlotFactory<T> factory) {
             final UnmodifiableLinearSlotContainer<T>[] result = new UnmodifiableLinearSlotContainer[amountRows];
-            Pos currentPos = pos;
+            Pos currentPos = new Pos(pos.getX(), pos.getY());
 
             for (int i = 0; i < amountRows; i++) {
                 UnmodifiableLinearSlotContainer<T> container = result[i] = new UnmodifiableLinearSlotContainer.Builder<>(currentPos, factory, indexes[i])
@@ -133,7 +134,7 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
                         .offset(offset)
                         .build();
 
-                currentPos = new Pos(pos.getX(), container.getSlot(0).getFrame().getStopPos().getY() + offset);
+                currentPos = new Pos(pos.getX(), currentPos.getY() + container.getSlot(0).getFrame().getHeight());
             }
 
             return result;
@@ -148,7 +149,7 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
 
         @SuppressWarnings("unchecked")
         private void render(RectangularSlotContainer<T> container) {
-            Arrays.stream(container.getRows()).forEach(row -> row.getRenderer().render(row));
+            Arrays.stream(container.getRows()).forEach(row -> row.getState().execute(row, row.getRenderer()));
         }
     }
 }
