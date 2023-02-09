@@ -34,7 +34,7 @@ public class Style implements Cloneable {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
         return new Style(matrixStack, (Color) color.clone(), (Opacity) opacity.clone(), (Shadow) shadow.clone(), (Indent) indent.clone(), (Background) background.clone());
     }
 

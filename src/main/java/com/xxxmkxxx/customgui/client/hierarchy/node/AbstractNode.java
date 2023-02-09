@@ -30,7 +30,7 @@ public abstract class AbstractNode implements Node {
     @Getter
     protected WindowSection windowSection = WindowSection.MIXED;
     @Setter
-    protected Style style = Style.DEFAULT_STYLE;
+    protected Style style = Style.defaultStyle();
     @Setter
     protected MatrixStack matrixStack = new MatrixStack();
     protected NodeState<AbstractNode> state = States.DISPLAYED;
