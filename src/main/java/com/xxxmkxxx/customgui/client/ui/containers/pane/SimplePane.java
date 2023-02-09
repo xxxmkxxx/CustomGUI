@@ -1,45 +1,68 @@
 package com.xxxmkxxx.customgui.client.ui.containers.pane;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.xxxmkxxx.customgui.CustomGUI;
-import com.xxxmkxxx.customgui.client.common.SimpleBuilder;
+import com.xxxmkxxx.customgui.client.common.ParametrizedSelfDestructionMethod;
 import com.xxxmkxxx.customgui.client.common.Validator;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
-import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
+import com.xxxmkxxx.customgui.client.hierarchy.style.Background;
+import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
+import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import lombok.Getter;
-import lombok.Setter;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Getter
 @SuppressWarnings("unused")
 public class SimplePane extends AbstractPane {
-    protected final List<AbstractNode> nodes;
-    @Setter
-    private int color;
+    private final List<AbstractNode> nodes;
 
-    protected SimplePane(AbstractFrame frame) {
-        Validator.checkNullObject(frame);
-        this.frame = frame;
+    protected SimplePane(Pos startPos, int width, int height) {
+        super(startPos, width, height);
         nodes = new LinkedList<>();
     }
 
-    protected SimplePane(AbstractFrame frame, List<AbstractNode> nodes) {
-        Validator.checkNullObject(frame);
-        Validator.checkNullObject(nodes);
-        this.nodes = nodes;
+    @Override
+    public void initSection(Function<AbstractNode, WindowSection> initMethod) {
+        super.initSection(initMethod);
+        nodes.forEach(node -> node.initSection(initMethod));
+    }
+
+    @Override
+    public void init(Consumer<AbstractNode> initMethod) {
+        super.init(initMethod);
+        nodes.forEach(node -> node.init(initMethod));
     }
 
     @Override
     public void initRenderer(RendererType type) {
+        super.initRenderer(type);
         this.renderer = new RendererFactory().create(type);
+        nodes.forEach(node -> node.initRenderer(rendererType));
+    }
+
+    @Override
+    public void scaling(double widthScaleValue, double heightScaleValue) {
+        super.scaling(widthScaleValue, heightScaleValue);
+        nodes.forEach(node -> node.scaling(widthScaleValue, heightScaleValue));
+    }
+
+    @Override
+    public void hide() {
+        super.hide();
+        nodes.forEach(AbstractNode::hide);
+    }
+
+    @Override
+    public void display() {
+        super.display();
+        nodes.forEach(AbstractNode::display);
+
     }
 
     public void addNode(AbstractNode node) {
@@ -47,77 +70,70 @@ public class SimplePane extends AbstractPane {
         nodes.add(node);
     }
 
-    public static Builder builder(AbstractFrame frame, List<AbstractNode> nodes) {
-        return new Builder(frame, nodes);
-    }
-    public static Builder builder(AbstractFrame frame) {
-        return new Builder(frame);
+    public static Builder builder() {
+        return new Builder();
     }
 
-    public static final class Builder implements SimpleBuilder<SimplePane> {
-        private final SimplePane simplePane;
+    public static final class Builder {
+        private Pos startPos = Pos.DEFAULT_POS;
+        private int width = 50;
+        private int height = 50;
+        private Style style = Style.defaultStyle();
 
-        public Builder(AbstractFrame frame) {
-            simplePane = new SimplePane(frame);
-        }
-
-        public Builder(AbstractFrame frame, List<AbstractNode> nodes) {
-            simplePane = new SimplePane(frame, nodes);
-        }
-
-        public Builder color(int hexColorCode) {
-            Validator.checkNullObject(hexColorCode);
-            simplePane.setColor(hexColorCode);
-
+        public Builder pos(Pos pos) {
+            this.startPos = pos;
             return this;
         }
 
-        public Builder matrixStack(MatrixStack matrixStack) {
-            Validator.checkNullObject(matrixStack);
-            simplePane.matrixStack = matrixStack;
-
+        public Builder width(int width) {
+            this.width = width;
             return this;
         }
 
-        @Override
+        public Builder height(int height) {
+            this.height = height;
+            return this;
+        }
+
+        public Builder style(Style style) {
+            try {
+                this.style = (Style) style.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
+            return this;
+        }
+
         public SimplePane build() {
+            SimplePane simplePane = new SimplePane(startPos, width, height);
+            simplePane.setStyle(style);
             return simplePane;
         }
     }
 
     public static class RendererFactory implements NodeRendererFactory<SimplePane> {
+        private final ParametrizedSelfDestructionMethod<SimplePane> initBackgroundMethod = new ParametrizedSelfDestructionMethod<>();
+        private Consumer<SimplePane> renderBackgroundMethod;
+
+        public RendererFactory() {
+            initBackgroundMethod.setAction(simplePane -> {
+                renderBackgroundMethod = Background.chooseBackground(simplePane.getStyle().getBackground().getType());
+            });
+        }
+
         @Override
         public NodeRenderer<SimplePane> create(RendererType type) {
-            return switch (type) {
-                case HUD -> this::render;
-                case SCREEN -> this::renderWithBackground;
-            };
+            return this::render;
         }
+
 
         @SuppressWarnings("unchecked")
         private void render(SimplePane simplePane) {
-            CustomGUI.NODE_DRAWABLE_HELPER.fillFrame(
-                    simplePane.getMatrixStack(),
-                    simplePane.getFrame(),
-                    simplePane.getColor()
-            );
+            initBackgroundMethod.execute(simplePane);
 
-            simplePane.getNodes().forEach(node -> node.getRenderer().render(node));
-        }
+            renderBackgroundMethod.accept(simplePane);
 
-        private void renderWithBackground(SimplePane simplePane) {
-            final int width = MinecraftClient.getInstance().getWindow().getWidth();
-            final int height = MinecraftClient.getInstance().getWindow().getHeight();
-
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            CustomGUI.NODE_DRAWABLE_HELPER.gradientFillFrame(
-                    simplePane.getMatrixStack(),
-                    0, 0,
-                    width, height
-            );
-
-            render(simplePane);
+            simplePane.getNodes().forEach(node -> node.getState().execute(node, node.getRenderer()));
         }
     }
 }
