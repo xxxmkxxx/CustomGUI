@@ -112,7 +112,7 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
     }
 
     public static class Builder {
-        private Pos startPos = Pos.DEFAULT_POS;
+        private Pos startPos = Pos.defaultPos();
         private Text text = Text.of("button");
         private Style style = Style.defaultStyle();
         private AbstractImage image;

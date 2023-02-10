@@ -99,7 +99,7 @@ public class SimpleImage extends AbstractImage implements LeftClickEventHandler,
         private Identifier imageIdentifier = new Identifier("modid");
         private int width = 10;
         private int height = 10;
-        private Pos startPos = Pos.DEFAULT_POS;
+        private Pos startPos = Pos.defaultPos();
         private Style style = Style.defaultStyle();
 
         public Builder identifier(Identifier imageIdentifier) {

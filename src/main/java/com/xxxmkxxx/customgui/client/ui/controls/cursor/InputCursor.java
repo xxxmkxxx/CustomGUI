@@ -38,7 +38,7 @@ public class InputCursor extends AbstractCursor {
     }
 
     public static class Builder {
-        private Pos pos = Pos.DEFAULT_POS;
+        private Pos pos = Pos.defaultPos();
         private Style style = Style.defaultStyle();
         private int width = 1;
         private int height = 7;

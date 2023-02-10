@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class Pos implements Cloneable {
-    public static Pos DEFAULT_POS = new Pos(10, 10);
+    private static final Pos DEFAULT_POS = new Pos(10, 10);
     private int x;
     private int y;
 
@@ -14,6 +14,14 @@ public class Pos implements Cloneable {
     public Object clone() throws CloneNotSupportedException {
         super.clone();
         return new Pos(x, y);
+    }
+
+    public static Pos defaultPos() {
+        try {
+            return (Pos) DEFAULT_POS.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Pos moveByX(int distance) {

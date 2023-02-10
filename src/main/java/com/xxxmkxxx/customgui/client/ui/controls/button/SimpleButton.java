@@ -111,7 +111,7 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
 
     public static class Builder {
         private String buttonName = "button";
-        private Pos startPos = Pos.DEFAULT_POS;
+        private Pos startPos = Pos.defaultPos();
         private Style style = Style.defaultStyle();
 
         public Builder text(String text) {

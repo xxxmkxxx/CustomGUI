@@ -23,6 +23,17 @@ public class AbstractText extends AbstractNode implements Text {
         this.frame = new SimpleFrame(startPos, textWidth, textHeight);
     }
 
+    @Override
+    public AbstractNode arrangeRelatively(AbstractNode node, Position position) {
+        super.arrangeRelatively(node, position);
+        try {
+            startPos = (Pos) node.getFrame().getInitialStartPos().clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+        return this;
+    }
+
     public void setText(net.minecraft.text.Text text) {
         this.text = text;
         textWidth = Utils.getTextWidth(text);

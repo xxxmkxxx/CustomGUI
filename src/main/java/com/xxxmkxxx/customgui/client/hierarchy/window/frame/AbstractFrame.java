@@ -12,7 +12,7 @@ import java.util.Objects;
 @Getter
 @ToString
 public abstract class AbstractFrame implements Frame, Cloneable {
-    public static final AbstractFrame DEFAULT_FRAME = new AbstractFrame(10, 10, 10, 10) {};
+    private static final AbstractFrame DEFAULT_FRAME = new AbstractFrame(10, 10, 10, 10) {};
     protected Pos initialStartPos;
     protected Pos initialStopPos;
     @Setter
@@ -51,6 +51,23 @@ public abstract class AbstractFrame implements Frame, Cloneable {
         this.diagonal = Pos.calculateSegmentLength(startPos, stopPos);
         this.lastWidthScaleValue = 1;
         this.lastHeightScaleValue = 1;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        super.clone();
+        SimpleFrame frame = new SimpleFrame((Pos) initialStartPos.clone(), (Pos) initialStopPos.clone());
+        frame.setStartPos((Pos) startPos.clone());
+        frame.setStopPos((Pos) stopPos.clone());
+        return frame;
+    }
+
+    public static AbstractFrame defaultFrame() {
+        try {
+            return (AbstractFrame) DEFAULT_FRAME.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void scaling(double widthScaleValue, double heightScaleValue) {

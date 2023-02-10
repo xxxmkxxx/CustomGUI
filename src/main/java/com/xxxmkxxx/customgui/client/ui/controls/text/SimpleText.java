@@ -78,6 +78,12 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
                         simpleText.getStartPos(),
                         simpleText.getStyle().getHexColor()
                 );
+
+                CustomGUI.NODE_DRAWABLE_HELPER.fillFrame(
+                        simpleText.getStyle().getMatrixStack(),
+                        simpleText.getFrame(),
+                        simpleText.getStyle().getHexColor()
+                );
             };
         }
 
@@ -92,7 +98,7 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
     }
 
     public static class Builder {
-        private Pos startPos = Pos.DEFAULT_POS;
+        private Pos startPos = Pos.defaultPos();
         private Text text = Text.of("text");
         private Style style = Style.defaultStyle();
 

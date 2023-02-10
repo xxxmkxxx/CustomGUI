@@ -75,7 +75,7 @@ public class SimplePane extends AbstractPane {
     }
 
     public static final class Builder {
-        private Pos startPos = Pos.DEFAULT_POS;
+        private Pos startPos = Pos.defaultPos();
         private int width = 50;
         private int height = 50;
         private Style style = Style.defaultStyle();

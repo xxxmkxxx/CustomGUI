@@ -104,13 +104,6 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
         changeKeyAction(key).run();
     }
 
-    @Override
-    public AbstractNode arrangeRelatively(AbstractNode node, Position position, int indent) {
-        super.arrangeRelatively(node, position, indent);
-        //inputCursor.updatePos(frame.getStartPos());
-        return this;
-    }
-
     public static Builder builder() {
         return new Builder();
     }
@@ -147,7 +140,24 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
     }
 
     public static class Builder {
+        private Pos pos = Pos.defaultPos();
+        private int width = 50, height = 10;
         private Style style = Style.defaultStyle();
+
+        public Builder pos(Pos pos) {
+            this.pos = pos;
+            return this;
+        }
+
+        public Builder width(int width) {
+            this.width = width;
+            return this;
+        }
+
+        public Builder height(int height) {
+            this.height = height;
+            return this;
+        }
 
         public Builder style(Style style) {
             try {
@@ -158,8 +168,8 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
             return this;
         }
 
-        public InputField build(Pos startPos, int width, int height) {
-            InputField inputField = new InputField(startPos, width, height);
+        public InputField build() {
+            InputField inputField = new InputField(pos, width, height);
             inputField.setStyle(style);
             return inputField;
         }

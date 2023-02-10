@@ -44,7 +44,7 @@ public enum WindowSection {
     );
 
     @Getter
-    private AbstractFrame frame = AbstractFrame.DEFAULT_FRAME;
+    private AbstractFrame frame = AbstractFrame.defaultFrame();
     @Getter
     private final BiFunction<Integer, Integer, Pos> expressionStartPos;
     @Getter

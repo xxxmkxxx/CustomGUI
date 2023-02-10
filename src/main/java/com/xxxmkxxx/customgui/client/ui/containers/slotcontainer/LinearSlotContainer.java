@@ -88,7 +88,7 @@ public class LinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlot
     }
 
     public static class Builder<T extends AbstractSlot> {
-        private Pos pos = Pos.DEFAULT_POS;
+        private Pos pos = Pos.defaultPos();
         private int offset = 1;
 
         public Builder<T> pos(Pos pos) {

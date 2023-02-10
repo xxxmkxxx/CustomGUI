@@ -16,13 +16,4 @@ public class SimpleFrame extends AbstractFrame {
     public SimpleFrame(Pos startPos, Pos stopPos) {
         super(startPos, stopPos);
     }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        super.clone();
-        SimpleFrame frame = new SimpleFrame((Pos) initialStartPos.clone(), (Pos) initialStopPos.clone());
-        frame.setStartPos((Pos) startPos.clone());
-        frame.setStopPos((Pos) stopPos.clone());
-        return frame;
-    }
 }

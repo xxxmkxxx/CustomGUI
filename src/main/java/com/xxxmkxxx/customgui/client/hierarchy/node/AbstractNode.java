@@ -26,7 +26,7 @@ public abstract class AbstractNode implements Node {
     private static int currentIdNumber = 0;
     private final int id;
 
-    protected AbstractFrame frame = AbstractFrame.DEFAULT_FRAME;
+    protected AbstractFrame frame = AbstractFrame.defaultFrame();
     @Getter
     protected WindowSection windowSection = WindowSection.MIXED;
     @Setter
@@ -70,56 +70,56 @@ public abstract class AbstractNode implements Node {
         frame.scaling(widthScaleValue, heightScaleValue);
     }
 
-    public AbstractNode arrangeRelatively(AbstractNode node, Position position, int indent) {
+    public AbstractNode arrangeRelatively(AbstractNode node, Position position) {
         switch (position) {
             case RIGHT -> {
                 Pos startPos = new Pos(
-                        node.getFrame().getStopPos().getX() + indent,
-                        node.getFrame().getStartPos().getY()
+                        node.getFrame().getInitialStopPos().getX(),
+                        node.getFrame().getInitialStartPos().getY()
                 );
 
                 Pos stopPos = new Pos(
-                        node.getFrame().getStopPos().getX() + frame.getWidth() + indent,
-                        node.getFrame().getStartPos().getY() + frame.getHeight()
+                        node.getFrame().getInitialStopPos().getX() + frame.getWidth(),
+                        node.getFrame().getInitialStartPos().getY() + frame.getHeight()
                 );
 
                 this.frame = new SimpleFrame(startPos, stopPos);
             }
             case LEFT -> {
                 Pos startPos = new Pos(
-                        node.getFrame().getStartPos().getX() - frame.getWidth() - indent,
-                        node.getFrame().getStartPos().getY()
+                        node.getFrame().getInitialStartPos().getX() - frame.getWidth(),
+                        node.getFrame().getInitialStartPos().getY()
                 );
 
                 Pos stopPos = new Pos(
-                        node.getFrame().getStartPos().getX() - indent,
-                        node.getFrame().getStartPos().getY() + frame.getHeight()
+                        node.getFrame().getInitialStartPos().getX(),
+                        node.getFrame().getInitialStartPos().getY() + frame.getHeight()
                 );
 
                 this.frame = new SimpleFrame(startPos, stopPos);
             }
             case BOTTOM -> {
                 Pos startPos = new Pos(
-                        node.getFrame().getStartPos().getX(),
-                        node.getFrame().getStopPos().getY() + indent
+                        node.getFrame().getInitialStartPos().getX(),
+                        node.getFrame().getInitialStopPos().getY()
                 );
 
                 Pos stopPos = new Pos(
-                        node.getFrame().getStartPos().getX() + frame.getWidth(),
-                        node.getFrame().getStopPos().getY() + frame.getHeight() + indent
+                        node.getFrame().getInitialStartPos().getX() + frame.getWidth(),
+                        node.getFrame().getInitialStopPos().getY() + frame.getHeight()
                 );
 
                 this.frame = new SimpleFrame(startPos, stopPos);
             }
             case TOP -> {
                 Pos startPos = new Pos(
-                        node.getFrame().getStartPos().getX(),
-                        node.getFrame().getStartPos().getY() - frame.getHeight() - indent
+                        node.getFrame().getInitialStartPos().getX(),
+                        node.getFrame().getInitialStartPos().getY() - frame.getHeight()
                 );
 
                 Pos stopPos = new Pos(
-                        node.getFrame().getStartPos().getX() + frame.getWidth(),
-                        node.getFrame().getStartPos().getY() - indent
+                        node.getFrame().getInitialStartPos().getX() + frame.getWidth(),
+                        node.getFrame().getInitialStartPos().getY()
                 );
 
                 this.frame = new SimpleFrame(startPos, stopPos);

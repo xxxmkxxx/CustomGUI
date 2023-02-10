@@ -81,7 +81,7 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
     }
 
     public static class Builder<T extends AbstractSlot> {
-        protected Pos pos = Pos.DEFAULT_POS;
+        protected Pos pos = Pos.defaultPos();
         protected int rowSize = 1;
         protected int amountRows = 1;
         protected int offset = 1;
