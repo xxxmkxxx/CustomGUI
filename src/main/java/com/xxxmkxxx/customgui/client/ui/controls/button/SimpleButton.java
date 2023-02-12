@@ -119,7 +119,7 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
             return this;
         }
 
-        public Builder startPos(Pos pos) {
+        public Builder pos(Pos pos) {
             this.startPos = pos;
             return this;
         }

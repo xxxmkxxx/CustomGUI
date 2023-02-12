@@ -70,7 +70,7 @@ public abstract class AbstractNode implements Node {
         frame.scaling(widthScaleValue, heightScaleValue);
     }
 
-    public AbstractNode arrangeRelatively(AbstractNode node, Position position) {
+    public void arrangeRelatively(AbstractNode node, Position position) {
         switch (position) {
             case RIGHT -> {
                 Pos startPos = new Pos(
@@ -125,8 +125,6 @@ public abstract class AbstractNode implements Node {
                 this.frame = new SimpleFrame(startPos, stopPos);
             }
         }
-
-        return this;
     }
 
     @Override

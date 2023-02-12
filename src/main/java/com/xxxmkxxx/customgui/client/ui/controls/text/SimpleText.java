@@ -8,7 +8,6 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.ResetHoverEven
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
-import com.xxxmkxxx.customgui.client.hierarchy.style.Color;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import lombok.Getter;
@@ -49,6 +48,14 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
     }
 
     @Override
+    public void scaling(double widthScaleValue, double heightScaleValue) {
+        MatrixStack matrixStack = new MatrixStack();
+        matrixStack.scale((float) widthScaleValue, (float) heightScaleValue, 1);
+        style.setMatrixStack(matrixStack);
+        super.scaling(widthScaleValue, heightScaleValue);
+    }
+
+    @Override
     public void onLeftClick() {
         leftClickAction.run();
     }
@@ -75,13 +82,7 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
                 CustomGUI.NODE_DRAWABLE_HELPER.drawText(
                         simpleText.getStyle().getMatrixStack(),
                         simpleText.getText(),
-                        simpleText.getStartPos(),
-                        simpleText.getStyle().getHexColor()
-                );
-
-                CustomGUI.NODE_DRAWABLE_HELPER.fillFrame(
-                        simpleText.getStyle().getMatrixStack(),
-                        simpleText.getFrame(),
+                        simpleText.getFrame().getInitialStartPos(),
                         simpleText.getStyle().getHexColor()
                 );
             };
@@ -103,7 +104,11 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
         private Style style = Style.defaultStyle();
 
         public Builder style(Style style) {
-            this.style = style;
+            try {
+                this.style = (Style) style.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
             return this;
         }
 
@@ -123,7 +128,11 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
         }
 
         public Builder pos(Pos pos) {
-            this.startPos = pos;
+            try {
+                this.startPos = (Pos) pos.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
             return this;
         }
 

@@ -12,7 +12,7 @@ import java.util.Objects;
 @Getter
 @ToString
 public abstract class AbstractFrame implements Frame, Cloneable {
-    private static final AbstractFrame DEFAULT_FRAME = new AbstractFrame(10, 10, 10, 10) {};
+    private static final AbstractFrame DEFAULT_FRAME = new AbstractFrame(Pos.defaultPos(), 10, 10) {};
     protected Pos initialStartPos;
     protected Pos initialStopPos;
     @Setter
