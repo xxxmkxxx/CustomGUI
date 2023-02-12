@@ -46,10 +46,9 @@ public class SimpleLabel extends AbstractLabel implements LeftClickEventHandler,
     }
 
     @Override
-    public AbstractNode arrangeRelatively(AbstractNode node, Position position) {
+    public void arrangeRelatively(AbstractNode node, Position position) {
         super.arrangeRelatively(node, position);
         text.arrangeRelatively(node, position);
-        return this;
     }
 
     @Override
@@ -123,7 +122,11 @@ public class SimpleLabel extends AbstractLabel implements LeftClickEventHandler,
         }
 
         public Builder style(Style style) {
-            this.style = style;
+            try {
+                this.style = (Style) style.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
             return this;
         }
 
