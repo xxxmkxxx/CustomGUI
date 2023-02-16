@@ -91,24 +91,30 @@ public class SimpleImage extends AbstractImage implements LeftClickEventHandler,
         }
 
         private void render(SimpleImage simpleImage) {
+            initImageRendererMethod.execute(simpleImage);
+
             imageRenderMethod.accept(simpleImage);
         }
     }
 
     public static class Builder {
-        private Identifier imageIdentifier = new Identifier("modid");
+        private Identifier identifier = new Identifier("modid");
         private int width = 10;
         private int height = 10;
-        private Pos startPos = Pos.defaultPos();
+        private Pos pos = Pos.defaultPos();
         private Style style = Style.defaultStyle();
 
         public Builder identifier(Identifier imageIdentifier) {
-            this.imageIdentifier = imageIdentifier;
+            this.identifier = imageIdentifier;
             return this;
         }
 
-        public Builder startPos(Pos pos) {
-            this.startPos = pos;
+        public Builder pos(Pos pos) {
+            try {
+                this.pos = (Pos) pos.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
             return this;
         }
 
@@ -132,7 +138,7 @@ public class SimpleImage extends AbstractImage implements LeftClickEventHandler,
         }
 
         public SimpleImage build() {
-            SimpleImage image = new SimpleImage(startPos, width, height, imageIdentifier);
+            SimpleImage image = new SimpleImage(pos, width, height, identifier);
             image.setStyle(style);
             return image;
         }
