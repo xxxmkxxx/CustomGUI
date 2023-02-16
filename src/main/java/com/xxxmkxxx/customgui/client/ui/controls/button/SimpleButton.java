@@ -110,17 +110,21 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
     }
 
     public static class Builder {
-        private String buttonName = "button";
-        private Pos startPos = Pos.defaultPos();
+        private String text = "button";
+        private Pos pos = Pos.defaultPos();
         private Style style = Style.defaultStyle();
 
         public Builder text(String text) {
-            this.buttonName = text;
+            this.text = text;
             return this;
         }
 
         public Builder pos(Pos pos) {
-            this.startPos = pos;
+            try {
+                this.pos = (Pos) pos.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
             return this;
         }
 
@@ -134,7 +138,7 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
         }
 
         public SimpleButton build() {
-            SimpleButton button = new SimpleButton(startPos, buttonName);
+            SimpleButton button = new SimpleButton(pos, text);
             button.setStyle(style);
             return button;
         }

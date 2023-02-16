@@ -13,8 +13,10 @@ import com.xxxmkxxx.customgui.client.hierarchy.style.Background;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.ui.controls.image.AbstractImage;
+import com.xxxmkxxx.customgui.client.ui.controls.image.SimpleImage;
 import lombok.Getter;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import java.util.function.Consumer;
 
@@ -112,10 +114,10 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
     }
 
     public static class Builder {
-        private Pos startPos = Pos.defaultPos();
+        private Pos pos = Pos.defaultPos();
         private Text text = Text.of("button");
         private Style style = Style.defaultStyle();
-        private AbstractImage image;
+        private SimpleImage image = SimpleImage.builder().identifier(new Identifier("customgui", "empty_img.png")).build();
 
         public Builder style(Style style) {
             try {
@@ -127,7 +129,11 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
         }
 
         public Builder pos(Pos startPos) {
-            this.startPos = startPos;
+            try {
+                this.pos = (Pos) startPos.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
             return this;
         }
 
@@ -141,13 +147,27 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
             return this;
         }
 
-        public Builder image(AbstractImage image) {
-            this.image = image;
+        public Builder image(SimpleImage image) {
+            this.image = SimpleImage.builder()
+                    .pos(pos)
+                    .identifier(image.getImageIdentifier())
+                    .height(image.getFrame().getHeight())
+                    .width(image.getFrame().getWidth())
+                    .style(image.getStyle())
+                    .build();
+            return this;
+        }
+
+        public Builder image(Identifier identifier) {
+            this.image = SimpleImage.builder()
+                    .identifier(identifier)
+                    .pos(pos)
+                    .build();
             return this;
         }
 
         public ImagedButton build() {
-            ImagedButton imagedButton = new ImagedButton(startPos, text, image);
+            ImagedButton imagedButton = new ImagedButton(pos, text, image);
             imagedButton.setStyle(style);
             return imagedButton;
         }
