@@ -126,7 +126,7 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
         return new Identifier(itemIdentifier.getNamespace(), "textures/gui/" + itemIdentifier.getPath());
     }
 
-    public static Factory factory(Pos startPos, int width, int height, AbstractInventory inventory) {
+    public static Factory factory(int width, int height, AbstractInventory inventory) {
         return new Factory(width, height, inventory);
     }
 
