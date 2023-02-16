@@ -1,14 +1,14 @@
 package com.xxxmkxxx.customgui.client.ui.containers.slotcontainer;
 
-import com.xxxmkxxx.customgui.client.common.SimpleBuilder;
 import com.xxxmkxxx.customgui.client.common.Validator;
-import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
-import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
-import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
+import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
+import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.ui.controls.slot.AbstractSlot;
 import com.xxxmkxxx.customgui.client.ui.controls.slot.SlotFactory;
 import lombok.Getter;
@@ -25,10 +25,10 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
     private final Object[] slots;
 
     @SuppressWarnings("unchecked")
-    protected UnmodifiableLinearSlotContainer(int offset, Pos pos, SlotFactory<T> factory, int[] indexes) {
-        super(offset, factory);
+    protected UnmodifiableLinearSlotContainer(Pos pos, SlotFactory<T> factory, int[] indexes) {
+        super(factory);
         this.size = indexes.length;
-        this.slots = initSlots(indexes, offset, pos, factory);
+        this.slots = initSlots(indexes, pos, factory);
         this.frame = new SimpleFrame(pos, ((T)slots[slots.length - 1]).getFrame().getStopPos());
     }
 
@@ -102,11 +102,11 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
         return (T) slots[index];
     }
 
-    public static <S extends AbstractSlot> Builder<S> builder(Pos pos, SlotFactory<S> factory, int ... indexes) {
-        return new Builder<>(pos, factory, indexes);
+    public static <S extends AbstractSlot> Builder<S> builder() {
+        return new Builder<>();
     }
 
-    private Object[] initSlots(int[] indexes, int offset, Pos pos, SlotFactory<T> factory) {
+    private Object[] initSlots(int[] indexes, Pos pos, SlotFactory<T> factory) {
         Object[] result = new Object[size];
         Pos currentPos = new Pos(pos.getX(), pos.getY());
 
@@ -121,17 +121,18 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
         return result;
     }
 
-    public static class Builder<T extends AbstractSlot> implements SimpleBuilder<UnmodifiableLinearSlotContainer<T>> {
-        private final Pos pos;
-        private final SlotFactory<T> factory;
-        private final int[] indexes;
+    public static class Builder<T extends AbstractSlot> {
+        private Pos pos = Pos.defaultPos();
+        private Style style = Style.defaultStyle();
         private int size = 1;
-        private int offset = 1;
 
-        public Builder(Pos pos, SlotFactory<T> factory, int ... indexes) {
-            this.pos = pos;
-            this.factory = factory;
-            this.indexes = indexes;
+        public Builder<T> style(Style style) {
+            try {
+                this.style = (Style) style.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
+            return this;
         }
 
         public Builder<T> size(int size) {
@@ -140,13 +141,8 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
             return this;
         }
 
-        public Builder<T> offset(int offset) {
-            this.offset = offset;
-            return this;
-        }
-
-        public UnmodifiableLinearSlotContainer<T> build() {
-            return new UnmodifiableLinearSlotContainer<>(offset, pos, factory, indexes);
+        public UnmodifiableLinearSlotContainer<T> build(Pos pos, SlotFactory<T> factory, int ... indexes) {
+            return new UnmodifiableLinearSlotContainer<>(pos, factory, indexes);
         }
     }
 

@@ -5,13 +5,13 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
+import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.ui.controls.slot.AbstractSlot;
 import com.xxxmkxxx.customgui.client.ui.controls.slot.SlotFactory;
 import lombok.Getter;
-import org.lwjgl.system.CallbackI;
 
 import javax.naming.OperationNotSupportedException;
 import java.util.Arrays;
@@ -25,8 +25,8 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
     private final int amountRows;
     private final UnmodifiableLinearSlotContainer<T>[] rows;
 
-    protected RectangularSlotContainer(int offset, Pos pos, SlotFactory<T> factory, int rowSize, int amountRows, UnmodifiableLinearSlotContainer<T>[] rows) {
-        super(offset, factory);
+    protected RectangularSlotContainer(Pos pos, SlotFactory<T> factory, int rowSize, int amountRows, UnmodifiableLinearSlotContainer<T>[] rows) {
+        super(factory);
         this.rowSize = rowSize;
         this.amountRows = amountRows;
         this.rows = rows;
@@ -82,12 +82,25 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
 
     public static class Builder<T extends AbstractSlot> {
         protected Pos pos = Pos.defaultPos();
+        protected Style style = Style.defaultStyle();
         protected int rowSize = 1;
         protected int amountRows = 1;
-        protected int offset = 1;
 
         public Builder<T> pos(Pos pos) {
-            this.pos = pos;
+            try {
+                this.pos = (Pos) pos.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
+            return this;
+        }
+
+        public Builder<T> style(Style style) {
+            try {
+                this.style = (Style) style.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
             return this;
         }
 
@@ -103,14 +116,9 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
             return this;
         }
 
-        public Builder<T> offset(int offset) {
-            this.offset = offset;
-            return this;
-        }
-
         public RectangularSlotContainer<T> build(SlotFactory<T> factory, int[][] indexes) {
             checkIndexes(amountRows, rowSize, indexes);
-            return new RectangularSlotContainer<>(offset, pos, factory, rowSize, amountRows, initRows(indexes, amountRows, rowSize, offset, pos, factory));
+            return new RectangularSlotContainer<>(pos, factory, rowSize, amountRows, initRows(indexes, amountRows, rowSize, pos, factory));
         }
 
         protected void checkIndexes(int amountRows, int rowSize, int[][] indexes) {
@@ -124,15 +132,14 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
         }
 
         @SuppressWarnings("unchecked")
-        protected UnmodifiableLinearSlotContainer<T>[] initRows(int[][] indexes, int amountRows, int rowSize, int offset, Pos pos, SlotFactory<T> factory) {
+        protected UnmodifiableLinearSlotContainer<T>[] initRows(int[][] indexes, int amountRows, int rowSize, Pos pos, SlotFactory<T> factory) {
             final UnmodifiableLinearSlotContainer<T>[] result = new UnmodifiableLinearSlotContainer[amountRows];
             Pos currentPos = new Pos(pos.getX(), pos.getY());
 
             for (int i = 0; i < amountRows; i++) {
-                UnmodifiableLinearSlotContainer<T> container = result[i] = new UnmodifiableLinearSlotContainer.Builder<>(currentPos, factory, indexes[i])
+                UnmodifiableLinearSlotContainer<T> container = result[i] = UnmodifiableLinearSlotContainer.<T>builder()
                         .size(rowSize)
-                        .offset(offset)
-                        .build();
+                        .build(currentPos, factory, indexes[i]);
 
                 currentPos = new Pos(pos.getX(), currentPos.getY() + container.getSlot(0).getFrame().getHeight());
             }

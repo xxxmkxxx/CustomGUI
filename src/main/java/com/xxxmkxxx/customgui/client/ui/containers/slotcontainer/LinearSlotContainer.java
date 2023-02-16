@@ -5,6 +5,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
+import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
@@ -22,8 +23,8 @@ import java.util.function.Function;
 public class LinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlotContainer<T> {
     private final List<T> slots = new ArrayList<>();
 
-    protected LinearSlotContainer(int offset, Pos startPos, SlotFactory<T> factory) {
-        super(offset, factory);
+    protected LinearSlotContainer(Pos startPos, SlotFactory<T> factory) {
+        super(factory);
         this.frame = new SimpleFrame(startPos, 0, 0);
     }
 
@@ -89,20 +90,28 @@ public class LinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlot
 
     public static class Builder<T extends AbstractSlot> {
         private Pos pos = Pos.defaultPos();
-        private int offset = 1;
+        private Style style = Style.defaultStyle();
 
-        public Builder<T> pos(Pos pos) {
-            this.pos = pos;
+        public Builder<T> style(Style style) {
+            try {
+                this.style = (Style) style.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
             return this;
         }
 
-        public Builder<T> offset(int offset) {
-            this.offset = offset;
+        public Builder<T> pos(Pos pos) {
+            try {
+                this.pos = (Pos) pos.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
             return this;
         }
 
         public LinearSlotContainer<T> build(SlotFactory<T> factory, List<Integer> indexes) {
-            LinearSlotContainer<T> slotContainer = new LinearSlotContainer<>(offset, pos, factory);
+            LinearSlotContainer<T> slotContainer = new LinearSlotContainer<>(pos, factory);
 
             for (int i = 0; i < indexes.size(); i++) {
                 slotContainer.addSlot(indexes.get(i));

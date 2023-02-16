@@ -9,6 +9,5 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public abstract class AbstractMultiRowSlotContainer<T extends AbstractSlot> extends AbstractNode implements MultiRowSlotContainer<T> {
-    protected final int offset;
     protected final SlotFactory<T> factory;
 }

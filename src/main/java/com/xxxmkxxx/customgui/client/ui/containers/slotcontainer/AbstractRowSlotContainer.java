@@ -9,6 +9,5 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public abstract class AbstractRowSlotContainer<T extends AbstractSlot> extends AbstractNode implements RowSlotContainer<T> {
-    protected final int offset;
     protected final SlotFactory<T> factory;
 }

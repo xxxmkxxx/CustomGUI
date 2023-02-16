@@ -8,8 +8,8 @@ import lombok.Getter;
 @Getter
 @SuppressWarnings("unused")
 public class SquareSlotContainer<T extends AbstractSlot> extends RectangularSlotContainer<T> {
-    protected SquareSlotContainer(int offset, Pos pos, SlotFactory<T> factory,int size, UnmodifiableLinearSlotContainer<T>[] rows) {
-        super(offset, pos, factory, size, size, rows);
+    protected SquareSlotContainer(Pos pos, SlotFactory<T> factory,int size, UnmodifiableLinearSlotContainer<T>[] rows) {
+        super(pos, factory, size, size, rows);
     }
 
     public static class Builder<T extends AbstractSlot> extends RectangularSlotContainer.Builder<T> {
@@ -21,7 +21,7 @@ public class SquareSlotContainer<T extends AbstractSlot> extends RectangularSlot
 
         public SquareSlotContainer<T> build(SlotFactory<T> factory, int[][] indexes) {
             checkIndexes(amountRows, rowSize, indexes);
-            return new SquareSlotContainer<>(offset, pos, factory, amountRows, initRows(indexes, amountRows, rowSize, offset, pos, factory));
+            return new SquareSlotContainer<>(pos, factory, amountRows, initRows(indexes, amountRows, rowSize, pos, factory));
         }
     }
 }
