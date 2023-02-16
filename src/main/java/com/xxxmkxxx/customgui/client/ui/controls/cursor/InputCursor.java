@@ -44,7 +44,11 @@ public class InputCursor extends AbstractCursor {
         private int height = 7;
 
         public Builder pos(Pos pos) {
-            this.pos = pos;
+            try {
+                this.pos = (Pos) pos.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
             return this;
         }
 
