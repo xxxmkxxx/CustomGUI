@@ -45,7 +45,7 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
                 .pos(initAmountItemsTextStartPos(Text.of(String.valueOf(inventory.getStack(index).getCount()))))
                 .build();
         this.image = SimpleImage.builder()
-                .startPos(startPos)
+                .pos(startPos)
                 .width(width)
                 .height(height)
                 .build();
@@ -126,10 +126,6 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
         return new Identifier(itemIdentifier.getNamespace(), "textures/gui/" + itemIdentifier.getPath());
     }
 
-    public static FactoryBuilder factoryBuilder(int width, int height, AbstractInventory inventory) {
-        return new FactoryBuilder(width, height, inventory);
-    }
-
     public static Factory factory(Pos startPos, int width, int height, AbstractInventory inventory) {
         return new Factory(width, height, inventory);
     }
@@ -162,38 +158,6 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
             slot.setStyle(style);
 
             return slot;
-        }
-    }
-
-    public static class FactoryBuilder {
-        private Factory factory;
-
-        public FactoryBuilder(int width, int height, AbstractInventory inventory) {
-            this.factory = new Factory(width, height, inventory);
-        }
-
-        public FactoryBuilder leftClickAction(Consumer<ItemStack> leftClickAction) {
-            factory.setLeftClickAction(leftClickAction);
-            return this;
-        }
-
-        public FactoryBuilder hoverAction(Runnable hoverAction) {
-            factory.setHoverAction(hoverAction);
-            return this;
-        }
-
-        public FactoryBuilder resetHoverAction(Runnable resetHoverAction) {
-            factory.setResetHoverAction(resetHoverAction);
-            return this;
-        }
-
-        public FactoryBuilder style(Style style) {
-            factory.setStyle(style);
-            return this;
-        }
-
-        public Factory build() {
-            return factory;
         }
     }
 
