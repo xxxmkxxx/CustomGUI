@@ -3,7 +3,6 @@ package com.xxxmkxxx.customgui.client.hierarchy.window;
 import com.xxxmkxxx.customgui.client.common.comparators.NodeFrameComparator;
 import com.xxxmkxxx.customgui.client.hierarchy.window.event.resize.ResizeWindowEventHandler;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public class Window implements ResizeWindowEventHandler {
@@ -29,8 +28,8 @@ public class Window implements ResizeWindowEventHandler {
 
     public void setWindowSectionNodes(WindowSectionNodes windowSectionNodes) {
         this.windowSectionNodes = windowSectionNodes;
-        onResize(windowWidth, windowHeight, scaledWindowWidth, scaledWindowHeight);
         windowSectionNodes.divideNodesIntoSections();
+        onResize(windowWidth, windowHeight, scaledWindowWidth, scaledWindowHeight);
     }
 
     @Override

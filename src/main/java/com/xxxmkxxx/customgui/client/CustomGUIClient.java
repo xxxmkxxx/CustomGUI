@@ -242,7 +242,7 @@ public class CustomGUIClient implements ClientModInitializer {
 
                 //Missions element
                 SimplePane missionsPane = SimplePane.builder()
-                        .pos(new Pos(6, 12))
+                        .pos(new Pos(10, 20))
                         .width(50)
                         .height(14)
                         .style(standardElementStyle)
@@ -273,6 +273,7 @@ public class CustomGUIClient implements ClientModInitializer {
 
                 SimpleText createTeamsText = SimpleText.builder()
                         .text("CREATE TEAM")
+                        .pos(new Pos(96, 467))
                         .build();
 
                 createTeamsPane.addNode(createTeamsText);
@@ -283,11 +284,11 @@ public class CustomGUIClient implements ClientModInitializer {
 
                 UnmodifiableLinearSlotContainer<SimpleSlot> armorSlotContainer = armorSlotContainerBuilder
                         .size(7)
-                        .build(new Pos(192, 392), slotFactory, 0, 0, 0, 0, 0, 0, 0);
+                        .build(new Pos(192, 392), slotFactory, 1, 0, 0, 0, 0, 0, 0);
 
                 scene.addElement(missionsPane);
-                /*scene.addElement(createTeamsPane);
-                scene.addElement(armorSlotContainer);*/
+                //scene.addElement(createTeamsPane);
+                scene.addElement(armorSlotContainer);
 
                 return scene;
             });

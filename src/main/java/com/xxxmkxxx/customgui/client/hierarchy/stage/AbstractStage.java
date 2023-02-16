@@ -1,13 +1,11 @@
 package com.xxxmkxxx.customgui.client.hierarchy.stage;
 
 import com.xxxmkxxx.customgui.client.common.Validator;
-import com.xxxmkxxx.customgui.client.common.comparators.NodeFrameComparator;
 import com.xxxmkxxx.customgui.client.common.event.EventBus;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.scene.AbstractScene;
 import com.xxxmkxxx.customgui.client.hierarchy.stage.state.StageState;
 import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
-import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSectionNodes;
 import lombok.Getter;
 import lombok.Setter;
 
