@@ -81,7 +81,11 @@ public class SimplePane extends AbstractPane {
         private Style style = Style.defaultStyle();
 
         public Builder pos(Pos pos) {
-            this.startPos = pos;
+            try {
+                this.startPos = (Pos) pos.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
             return this;
         }
 
