@@ -145,7 +145,11 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
         private Style style = Style.defaultStyle();
 
         public Builder pos(Pos pos) {
-            this.pos = pos;
+            try {
+                this.pos = (Pos) pos.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
             return this;
         }
 
