@@ -29,7 +29,13 @@ public class Window implements ResizeWindowEventHandler {
     public void setWindowSectionNodes(WindowSectionNodes windowSectionNodes) {
         this.windowSectionNodes = windowSectionNodes;
         windowSectionNodes.divideNodesIntoSections();
-        onResize(windowWidth, windowHeight, scaledWindowWidth, scaledWindowHeight);
+
+        windowSectionNodes.getNodes().forEach(node -> {
+            node.scaling(
+                    (double) scaledWindowWidth / windowWidth,
+                    (double) scaledWindowHeight / windowHeight
+            );
+        });
     }
 
     @Override

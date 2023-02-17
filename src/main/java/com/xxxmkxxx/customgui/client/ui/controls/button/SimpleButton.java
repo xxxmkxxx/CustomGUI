@@ -64,11 +64,6 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
     }
 
     @Override
-    public void initSection(Function<AbstractNode, WindowSection> initMethod) {
-        super.initSection(initMethod);
-    }
-
-    @Override
     public void onLeftClick() {
         leftClickAction.run();
     }
@@ -88,6 +83,24 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
         super.initRenderer(type);
         renderer = new RendererFactory().create(type);
         text.initRenderer(type);
+    }
+
+    @Override
+    public void scaling(double widthScaleValue, double heightScaleValue) {
+        super.scaling(widthScaleValue, heightScaleValue);
+        text.scaling(widthScaleValue, heightScaleValue);
+    }
+
+    @Override
+    public void hide() {
+        super.hide();
+        text.hide();
+    }
+
+    @Override
+    public void display() {
+        super.display();
+        text.display();
     }
 
     public void setLeftClickAction(Runnable leftClickAction) {

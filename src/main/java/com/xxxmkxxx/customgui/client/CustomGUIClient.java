@@ -102,7 +102,7 @@ public class CustomGUIClient implements ClientModInitializer {
                 SimpleScene scene = new SimpleScene(RendererType.SCREEN);
 
                 SimpleButton button = SimpleButton.builder()
-                        .pos(new Pos(150, 150))
+                        .pos(new Pos(50, 50))
                         .text("test")
                         .build();
                 button.setLeftClickAction(() -> {
@@ -111,7 +111,6 @@ public class CustomGUIClient implements ClientModInitializer {
                 button.setStyle(style);
 
                 //scene.addElement(image);
-                //scene.addElement(button);
                 scene.addElement(button);
 
                 return scene;
@@ -293,7 +292,7 @@ public class CustomGUIClient implements ClientModInitializer {
                 return scene;
             });
 
-            customGUI.setActiveScene("RMC", RendererType.SCREEN);
+            customGUI.setActiveScene("testButton", RendererType.SCREEN);
         });
     }
 }
