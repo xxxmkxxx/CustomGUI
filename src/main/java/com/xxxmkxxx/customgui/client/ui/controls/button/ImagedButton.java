@@ -11,8 +11,9 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Background;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
-import com.xxxmkxxx.customgui.client.ui.controls.image.AbstractImage;
 import com.xxxmkxxx.customgui.client.ui.controls.image.SimpleImage;
 import com.xxxmkxxx.customgui.client.ui.controls.text.SimpleText;
 import lombok.Getter;
@@ -23,25 +24,15 @@ import java.util.function.Consumer;
 
 public class ImagedButton extends AbstractButton implements LeftClickEventHandler, HoverEventHandler, ResetHoverEventHandler {
     @Getter
-    private AbstractImage image;
+    private SimpleImage image;
     protected Runnable leftClickAction = () -> {};
     protected Runnable hoverAction = () -> {};
     protected Runnable resetHoverAction = () -> {};
 
-    protected ImagedButton(Pos startPos, Text text, AbstractImage image) {
-        super(startPos, Pos.defaultPos(), SimpleText.builder().build());
+    protected ImagedButton(Pos startPos, Pos stopPos, SimpleText text, SimpleImage image) {
+        super(startPos, stopPos, text);
         this.image = image;
-        initFrame(image);
-    }
-
-    private void initFrame(AbstractImage image) {
-        this.frame.moveStopPos(Pos.builder()
-                        .coords(
-                                frame.getStopPos().getX() + image.getFrame().getWidth() + image.getStyle().getIndent().getRight(),
-                                frame.getStopPos().getY() + image.getFrame().getHeight() + image.getStyle().getIndent().getBottom()
-                        )
-                        .build(frame.getLastXPercentValue(), frame.getLastYPercentValue())
-        );
+        this.frame = new SimpleFrame(startPos, stopPos);
     }
 
     @Override
@@ -69,7 +60,8 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
     public void initRenderer(RendererType type) {
         super.initRenderer(type);
         this.renderer = new RendererFactory().create(type);
-        this.getImage().initRenderer(type);
+        text.initRenderer(type);
+        image.initRenderer(type);
     }
 
     @Override
@@ -118,10 +110,20 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
     }
 
     public static class Builder {
-        private Pos pos = Pos.defaultPos();
-        private Text text = Text.of("button");
-        private Style style = Style.defaultStyle();
-        private SimpleImage image = SimpleImage.builder().identifier(new Identifier("customgui", "empty_img.png")).build();
+        private String text;
+        private Pos startPos;
+        private Pos stopPos;
+        private SimpleText textNode;
+        private Identifier identifier;
+        private Style style;
+        private SimpleImage image;
+
+        public Builder() {
+            this.text = "button";
+            this.startPos = Pos.defaultPos();
+            this.style = Style.defaultStyle();
+            this.identifier = new Identifier("customgui", "textures/gui/empty_img.png");
+        }
 
         public Builder style(Style style) {
             try {
@@ -132,46 +134,69 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
             return this;
         }
 
-        public Builder pos(Pos startPos) {
+        public Builder startPos(Pos startPos) {
             try {
-                this.pos = (Pos) startPos.clone();
+                this.startPos = (Pos) startPos.clone();
             } catch (CloneNotSupportedException e) {
                 throw new RuntimeException(e);
             }
             return this;
         }
 
-        public Builder text(String text) {
-            this.text = Text.of(text);
+        public Builder stopPos(Pos pos) {
+            try {
+                this.stopPos = (Pos) pos.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
             return this;
         }
 
-        public Builder text(Text text) {
+        public Builder positions(Pos startPos, Pos stopPos) {
+            startPos(startPos);
+            stopPos(stopPos);
+            return this;
+        }
+
+        public Builder positions(AbstractFrame frame) {
+            startPos(frame.getStartPos());
+            stopPos(frame.getStopPos());
+            return this;
+        }
+
+        public Builder text(String text) {
             this.text = text;
             return this;
         }
 
+        public Builder text(SimpleText text) {
+            this.textNode = text;
+            return this;
+        }
+
         public Builder image(SimpleImage image) {
-            this.image = SimpleImage.builder()
-                    .pos(pos)
-                    .identifier(image.getImageIdentifier())
-                    .height(image.getFrame().getHeight())
-                    .width(image.getFrame().getWidth())
-                    .style(image.getStyle())
-                    .build();
+            this.image = image;
             return this;
         }
 
         public Builder image(Identifier identifier) {
-            this.image = SimpleImage.builder()
-                    .identifier(identifier)
-                    .pos(pos)
-                    .build();
+            this.identifier = identifier;
             return this;
         }
 
         public ImagedButton build() {
-            ImagedButton imagedButton = new ImagedButton(pos, text, image);
+            SimpleImage image = this.image == null ? SimpleImage.builder().identifier(identifier).build() : this.image;
+            SimpleText text = this.textNode == null ? SimpleText.builder().text(this.text).build() : this.textNode;
+            Pos stopPos = this.stopPos == null
+                    ? Pos.builder()
+                    .coords(
+                            image.getFrame().getInitialStopPos().getX() + text.getFrame().getWidth(),
+                            image.getFrame().getInitialStartPos().getY()
+                    )
+                    .build(text.getFrame().getLastXPercentValue(), text.getFrame().getLastYPercentValue())
+                    : this.stopPos;
+
+            ImagedButton imagedButton = new ImagedButton(startPos, stopPos, text, image);
             imagedButton.setStyle(style);
             return imagedButton;
         }
