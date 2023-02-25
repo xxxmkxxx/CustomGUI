@@ -9,6 +9,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
 import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
 import com.xxxmkxxx.customgui.client.ui.controls.text.SimpleText;
 import lombok.Getter;
@@ -27,7 +28,6 @@ public class SimpleLabel extends AbstractLabel implements LeftClickEventHandler,
         this.text = SimpleText.builder().text(text).build();
         this.pointer = pointer;
         this.position = position;
-        arrangeRelatively(pointer, position);
     }
 
     public void setLeftClickAction(Runnable leftClickAction) {
@@ -46,12 +46,6 @@ public class SimpleLabel extends AbstractLabel implements LeftClickEventHandler,
     }
 
     @Override
-    public void arrangeRelatively(AbstractNode node, Position position) {
-        super.arrangeRelatively(node, position);
-        text.arrangeRelatively(node, position);
-    }
-
-    @Override
     public void initRenderer(RendererType type) {
         super.initRenderer(type);
         text.initRenderer(type);
@@ -65,9 +59,9 @@ public class SimpleLabel extends AbstractLabel implements LeftClickEventHandler,
     }
 
     @Override
-    public void scaling(double widthScaleValue, double heightScaleValue) {
-        super.scaling(widthScaleValue, heightScaleValue);
-        text.scaling(widthScaleValue, heightScaleValue);
+    public void scaling(Window window) {
+        super.scaling(window);
+        text.scaling(window);
     }
 
     @Override

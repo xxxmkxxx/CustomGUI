@@ -24,7 +24,7 @@ public class CustomGUI {
     private CustomGUI(Window window) {
         WindowSection.initFrames(window.getWidth(), window.getHeight());
         this.hudStage = new HudStage(window.getWidth(), window.getHeight(), window.getScaledWidth(), window.getScaledHeight());
-        this.screenStage = new ScreenStage(window.getWidth(), window.getHeight(), window.getScaledWidth(), window.getScaledHeight());
+        this.screenStage = new ScreenStage(window.getWidth(), window.getHeight());
         this.guiBlocks = new HashMap<>();
         this.scenes = new HashMap<>();
     }

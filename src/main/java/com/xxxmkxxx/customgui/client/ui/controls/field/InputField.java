@@ -16,6 +16,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Background;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.ui.controls.cursor.InputCursor;
@@ -43,16 +44,16 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
         this.inputCursor = InputCursor.builder()
                 .pos(pos)
                 .width(1)
-                .height(text.getTextHeight())
+                .height((int) text.getTextHeight())
                 .build();
         inputCursor.hide();
     }
 
     @Override
-    public void scaling(double widthScaleValue, double heightScaleValue) {
-        super.scaling(widthScaleValue, heightScaleValue);
-        text.scaling(widthScaleValue, heightScaleValue);
-        inputCursor.scaling(widthScaleValue, heightScaleValue);
+    public void scaling(Window window) {
+        super.scaling(window);
+        text.scaling(window);
+        inputCursor.scaling(window);
     }
 
     @Override

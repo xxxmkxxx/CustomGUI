@@ -14,6 +14,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.ui.controls.image.AbstractImage;
 import com.xxxmkxxx.customgui.client.ui.controls.image.SimpleImage;
+import com.xxxmkxxx.customgui.client.ui.controls.text.SimpleText;
 import lombok.Getter;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -27,17 +28,20 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
     protected Runnable hoverAction = () -> {};
     protected Runnable resetHoverAction = () -> {};
 
-    private ImagedButton(Pos startPos, Text text, AbstractImage image) {
-        super(startPos, text.getString());
+    protected ImagedButton(Pos startPos, Text text, AbstractImage image) {
+        super(startPos, Pos.defaultPos(), SimpleText.builder().build());
         this.image = image;
         initFrame(image);
     }
 
     private void initFrame(AbstractImage image) {
-        this.frame.moveStopPos(new Pos(
-                frame.getStopPos().getX() + image.getFrame().getWidth() + image.getStyle().getIndent().getRight(),
-                frame.getStopPos().getY() + image.getFrame().getHeight() + image.getStyle().getIndent().getBottom()
-        ));
+        this.frame.moveStopPos(Pos.builder()
+                        .coords(
+                                frame.getStopPos().getX() + image.getFrame().getWidth() + image.getStyle().getIndent().getRight(),
+                                frame.getStopPos().getY() + image.getFrame().getHeight() + image.getStyle().getIndent().getBottom()
+                        )
+                        .build(frame.getLastXPercentValue(), frame.getLastYPercentValue())
+        );
     }
 
     @Override

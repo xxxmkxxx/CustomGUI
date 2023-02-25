@@ -13,6 +13,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Background;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.ui.controls.image.SimpleImage;
 import com.xxxmkxxx.customgui.client.ui.controls.text.SimpleText;
@@ -54,10 +55,12 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
     }
 
     private Pos initAmountItemsTextStartPos(Text text) {
-        return new Pos(
-                frame.getStopPos().getX() - Utils.getTextWidth(text),
-                frame.getStopPos().getY() - Utils.getTextHeight()
-        );
+        return Pos.builder()
+                .coords(
+                        frame.getStopPos().getX() - Utils.getTextWidth(text),
+                        frame.getStopPos().getY() - Utils.getTextHeight()
+                )
+                .build(frame.getLastXPercentValue(), frame.getLastYPercentValue());
     }
 
     private void updateAmountItemsText(ItemStack itemStack) {
@@ -65,10 +68,12 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
 
         Pos startPos = initAmountItemsTextStartPos(amount);
 
-        Pos stopPos = new Pos(
-                startPos.getX() + amountItemsText.getTextWidth(),
-                frame.getStopPos().getY() + amountItemsText.getTextHeight()
-        );
+        Pos stopPos = Pos.builder()
+                .coords(
+                        (int) (startPos.getX() + amountItemsText.getTextWidth()),
+                        (int) (frame.getStopPos().getY() + amountItemsText.getTextHeight())
+                )
+                .build(frame.getLastXPercentValue(), frame.getLastYPercentValue());
 
         amountItemsText.getFrame().moveStartPos(startPos);
         amountItemsText.getFrame().moveStopPos(stopPos);
@@ -76,10 +81,10 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
     }
 
     @Override
-    public void scaling(double widthScaleValue, double heightScaleValue) {
-        super.scaling(widthScaleValue, heightScaleValue);
-        amountItemsText.scaling(widthScaleValue, heightScaleValue);
-        image.scaling(widthScaleValue, heightScaleValue);
+    public void scaling(Window window) {
+        super.scaling(window);
+        amountItemsText.scaling(window);
+        image.scaling(window);
     }
 
     @Override

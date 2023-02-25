@@ -6,6 +6,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
 import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
@@ -47,9 +48,9 @@ public class LinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlot
     }
 
     @Override
-    public void scaling(double widthScaleValue, double heightScaleValue) {
-        super.scaling(widthScaleValue, heightScaleValue);
-        slots.forEach(slot -> slot.scaling(widthScaleValue, heightScaleValue));
+    public void scaling(Window window) {
+        super.scaling(window);
+        slots.forEach(slot -> slot.scaling(window));
     }
 
     @Override
@@ -66,7 +67,12 @@ public class LinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlot
 
     @Override
     public void addSlot(int index) {
-        T slot = factory.create(index, new Pos(frame.getStopPos().getX(), frame.getStartPos().getY()));
+        T slot = factory.create(
+                index,
+                Pos.builder()
+                        .coords(frame.getStopPos().getX(), frame.getStartPos().getY())
+                        .build(frame.getLastXPercentValue(), frame.getLastYPercentValue())
+        );
         slots.add(slot);
 
         frame.moveStopPos(slot.getFrame().getWidth(), 0);

@@ -12,14 +12,8 @@ import lombok.Getter;
 public abstract class AbstractButton extends AbstractNode implements Button {
     protected final SimpleText text;
 
-    protected AbstractButton(Pos startPos, String buttonText) {
-        this.text = SimpleText.builder()
-                .text(buttonText)
-                .pos(startPos)
-                .build();
-        this.frame = new SimpleFrame(
-                startPos,
-                text.getFrame().getStopPos()
-        );
+    protected AbstractButton(Pos startPos, Pos stopPos, SimpleText text) {
+        this.frame = new SimpleFrame(startPos, stopPos);
+        this.text = text;
     }
 }

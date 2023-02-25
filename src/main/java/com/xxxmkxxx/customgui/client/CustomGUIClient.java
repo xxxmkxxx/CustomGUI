@@ -11,12 +11,14 @@ import com.xxxmkxxx.customgui.client.hierarchy.style.Background;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Color;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Opacity;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.ui.containers.pane.SimplePane;
 import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.LinearSlotContainer;
 import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.RectangularSlotContainer;
 import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.SquareSlotContainer;
-import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.UnmodifiableLinearSlotContainer;
+import com.xxxmkxxx.customgui.client.ui.controls.button.ImagedButton;
 import com.xxxmkxxx.customgui.client.ui.controls.button.SimpleButton;
 import com.xxxmkxxx.customgui.client.ui.controls.field.InputField;
 import com.xxxmkxxx.customgui.client.ui.controls.image.SimpleImage;
@@ -27,11 +29,11 @@ import com.xxxmkxxx.customgui.client.ui.controls.text.SimpleText;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.realms.util.JsonUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 import java.util.Arrays;
 import java.util.List;
@@ -100,15 +102,22 @@ public class CustomGUIClient implements ClientModInitializer {
 
             customGUI.addGUIBlock("testButton", (hudStage, screenStage) -> {
                 SimpleScene scene = new SimpleScene(RendererType.SCREEN);
+                Window window = screenStage.getWindow();
+
+                Pos pos = Pos.builder().relativeCoords(0, 0).build(window.getXPercentValue(), window.getYPercentValue());
 
                 SimpleButton button = SimpleButton.builder()
-                        .pos(new Pos(50, 50))
-                        .text("test")
+                        .positions(new SimpleFrame(pos, 3.5, 2.07))
+                        .text("MISSIONS")
+                        .style(style)
                         .build();
                 button.setLeftClickAction(() -> {
-                    MinecraftClient.getInstance().player.sendMessage(Text.of("teeeest"), false);
+                    MinecraftClient.getInstance().player.sendMessage(Text.of("MISSIONS"), false);
                 });
-                button.setStyle(style);
+                button.getStyle().getOpacity().setPercent(50);
+
+                System.out.println(" window width - " + window.getWindowWidth() + " window height - " + window.getWindowHeight());
+                System.out.println(button.getFrame());
 
                 //scene.addElement(image);
                 scene.addElement(button);
@@ -117,23 +126,30 @@ public class CustomGUIClient implements ClientModInitializer {
             });
             customGUI.addGUIBlock("testSlot", (hudStage, screenStage) -> {
                 SimpleScene scene = new SimpleScene(RendererType.SCREEN);
+                Window window = screenStage.getWindow();
 
                 SimpleSlot.Factory slotFactory = SimpleSlot.factory(20, 20, inventory);
                 slotFactory.setLeftClickAction(itemStack -> {
                     MinecraftClient.getInstance().player.sendMessage(itemStack.getItem().getName(), false);
                 });
 
-                scene.addElement(slotFactory.create(2, new Pos(50, 50)));
+                scene.addElement(slotFactory.create(
+                        2,
+                        Pos.builder()
+                                .relativeCoords(5, 5)
+                                .build(window.getXPercentValue(), window.getYPercentValue())
+                ));
 
                 return scene;
             });
             customGUI.addGUIBlock("testLabel", (hudStage, screenStage) -> {
                 SimpleScene scene = new SimpleScene(RendererType.SCREEN);
+                Window window = screenStage.getWindow();
 
                 InputField field = InputField.builder()
                         .height(Utils.getTextHeight())
                         .width(50)
-                        .pos(new Pos(50, 50))
+                        .pos(Pos.builder().relativeCoords(5, 5).build(window.getXPercentValue(), window.getYPercentValue()))
                         .build();
                 SimpleLabel label = SimpleLabel.builder()
                         .text("label")
@@ -148,12 +164,13 @@ public class CustomGUIClient implements ClientModInitializer {
             });
             customGUI.addGUIBlock("testInputField", (hudStage, screenStage) -> {
                 SimpleScene scene = new SimpleScene(RendererType.SCREEN);
+                Window window = screenStage.getWindow();
 
                 InputField inputField = InputField.builder()
                         .style(style)
                         .height(Utils.getTextHeight())
                         .width(50)
-                        .pos(new Pos(50, 50))
+                        .pos(Pos.builder().relativeCoords(5, 5).build(window.getXPercentValue(), window.getYPercentValue()))
                         .build();
                 inputField.getInputCursor().getStyle().setColor(Color.DefaultColor.ORANGE.getColor());
 
@@ -163,17 +180,18 @@ public class CustomGUIClient implements ClientModInitializer {
             });
             customGUI.addGUIBlock("testSlotContainers", (hudStage, screenStage) -> {
                 SimpleScene scene = new SimpleScene(RendererType.SCREEN);
+                Window window = screenStage.getWindow();
 
                 SlotFactory<SimpleSlot> slotFactory = SimpleSlot.factory(18, 18, inventory);
 
                 LinearSlotContainer.Builder<SimpleSlot> u_builder = LinearSlotContainer.builder();
                 LinearSlotContainer<SimpleSlot> linearSlotContainer = u_builder
-                        .pos(new Pos(50, 50))
+                        .pos(Pos.builder().relativeCoords(5, 5).build(window.getXPercentValue(), window.getYPercentValue()))
                         .build(slotFactory, 0, 1, 2, 3);
 
                 RectangularSlotContainer.Builder<SimpleSlot> r_builder = RectangularSlotContainer.builder();
                 RectangularSlotContainer<SimpleSlot> rectangularSlotContainer = r_builder
-                        .pos(new Pos(50, 50))
+                        .pos(Pos.builder().relativeCoords(5, 5).build(window.getXPercentValue(), window.getYPercentValue()))
                         .amountRows(2)
                         .rowSize(2)
                         .build(slotFactory, new int[][]{{0, 1}, {2, 3}});
@@ -181,7 +199,7 @@ public class CustomGUIClient implements ClientModInitializer {
                 SquareSlotContainer.Builder<SimpleSlot> sq_builder = new SquareSlotContainer.Builder<>();
                 SquareSlotContainer<SimpleSlot> squareSlotContainer = (SquareSlotContainer<SimpleSlot>) sq_builder
                         .size(2)
-                        .pos(new Pos(50, 50))
+                        .pos(Pos.builder().relativeCoords(5, 5).build(window.getXPercentValue(), window.getYPercentValue()))
                         .build(slotFactory, new int[][]{{0, 1}, {2, 3}});
 
                 scene.addElement(squareSlotContainer);
@@ -190,13 +208,14 @@ public class CustomGUIClient implements ClientModInitializer {
             });
             customGUI.addGUIBlock("testPane", (hudStage, screenStage) -> {
                 SimpleScene scene = new SimpleScene(RendererType.SCREEN);
+                Window window = screenStage.getWindow();
 
                 SimplePane pane = SimplePane.builder()
-                        .pos(new Pos(50, 50))
+                        .pos(Pos.builder().relativeCoords(5, 5).build(window.getXPercentValue(), window.getYPercentValue()))
                         .build();
 
                 SimpleButton button = SimpleButton.builder()
-                        .pos(new Pos(50, 50))
+                        .startPos(Pos.builder().relativeCoords(5, 5).build(window.getXPercentValue(), window.getYPercentValue()))
                         .style(style)
                         .text("test")
                         .build();
@@ -211,13 +230,21 @@ public class CustomGUIClient implements ClientModInitializer {
             });
             customGUI.addGUIBlock("testText", (hudStage, screenStage) -> {
                 SimpleScene scene = new SimpleScene(RendererType.SCREEN);
+                Window window = screenStage.getWindow();
 
-                SimpleText text = SimpleText.builder().pos(new Pos(50, 50)).style(style).text("text").build();
+                SimpleText text = SimpleText.builder()
+                        .pos(Pos.builder().coords(50, 50).build(window.getXPercentValue(), window.getYPercentValue()))
+                        .style(style)
+                        .text("text")
+                        .build();
                 text.setLeftClickAction(() -> {
                     MinecraftClient.getInstance().player.sendMessage(Text.of("text"), false);
                 });
 
-                SimpleButton simpleButton = SimpleButton.builder().pos(new Pos(50, 50)).style(style).build();
+                SimpleButton simpleButton = SimpleButton.builder()
+                        .startPos(Pos.builder().coords(50, 50).build(window.getXPercentValue(), window.getYPercentValue()))
+                        .style(style)
+                        .build();
                 simpleButton.setLeftClickAction(() -> {
                     MinecraftClient.getInstance().player.sendMessage(Text.of("asdas"), false);
                 });
@@ -230,6 +257,7 @@ public class CustomGUIClient implements ClientModInitializer {
 
             customGUI.addGUIBlock("RMC", (hudStage, screenStage) -> {
                 SimpleScene scene = new SimpleScene(RendererType.SCREEN);
+                Window window = screenStage.getWindow();
 
                 Background moreElementsBackground = Background.builder()
                         .color(Color.builder().hexValue("655c55").build())
@@ -239,60 +267,27 @@ public class CustomGUIClient implements ClientModInitializer {
                 Style standardElementStyle = new Style();
                 standardElementStyle.setBackground(moreElementsBackground);
 
+
                 //Missions element
-                SimplePane missionsPane = SimplePane.builder()
-                        .pos(new Pos(10, 20))
-                        .width(50)
-                        .height(14)
+                SimpleImage missionButtonLogo = SimpleImage.builder()
+                        .pos(Pos.builder().relativeCoords(1.1, 2.63).build(window.getXPercentValue(), window.getYPercentValue()))
+                        .build();
+
+                ImagedButton missionButton = ImagedButton.builder()
                         .style(standardElementStyle)
-                        .build();
-
-                SimpleImage missionsLogo = SimpleImage.builder()
-                        .pos(missionsPane.getFrame().getStartPos())
-                        .width(12)
-                        .height(12)
-                        .identifier(new Identifier("customgui", "textures/gui/empty_img.png"))
-                        .build();
-
-                SimpleLabel missionsLogoLabel = SimpleLabel.builder()
-                        .position(AbstractNode.Position.RIGHT)
                         .text("MISSIONS")
-                        .build(missionsLogo);
-
-                missionsPane.addNode(missionsLogo);
-                missionsPane.addNode(missionsLogoLabel);
-
-                //Create teams element
-                SimplePane createTeamsPane = SimplePane.builder()
-                        .pos(new Pos(96, 467))
-                        .width(100)
-                        .height(20)
-                        .style(standardElementStyle)
+                        .image(missionButtonLogo)
+                        .pos(Pos.builder().relativeCoords(0.55, 2.63).build(window.getXPercentValue(), window.getYPercentValue()))
                         .build();
 
-                SimpleText createTeamsText = SimpleText.builder()
-                        .text("CREATE TEAM")
-                        .pos(new Pos(96, 467))
-                        .build();
-
-                createTeamsPane.addNode(createTeamsText);
-
-                //Armor slots element
-                SimpleSlot.Factory slotFactory = SimpleSlot.factory(36, 36, inventory);
-                UnmodifiableLinearSlotContainer.Builder<SimpleSlot> armorSlotContainerBuilder = UnmodifiableLinearSlotContainer.builder();
-
-                UnmodifiableLinearSlotContainer<SimpleSlot> armorSlotContainer = armorSlotContainerBuilder
-                        .size(7)
-                        .build(new Pos(192, 392), slotFactory, 1, 0, 0, 0, 0, 0, 0);
-
-                scene.addElement(missionsPane);
-                //scene.addElement(createTeamsPane);
-                scene.addElement(armorSlotContainer);
+                scene.addElement(missionButton);
 
                 return scene;
             });
 
             customGUI.setActiveScene("testButton", RendererType.SCREEN);
+
+            Window window = CustomGUI.getInstance().getScreenStage().getWindow();
         });
     }
 }

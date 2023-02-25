@@ -1,71 +1,125 @@
 package com.xxxmkxxx.customgui.client.hierarchy.window;
 
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
-import com.xxxmkxxx.customgui.client.hierarchy.window.frame.Frame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-
-import java.util.function.BiFunction;
 
 @RequiredArgsConstructor
 @SuppressWarnings("all")
 public enum WindowSection {
     TOP(
-            (width, height) -> new Pos(0, 0),
-            (width, height) -> new Pos(width, height / 5)
+            (width, height, xPercentValue, yPercentValue) -> {
+                return Pos.builder()
+                        .coords(0, 0)
+                        .build(xPercentValue, yPercentValue);
+            },
+            (width, height, xPercentValue, yPercentValue) -> {
+                return Pos.builder()
+                        .coords(width, height / 5)
+                        .build(xPercentValue, yPercentValue);
+            }
     ),
 
     BOTTOM(
-            (width, height) -> new Pos(0, (height / 5) * 4),
-            (width, height) -> new Pos(width, height)
+            (width, height, xPercentValue, yPercentValue) -> {
+                return Pos.builder()
+                        .coords(0, (height / 5) * 4)
+                        .build(xPercentValue, yPercentValue);
+            },
+            (width, height, xPercentValue, yPercentValue) -> {
+                return Pos.builder()
+                        .coords(width, height)
+                        .build(xPercentValue, yPercentValue);
+            }
     ),
 
     LEFT(
-            (width, height) -> new Pos(0, height / 5),
-            (width, height) -> new Pos(width / 8, (height / 5) * 4)
+            (width, height, xPercentValue, yPercentValue) -> {
+                return Pos.builder()
+                        .coords(0, height / 5)
+                        .build(xPercentValue, yPercentValue);
+            },
+            (width, height, xPercentValue, yPercentValue) -> {
+                return Pos.builder()
+                        .coords(width / 8, (height / 5) * 4)
+                        .build(xPercentValue, yPercentValue);
+            }
     ),
 
     RIGHT(
-            (width, height) -> new Pos((width / 8) * 7, height / 5),
-            (width, height) -> new Pos(width, (height / 5) * 4)
+            (width, height, xPercentValue, yPercentValue) -> {
+                return Pos.builder()
+                        .coords((width / 8) * 7, height / 5)
+                        .build(xPercentValue, yPercentValue);
+            },
+            (width, height, xPercentValue, yPercentValue) -> {
+                return Pos.builder()
+                        .coords(width, (height / 5) * 4)
+                        .build(xPercentValue, yPercentValue);
+            }
     ),
 
     CENTER(
-            (width, height) -> new Pos(width / 8, height / 5),
-            (width, height) -> new Pos((width / 8) * 7, (height / 5) * 4)
+            (width, height, xPercentValue, yPercentValue) -> {
+                return Pos.builder()
+                        .coords(width / 8, height / 5)
+                        .build(xPercentValue, yPercentValue);
+            },
+            (width, height, xPercentValue, yPercentValue) -> {
+                return Pos.builder()
+                        .coords((width / 8) * 7, (height / 5) * 4)
+                        .build(xPercentValue, yPercentValue);
+            }
     ),
 
     MIXED(
-            (width, height) -> new Pos(0, 0),
-            (width, height) -> new Pos(width, height)
+            (width, height, xPercentValue, yPercentValue) -> {
+                return Pos.builder()
+                        .coords(0, 0)
+                        .build(xPercentValue, yPercentValue);
+            },
+            (width, height, xPercentValue, yPercentValue) -> {
+                return Pos.builder()
+                        .coords(width, height)
+                        .build(xPercentValue, yPercentValue);
+            }
     );
 
     @Getter
     private AbstractFrame frame = AbstractFrame.defaultFrame();
     @Getter
-    private final BiFunction<Integer, Integer, Pos> expressionStartPos;
+    private final WindowSectionPosInitializer expressionStartPos;
     @Getter
-    private final BiFunction<Integer, Integer, Pos> expressionStopPos;
+    private final WindowSectionPosInitializer expressionStopPos;
 
     public void initFrame(Pos startPos, Pos stopPos) {
         this.frame = new SimpleFrame(startPos, stopPos);
     }
 
     public static void initFrames(int windowWidth, int windowHeight) {
+        double xPercentValue = windowWidth / 100d;
+        double yPercentValue = windowHeight / 100d;
+
         for (WindowSection windowSection : values()) {
             windowSection.initFrame(
-                    windowSection.getExpressionStartPos().apply(windowWidth, windowHeight),
-                    windowSection.getExpressionStopPos().apply(windowWidth, windowHeight)
+                    windowSection.getExpressionStartPos().init(windowWidth, windowHeight, xPercentValue, yPercentValue),
+                    windowSection.getExpressionStopPos().init(windowWidth, windowHeight, xPercentValue, yPercentValue)
             );
         }
     }
 
-    public static void updateFrames(double widthScaleValue, double heightScaleValue) {
+    public static void updateFrames(int windowWidth, int windowHeight) {
+        double xPercentValue = windowWidth / 100d;
+        double yPercentValue = windowHeight / 100d;
+
         for (WindowSection windowSection : values()) {
-            windowSection.getFrame().scaling(widthScaleValue, heightScaleValue);
+            windowSection.getFrame().scaling(xPercentValue, yPercentValue);
         }
+    }
+
+    private interface WindowSectionPosInitializer {
+        Pos init(int windowWidth, int windowHeight, double xPercentValue, double yPercentValue);
     }
 }

@@ -134,14 +134,21 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
         @SuppressWarnings("unchecked")
         protected UnmodifiableLinearSlotContainer<T>[] initRows(int[][] indexes, int amountRows, int rowSize, Pos pos, SlotFactory<T> factory) {
             final UnmodifiableLinearSlotContainer<T>[] result = new UnmodifiableLinearSlotContainer[amountRows];
-            Pos currentPos = new Pos(pos.getX(), pos.getY());
+            Pos currentPos = null;
+            try {
+                currentPos = (Pos) pos.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
 
             for (int i = 0; i < amountRows; i++) {
                 UnmodifiableLinearSlotContainer<T> container = result[i] = UnmodifiableLinearSlotContainer.<T>builder()
                         .size(rowSize)
                         .build(currentPos, factory, indexes[i]);
 
-                currentPos = new Pos(pos.getX(), currentPos.getY() + container.getSlot(0).getFrame().getHeight());
+                currentPos = Pos.builder()
+                        .coords(pos.getX(), currentPos.getY() + container.getSlot(0).getFrame().getHeight())
+                        .build(currentPos.getXPercentValue(), currentPos.getYPercentValue());
             }
 
             return result;

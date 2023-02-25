@@ -18,9 +18,9 @@ public abstract class AbstractStage implements Stage {
     @Getter @Setter
     protected StageState state;
 
-    public AbstractStage(RendererType type, int width, int height, int scaledWidth, int scaledHeight) {
+    public AbstractStage(RendererType type, int width, int height) {
         this.type = type;
-        this.window = new Window(width, height, scaledWidth, scaledHeight);
+        this.window = new Window(width, height);
         EventBus.RESIZE_WINDOW_EVENT.addHandler(window, window);
     }
 

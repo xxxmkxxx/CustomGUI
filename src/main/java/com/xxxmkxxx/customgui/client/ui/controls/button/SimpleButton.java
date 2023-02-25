@@ -3,7 +3,6 @@ package com.xxxmkxxx.customgui.client.ui.controls.button;
 import com.xxxmkxxx.customgui.CustomGUI;
 import com.xxxmkxxx.customgui.client.common.ParametrizedSelfDestructionMethod;
 import com.xxxmkxxx.customgui.client.common.event.EventBus;
-import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.standard.button.StandardButtonAnimations;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.ActionBuilder;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.EventManager;
@@ -15,11 +14,13 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Background;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
-import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
+import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.Frame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
+import com.xxxmkxxx.customgui.client.ui.controls.text.SimpleText;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 @SuppressWarnings("unused")
 public class SimpleButton extends AbstractButton implements LeftClickEventHandler, HoverEventHandler, ResetHoverEventHandler {
@@ -27,9 +28,8 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
     protected Runnable hoverAction;
     protected Runnable resetHoverAction;
 
-    @SuppressWarnings("CodeBlock2Expr")
-    protected SimpleButton(Pos start, String name) {
-        super(start, name);
+    protected SimpleButton(Pos startPos, Pos stopPos, SimpleText text) {
+        super(startPos, stopPos, text);
         this.leftClickAction = () -> {
             EventManager.sendAction(
                     rendererType,
@@ -86,9 +86,9 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
     }
 
     @Override
-    public void scaling(double widthScaleValue, double heightScaleValue) {
-        super.scaling(widthScaleValue, heightScaleValue);
-        text.scaling(widthScaleValue, heightScaleValue);
+    public void scaling(Window window) {
+        super.scaling(window);
+        text.scaling(window);
     }
 
     @Override
@@ -123,21 +123,55 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
     }
 
     public static class Builder {
-        private String text = "button";
-        private Pos pos = Pos.defaultPos();
-        private Style style = Style.defaultStyle();
+        private SimpleText textNode;
+        private String text;
+        private Pos startPos;
+        private Pos stopPos;
+        private Style style;
+
+        public Builder() {
+            this.text = "button";
+            this.startPos = Pos.defaultPos();
+            this.style = Style.defaultStyle();
+        }
 
         public Builder text(String text) {
             this.text = text;
             return this;
         }
 
-        public Builder pos(Pos pos) {
+        public Builder text(SimpleText text) {
+            this.textNode = text;
+            return this;
+        }
+
+        public Builder startPos(Pos pos) {
             try {
-                this.pos = (Pos) pos.clone();
+                this.startPos = (Pos) pos.clone();
             } catch (CloneNotSupportedException e) {
                 throw new RuntimeException(e);
             }
+            return this;
+        }
+
+        public Builder stopPos(Pos pos) {
+            try {
+                this.stopPos = (Pos) pos.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
+            return this;
+        }
+
+        public Builder positions(Pos startPos, Pos stopPos) {
+            startPos(startPos);
+            stopPos(stopPos);
+            return this;
+        }
+
+        public Builder positions(AbstractFrame frame) {
+            startPos(frame.getStartPos());
+            stopPos(frame.getStopPos());
             return this;
         }
 
@@ -151,7 +185,16 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
         }
 
         public SimpleButton build() {
-            SimpleButton button = new SimpleButton(pos, text);
+            SimpleText text = textNode == null ? SimpleText.builder().pos(startPos).text(this.text).build() : this.textNode;
+            Pos stopPos;
+
+            try {
+                stopPos = this.stopPos == null ? (Pos) text.getFrame().getStopPos().clone() : this.stopPos;
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
+
+            SimpleButton button = new SimpleButton(startPos, stopPos, text);
             button.setStyle(style);
             return button;
         }

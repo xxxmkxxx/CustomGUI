@@ -6,6 +6,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
 import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
@@ -61,10 +62,10 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
     }
 
     @Override
-    public void scaling(double widthScaleValue, double heightScaleValue) {
-        super.scaling(widthScaleValue, heightScaleValue);
+    public void scaling(Window window) {
+        super.scaling(window);
         for (int i = 0; i < size; i++) {
-            ((AbstractSlot)slots[i]).scaling(widthScaleValue, heightScaleValue);
+            ((AbstractSlot)slots[i]).scaling(window);
         }
     }
 
@@ -108,7 +109,13 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
 
     private Object[] initSlots(int[] indexes, Pos pos, SlotFactory<T> factory) {
         Object[] result = new Object[size];
-        Pos currentPos = new Pos(pos.getX(), pos.getY());
+        Pos currentPos = null;
+
+        try {
+            currentPos = (Pos) pos.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
 
         for (int i = 0; i < size; i++) {
             T slot = factory.create(indexes[i], currentPos);

@@ -5,12 +5,12 @@ import lombok.Getter;
 
 @Getter
 public class SimpleFrame extends AbstractFrame {
-    public SimpleFrame(int xPos, int yPos, int width, int height) {
-        super(xPos, yPos, width, height);
+    public SimpleFrame(int xPos, int yPos, int width, int height, double xPercentValue, double yPercentValue) {
+        super(xPos, yPos, width, height, xPercentValue, yPercentValue);
     }
 
-    public SimpleFrame(Pos startPos, int width, int height) {
-        super(startPos, width, height);
+    public SimpleFrame(Pos startPos, double widthPercents, double heightPercents) {
+        super(startPos, widthPercents, heightPercents);
     }
 
     public SimpleFrame(Pos startPos, Pos stopPos) {

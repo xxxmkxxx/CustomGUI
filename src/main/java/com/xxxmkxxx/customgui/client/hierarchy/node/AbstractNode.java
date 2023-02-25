@@ -1,12 +1,11 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node;
 
-import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
+import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
-import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
-import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.util.math.MatrixStack;
@@ -66,65 +65,8 @@ public abstract class AbstractNode implements Node {
         initMethod.accept(this);
     }
 
-    public void scaling(double widthScaleValue, double heightScaleValue) {
-        frame.scaling(widthScaleValue, heightScaleValue);
-    }
-
-    public void arrangeRelatively(AbstractNode node, Position position) {
-        switch (position) {
-            case RIGHT -> {
-                Pos startPos = new Pos(
-                        node.getFrame().getInitialStopPos().getX(),
-                        node.getFrame().getInitialStartPos().getY()
-                );
-
-                Pos stopPos = new Pos(
-                        node.getFrame().getInitialStopPos().getX() + frame.getWidth(),
-                        node.getFrame().getInitialStartPos().getY() + frame.getHeight()
-                );
-
-                this.frame = new SimpleFrame(startPos, stopPos);
-            }
-            case LEFT -> {
-                Pos startPos = new Pos(
-                        node.getFrame().getInitialStartPos().getX() - frame.getWidth(),
-                        node.getFrame().getInitialStartPos().getY()
-                );
-
-                Pos stopPos = new Pos(
-                        node.getFrame().getInitialStartPos().getX(),
-                        node.getFrame().getInitialStartPos().getY() + frame.getHeight()
-                );
-
-                this.frame = new SimpleFrame(startPos, stopPos);
-            }
-            case BOTTOM -> {
-                Pos startPos = new Pos(
-                        node.getFrame().getInitialStartPos().getX(),
-                        node.getFrame().getInitialStopPos().getY()
-                );
-
-                Pos stopPos = new Pos(
-                        node.getFrame().getInitialStartPos().getX() + frame.getWidth(),
-                        node.getFrame().getInitialStopPos().getY() + frame.getHeight()
-                );
-
-                this.frame = new SimpleFrame(startPos, stopPos);
-            }
-            case TOP -> {
-                Pos startPos = new Pos(
-                        node.getFrame().getInitialStartPos().getX(),
-                        node.getFrame().getInitialStartPos().getY() - frame.getHeight()
-                );
-
-                Pos stopPos = new Pos(
-                        node.getFrame().getInitialStartPos().getX() + frame.getWidth(),
-                        node.getFrame().getInitialStartPos().getY()
-                );
-
-                this.frame = new SimpleFrame(startPos, stopPos);
-            }
-        }
+    public void scaling(Window window) {
+        frame.scaling(window.getXPercentValue(), window.getYPercentValue());
     }
 
     @Override

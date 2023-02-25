@@ -8,6 +8,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Background;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
 import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import lombok.Getter;
@@ -47,9 +48,9 @@ public class SimplePane extends AbstractPane {
     }
 
     @Override
-    public void scaling(double widthScaleValue, double heightScaleValue) {
-        super.scaling(widthScaleValue, heightScaleValue);
-        nodes.forEach(node -> node.scaling(widthScaleValue, heightScaleValue));
+    public void scaling(Window window) {
+        super.scaling(window);
+        nodes.forEach(node -> node.scaling(window));
     }
 
     @Override

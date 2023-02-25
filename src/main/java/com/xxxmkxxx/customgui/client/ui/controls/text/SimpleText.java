@@ -1,6 +1,7 @@
 package com.xxxmkxxx.customgui.client.ui.controls.text;
 
 import com.xxxmkxxx.customgui.CustomGUI;
+import com.xxxmkxxx.customgui.client.common.ParametrizedSelfDestructionMethod;
 import com.xxxmkxxx.customgui.client.common.event.EventBus;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHandler;
@@ -9,6 +10,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import lombok.Getter;
 import net.minecraft.client.util.math.MatrixStack;
@@ -48,11 +50,8 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
     }
 
     @Override
-    public void scaling(double widthScaleValue, double heightScaleValue) {
-        MatrixStack matrixStack = new MatrixStack();
-        matrixStack.scale((float) widthScaleValue, (float) heightScaleValue, 1);
-        style.setMatrixStack(matrixStack);
-        super.scaling(widthScaleValue, heightScaleValue);
+    public void scaling(Window window) {
+        super.scaling(window);
     }
 
     @Override
@@ -75,14 +74,15 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
     }
 
     public static class RendererFactory implements NodeRendererFactory<SimpleText> {
-        private Consumer<SimpleText> textRenderMethod;
+        private final ParametrizedSelfDestructionMethod<SimpleText> initIndentMethod = new ParametrizedSelfDestructionMethod<>();
+        private final Consumer<SimpleText> textRenderMethod;
 
         public RendererFactory() {
             this.textRenderMethod = simpleText -> {
                 CustomGUI.NODE_DRAWABLE_HELPER.drawText(
                         simpleText.getStyle().getMatrixStack(),
                         simpleText.getText(),
-                        simpleText.getFrame().getInitialStartPos(),
+                        simpleText.getFrame().getStartPos(),
                         simpleText.getStyle().getHexColor()
                 );
             };
@@ -94,6 +94,8 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
         }
 
         private void render(SimpleText simpleText) {
+            //initIndentMethod.execute(simpleText);
+
             textRenderMethod.accept(simpleText);
         }
     }
@@ -122,8 +124,8 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
             return this;
         }
 
-        public Builder pos(int x, int y) {
-            this.startPos = new Pos(x, y);
+        public Builder pos(int x, int y, double xPercentValue, double yPercentValue) {
+            this.startPos = Pos.builder().coords(x, y).build(xPercentValue, yPercentValue);
             return this;
         }
 
