@@ -22,9 +22,9 @@ public class CustomGUI {
     private final Map<String, AbstractScene> scenes;
 
     private CustomGUI(Window window) {
-        WindowSection.initFrames(window.getWidth(), window.getHeight());
-        this.hudStage = new HudStage(window.getWidth(), window.getHeight(), window.getScaledWidth(), window.getScaledHeight());
-        this.screenStage = new ScreenStage(window.getWidth(), window.getHeight());
+        WindowSection.initFrames(window.getScaledWidth(), window.getScaledHeight());
+        this.hudStage = new HudStage(window.getScaledWidth(), window.getScaledHeight());
+        this.screenStage = new ScreenStage(window.getScaledWidth(), window.getScaledHeight());
         this.guiBlocks = new HashMap<>();
         this.scenes = new HashMap<>();
     }
