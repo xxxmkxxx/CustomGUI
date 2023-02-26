@@ -4,7 +4,6 @@ import com.xxxmkxxx.customgui.client.common.event.EventBus;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.Objects;
 
@@ -37,11 +36,21 @@ public abstract class AbstractFrame implements Frame, Cloneable {
     protected AbstractFrame(Pos startPos, Pos stopPos) {
         this.initialStartPos = startPos;
         this.initialStopPos = stopPos;
-        this.startPos = initialStartPos;
-        this.stopPos = initialStopPos;
+        try {
+            this.startPos = (Pos) startPos.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            this.stopPos = (Pos) stopPos.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
         this.width = this.initialStopPos.getX() - this.initialStartPos.getX();
         this.height = this.initialStopPos.getY() - this.initialStartPos.getY();
-        this.diagonal = Pos.calculateSegmentLength(startPos, stopPos);
+        this.diagonal = Pos.calculateSegmentLength(this.startPos, this.stopPos);
+        this.lastXPercentValue = startPos.getXPercentValue();
+        this.lastYPercentValue = startPos.getYPercentValue();
     }
 
     @Override
