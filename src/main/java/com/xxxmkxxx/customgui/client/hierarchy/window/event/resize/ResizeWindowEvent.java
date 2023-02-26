@@ -7,6 +7,6 @@ public class ResizeWindowEvent extends AbstractWindowEvent<ResizeWindowEventHand
     @Override
     public void callHandler(Window window, Object... args) {
         net.minecraft.client.util.Window win = (net.minecraft.client.util.Window) args[0];
-        handlers.get(window).onResize(win.getWidth(), win.getScaledWidth());
+        handlers.get(window).onResize(win.getScaledWidth(), win.getScaledHeight());
     }
 }
