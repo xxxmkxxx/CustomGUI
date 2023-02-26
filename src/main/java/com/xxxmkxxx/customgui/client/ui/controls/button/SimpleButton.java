@@ -16,7 +16,6 @@ import com.xxxmkxxx.customgui.client.hierarchy.style.Background;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
-import com.xxxmkxxx.customgui.client.hierarchy.window.frame.Frame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.ui.controls.text.SimpleText;
 
@@ -88,7 +87,6 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
     @Override
     public void scaling(Window window) {
         super.scaling(window);
-        text.scaling(window);
     }
 
     @Override

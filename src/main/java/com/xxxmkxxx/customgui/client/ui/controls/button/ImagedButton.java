@@ -11,13 +11,12 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Background;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
-import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.ui.controls.image.SimpleImage;
 import com.xxxmkxxx.customgui.client.ui.controls.text.SimpleText;
 import lombok.Getter;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Consumer;
@@ -32,13 +31,19 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
     protected ImagedButton(Pos startPos, Pos stopPos, SimpleText text, SimpleImage image) {
         super(startPos, stopPos, text);
         this.image = image;
-        this.frame = SimpleFrame.builder().positions(startPos, stopPos).build();
     }
 
     @Override
     public void init(Consumer<AbstractNode> initMethod) {
         super.init(initMethod);
         image.init(initMethod);
+    }
+
+    @Override
+    public void scaling(Window window) {
+        super.scaling(window);
+        image.scaling(window);
+        System.out.println(frame);
     }
 
     public void setLeftClickAction(Runnable leftClickAction) {
@@ -193,7 +198,7 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
                             image.getFrame().getInitialStopPos().getX() + text.getFrame().getWidth(),
                             image.getFrame().getInitialStartPos().getY()
                     )
-                    .build(text.getFrame().getLastXPercentValue(), text.getFrame().getLastYPercentValue())
+                    .build(startPos.getXPercentValue(), startPos.getXPercentValue())
                     : this.stopPos;
 
             ImagedButton imagedButton = new ImagedButton(startPos, stopPos, text, image);
