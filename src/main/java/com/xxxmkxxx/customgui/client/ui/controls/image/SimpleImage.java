@@ -1,7 +1,6 @@
 package com.xxxmkxxx.customgui.client.ui.controls.image;
 
 import com.xxxmkxxx.customgui.CustomGUI;
-import com.xxxmkxxx.customgui.client.common.ParametrizedSelfDestructionMethod;
 import com.xxxmkxxx.customgui.client.common.event.EventBus;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHandler;
@@ -12,7 +11,6 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
-import com.xxxmkxxx.customgui.client.ui.controls.button.SimpleButton;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Consumer;
@@ -67,24 +65,16 @@ public class SimpleImage extends AbstractImage implements LeftClickEventHandler,
     }
 
     public static class RendererFactory implements NodeRendererFactory<SimpleImage> {
-        private final ParametrizedSelfDestructionMethod<SimpleImage> initImageRendererMethod = new ParametrizedSelfDestructionMethod<>();
         private Consumer<SimpleImage> imageRenderMethod;
 
         public RendererFactory() {
-            initImageRendererMethod.setAction((image) -> {
-                if (image.isStandard()) {
-                    imageRenderMethod = simpleImage -> {};
-                }
-                else {
-                    imageRenderMethod = simpleImage -> {
-                        CustomGUI.NODE_DRAWABLE_HELPER.drawTexture(
-                                simpleImage.getStyle().getMatrixStack(),
-                                simpleImage.getFrame(),
-                                simpleImage.getImageIdentifier()
-                        );
-                    };
-                }
-            });
+            imageRenderMethod = simpleImage -> {
+                CustomGUI.NODE_DRAWABLE_HELPER.drawTexture(
+                        simpleImage.getStyle().getMatrixStack(),
+                        simpleImage.getFrame(),
+                        simpleImage.getImageIdentifier()
+                );
+            };
         }
 
         @Override
@@ -93,8 +83,6 @@ public class SimpleImage extends AbstractImage implements LeftClickEventHandler,
         }
 
         private void render(SimpleImage simpleImage) {
-            initImageRendererMethod.execute(simpleImage);
-
             imageRenderMethod.accept(simpleImage);
         }
     }
