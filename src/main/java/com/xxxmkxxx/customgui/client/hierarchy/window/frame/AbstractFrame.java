@@ -10,7 +10,7 @@ import java.util.Objects;
 
 @Getter
 public abstract class AbstractFrame implements Frame, Cloneable {
-    private static final AbstractFrame DEFAULT_FRAME = new AbstractFrame(Pos.defaultPos(), 10, 10) {};
+    private static final AbstractFrame DEFAULT_FRAME;
     protected Pos initialStartPos;
     protected Pos initialStopPos;
     @Setter
@@ -23,26 +23,15 @@ public abstract class AbstractFrame implements Frame, Cloneable {
     protected double lastXPercentValue;
     protected double lastYPercentValue;
 
-    protected AbstractFrame(int xPos, int yPos, int width, int height, double xPercentValue, double yPercentValue) {
-        this.width = width;
-        this.height = height;
-        this.initialStartPos = Pos.builder().coords(xPos, yPos).build(xPercentValue, yPercentValue);
-        this.initialStopPos = Pos.builder().coords(xPos + width, yPos + height).build(xPercentValue, yPercentValue);
-        this.startPos = initialStartPos;
-        this.stopPos = initialStopPos;
-        this.diagonal = Pos.calculateSegmentLength(startPos, stopPos);
-    }
-
-    protected AbstractFrame(Pos startPos, double widthPercents, double heightPercents) {
-        this(
-                startPos,
-                Pos.builder()
-                        .relativeCoords(
-                                startPos.getXIndentPercent() + widthPercents,
-                                startPos.getYIndentPercent() + heightPercents
-                        )
-                        .build(startPos.getXPercentValue(), startPos.getYPercentValue())
-        );
+    static {
+        Pos startPos = Pos.defaultPos();
+        Pos stopPos = Pos.builder()
+                .relativeCoords(
+                        startPos.getXIndentPercent() + 1,
+                        startPos.getYIndentPercent() + 2
+                )
+                .build(startPos.getXPercentValue(), startPos.getYPercentValue());
+        DEFAULT_FRAME = new AbstractFrame(startPos, stopPos) {};
     }
 
     protected AbstractFrame(Pos startPos, Pos stopPos) {
@@ -73,16 +62,16 @@ public abstract class AbstractFrame implements Frame, Cloneable {
     }
 
     public void scaling(double xPercentValue, double yPercentValue) {
-        lastXPercentValue = xPercentValue;
-        lastYPercentValue = yPercentValue;
-
         startPos = Pos.builder()
                 .relativeCoords(startPos.getXIndentPercent(), startPos.getYIndentPercent())
-                .build(lastXPercentValue, lastYPercentValue);
+                .build(xPercentValue, yPercentValue);
 
         stopPos = Pos.builder()
                 .relativeCoords(stopPos.getXIndentPercent(), stopPos.getYIndentPercent())
-                .build(lastXPercentValue, lastYPercentValue);
+                .build(xPercentValue, yPercentValue);
+
+        lastXPercentValue = xPercentValue;
+        lastYPercentValue = yPercentValue;
     }
 
     public void moveStartPos(int xDistance, int yDistance) {

@@ -46,9 +46,11 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
                 .pos(initAmountItemsTextStartPos(Text.of(String.valueOf(inventory.getStack(index).getCount()))))
                 .build();
         this.image = SimpleImage.builder()
-                .pos(startPos)
-                .width(width)
-                .height(height)
+                .startPos(startPos)
+                //Затычка
+                .widthPercent(width)
+                //Затычка
+                .heightPercent(height)
                 .build();
 
         updateAmountItemsText(inventory.getStack(index));

@@ -10,7 +10,9 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
+import com.xxxmkxxx.customgui.client.ui.controls.button.SimpleButton;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Consumer;
@@ -20,8 +22,8 @@ public class SimpleImage extends AbstractImage implements LeftClickEventHandler,
     private Runnable hoverAction = () -> {};
     private Runnable  resetHoverAction = () -> {};
 
-    protected SimpleImage(Pos startPos, int width, int height, Identifier imageIdentifier) {
-        super(startPos, width, height, imageIdentifier);
+    protected SimpleImage(Pos startPos, Pos stopPos, Identifier imageIdentifier) {
+        super(startPos, stopPos, imageIdentifier);
     }
 
     public void setLeftClickAction(Runnable leftClickAction) {
@@ -98,33 +100,63 @@ public class SimpleImage extends AbstractImage implements LeftClickEventHandler,
     }
 
     public static class Builder {
-        private Identifier identifier = new Identifier("modid");
-        private int width = 10;
-        private int height = 10;
-        private Pos pos = Pos.defaultPos();
-        private Style style = Style.defaultStyle();
+        private Identifier identifier;
+        private Pos startPos;
+        private Pos stopPos;
+        private double widthPercent;
+        private double heightPercent;
+        private Style style;
+
+        public Builder() {
+            this.identifier = new Identifier("customgui", "/textures/gui/empty_img.png");
+            this.widthPercent = 0.5;
+            this.heightPercent = 1;
+            this.startPos = Pos.defaultPos();
+            this.style = Style.defaultStyle();
+        }
 
         public Builder identifier(Identifier imageIdentifier) {
             this.identifier = imageIdentifier;
             return this;
         }
 
-        public Builder pos(Pos pos) {
+        public Builder startPos(Pos startPos) {
             try {
-                this.pos = (Pos) pos.clone();
+                this.startPos = (Pos) startPos.clone();
             } catch (CloneNotSupportedException e) {
                 throw new RuntimeException(e);
             }
             return this;
         }
 
-        public Builder width(int width) {
-            this.width = width;
+        public Builder stopPos(Pos stopPos) {
+            try {
+                this.stopPos = (Pos) stopPos.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
             return this;
         }
 
-        public Builder height(int height) {
-            this.height = height;
+        public Builder positions(Pos startPos, Pos stopPos) {
+            startPos(startPos);
+            stopPos(stopPos);
+            return this;
+        }
+
+        public Builder positions(AbstractFrame frame) {
+            startPos(frame.getStartPos());
+            stopPos(frame.getStopPos());
+            return this;
+        }
+
+        public Builder widthPercent(double widthPercent) {
+            this.widthPercent = widthPercent;
+            return this;
+        }
+
+        public Builder heightPercent(double heightPercent) {
+            this.heightPercent = heightPercent;
             return this;
         }
 
@@ -138,7 +170,15 @@ public class SimpleImage extends AbstractImage implements LeftClickEventHandler,
         }
 
         public SimpleImage build() {
-            SimpleImage image = new SimpleImage(pos, width, height, identifier);
+            Pos stopPos = this.stopPos == null
+                    ? Pos.builder()
+                        .relativeCoords(
+                             startPos.getXIndentPercent() + widthPercent,
+                             startPos.getYIndentPercent() + heightPercent
+                        )
+                        .build(startPos.getXPercentValue(), startPos.getYPercentValue())
+                    : this.stopPos;
+            SimpleImage image = new SimpleImage(startPos, stopPos, identifier);
             image.setStyle(style);
             return image;
         }

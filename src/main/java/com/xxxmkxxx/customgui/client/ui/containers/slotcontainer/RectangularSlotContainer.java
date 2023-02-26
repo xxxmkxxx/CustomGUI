@@ -31,7 +31,12 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
         this.amountRows = amountRows;
         this.rows = rows;
         UnmodifiableLinearSlotContainer<T> container = rows[rows.length - 1];
-        this.frame = new SimpleFrame(pos, container.getSlot(container.getSize() - 1).getFrame().getStopPos());
+        this.frame = SimpleFrame.builder()
+                .positions(
+                        pos,
+                        container.getSlot(container.getSize() - 1).getFrame().getStopPos()
+                )
+                .build();
     }
 
     @Override

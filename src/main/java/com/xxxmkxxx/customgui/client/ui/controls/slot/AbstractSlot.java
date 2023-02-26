@@ -18,7 +18,9 @@ public abstract class AbstractSlot extends AbstractNode implements Slot {
     public AbstractSlot(Pos startPos, int width, int height, int index, Inventory inventory) {
         this.index = index;
         this.inventory = inventory;
-        this.frame = new SimpleFrame(startPos, width, height);
+
+        //gag
+        this.frame = SimpleFrame.builder().startPos(startPos).widthPercent(0.0).heightPercent(0.0).build();
     }
 
     public ItemStack getItemStack() {

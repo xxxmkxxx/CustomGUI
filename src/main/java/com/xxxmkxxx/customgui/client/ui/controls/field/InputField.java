@@ -36,7 +36,8 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
     private Runnable changeAction = () -> {};
 
     protected InputField(Pos pos, int width, int height) {
-        this.frame = new SimpleFrame(pos, width, height);
+        //gag
+        this.frame = SimpleFrame.builder().startPos(pos).widthPercent(0.0).heightPercent(0.0).build();
         this.text = SimpleText.builder()
                 .pos(pos)
                 .text("")

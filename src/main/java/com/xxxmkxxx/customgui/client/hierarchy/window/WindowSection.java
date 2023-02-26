@@ -95,7 +95,7 @@ public enum WindowSection {
     private final WindowSectionPosInitializer expressionStopPos;
 
     public void initFrame(Pos startPos, Pos stopPos) {
-        this.frame = new SimpleFrame(startPos, stopPos);
+        this.frame = SimpleFrame.builder().positions(startPos, stopPos).build();
     }
 
     public static void initFrames(int windowWidth, int windowHeight) {

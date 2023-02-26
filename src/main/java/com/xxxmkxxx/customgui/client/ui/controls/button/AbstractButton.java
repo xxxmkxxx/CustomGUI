@@ -13,7 +13,7 @@ public abstract class AbstractButton extends AbstractNode implements Button {
     protected final SimpleText text;
 
     protected AbstractButton(Pos startPos, Pos stopPos, SimpleText text) {
-        this.frame = new SimpleFrame(startPos, stopPos);
+        this.frame = SimpleFrame.builder().positions(startPos, stopPos).build();
         this.text = text;
     }
 }

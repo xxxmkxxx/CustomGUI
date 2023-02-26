@@ -15,9 +15,12 @@ public class AbstractText extends AbstractNode implements Text {
 
     protected AbstractText(Pos startPos, net.minecraft.text.Text text) {
         this.text = text;
-        this.textWidth = Utils.getTextWidth(text) / startPos.getXIndentPercent();
+        //Затычка
+        this.textWidth = Utils.getTextWidth(text) / startPos.getXPercentValue();
+        //Затычка
         this.textHeight = Utils.getTextHeight() / startPos.getYPercentValue();
-        this.frame = new SimpleFrame(startPos, textWidth, textHeight);
+
+        this.frame = SimpleFrame.builder().startPos(startPos).widthPercent(textWidth).heightPercent(textHeight).build();
     }
 
     public void setText(net.minecraft.text.Text text) {
@@ -25,7 +28,7 @@ public class AbstractText extends AbstractNode implements Text {
         textWidth = Utils.getTextWidth(text);
         double lastXPercentValue = frame.getLastXPercentValue();
         double lastYPercentValue = frame.getLastYPercentValue();
-        frame = new SimpleFrame(frame.getInitialStartPos(), textWidth, textHeight);
+        frame = SimpleFrame.builder().startPos(frame.getInitialStartPos()).widthPercent(textWidth).heightPercent(textHeight).build();
         frame.scaling(lastXPercentValue, lastYPercentValue);
         EventBus.CHANGE_EVENT.callHandler(this);
     }

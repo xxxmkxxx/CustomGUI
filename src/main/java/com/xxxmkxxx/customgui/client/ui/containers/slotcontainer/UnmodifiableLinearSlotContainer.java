@@ -30,7 +30,7 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
         super(factory);
         this.size = indexes.length;
         this.slots = initSlots(indexes, pos, factory);
-        this.frame = new SimpleFrame(pos, ((T)slots[slots.length - 1]).getFrame().getStopPos());
+        this.frame = SimpleFrame.builder().positions(pos, ((T)slots[slots.length - 1]).getFrame().getStopPos()).build();
     }
 
     @Override

@@ -26,7 +26,7 @@ public class LinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlot
 
     protected LinearSlotContainer(Pos startPos, SlotFactory<T> factory) {
         super(factory);
-        this.frame = new SimpleFrame(startPos, 0, 0);
+        this.frame = SimpleFrame.builder().startPos(startPos).widthPercent(0.0).heightPercent(0.0).build();
     }
 
     @Override

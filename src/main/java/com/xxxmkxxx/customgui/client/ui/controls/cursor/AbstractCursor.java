@@ -13,7 +13,8 @@ public abstract class AbstractCursor extends AbstractNode implements Cursor {
     public AbstractCursor(Pos pos, int width, int height) {
         this.width = width;
         this.height = height;
-        this.frame = new SimpleFrame(pos, width, height);
+        //gag
+        this.frame = SimpleFrame.builder().startPos(pos).widthPercent(0.0).heightPercent(0.0).build();
     }
 
     public void move(int xDistance, int yDistance) {

@@ -32,7 +32,7 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
     protected ImagedButton(Pos startPos, Pos stopPos, SimpleText text, SimpleImage image) {
         super(startPos, stopPos, text);
         this.image = image;
-        this.frame = new SimpleFrame(startPos, stopPos);
+        this.frame = SimpleFrame.builder().positions(startPos, stopPos).build();
     }
 
     @Override

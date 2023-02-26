@@ -12,10 +12,10 @@ public class AbstractImage extends AbstractNode implements Image {
     protected boolean isStandard;
     protected Identifier imageIdentifier;
 
-    public AbstractImage(Pos startPos, int width, int height, Identifier imageIdentifier) {
+    public AbstractImage(Pos startPos, Pos stopPos, Identifier imageIdentifier) {
         this.imageIdentifier = imageIdentifier;
         this.isStandard = defineImageStatus();
-        this.frame = new SimpleFrame(startPos, width, height);
+        this.frame = SimpleFrame.builder().positions(startPos, stopPos).build();
     }
 
     public boolean defineImageStatus() {
