@@ -118,11 +118,15 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
         }
 
         for (int i = 0; i < size; i++) {
-            T slot = factory.create(indexes[i], currentPos);
+            T slot = factory.create(
+                    indexes[i],
+                    Pos.builder()
+                            .coords(currentPos.getX(), currentPos.getY())
+                            .build(currentPos.getXPercentValue(), currentPos.getYPercentValue())
+            );
 
             result[i] = slot;
-
-            currentPos.moveByX(slot.getFrame().getWidth());
+            currentPos.moveByX(slot.getFrame().getWidth() + slot.getStyle().getIndent().getLeft());
         }
 
         return result;

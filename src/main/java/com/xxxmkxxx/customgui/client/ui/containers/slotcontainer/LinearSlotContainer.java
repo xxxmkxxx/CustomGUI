@@ -75,7 +75,7 @@ public class LinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlot
         );
         slots.add(slot);
 
-        frame.moveStopPos(slot.getFrame().getWidth(), 0);
+        frame.moveStopPos(slot.getFrame().getWidth() + slot.getStyle().getIndent().getLeft(), 0);
     }
 
     @Override

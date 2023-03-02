@@ -152,7 +152,12 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
                         .build(currentPos, factory, indexes[i]);
 
                 currentPos = Pos.builder()
-                        .coords(pos.getX(), currentPos.getY() + container.getSlot(0).getFrame().getHeight())
+                        .coords(
+                                pos.getX(),
+                                currentPos.getY()
+                                        + container.getSlot(0).getFrame().getHeight()
+                                        + container.getSlot(0).getStyle().getIndent().getTop()
+                        )
                         .build(currentPos.getXPercentValue(), currentPos.getYPercentValue());
             }
 
