@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 import java.util.function.Consumer;
 
@@ -48,7 +49,7 @@ public class StandardImage extends AbstractImage implements LeftClickEventHandle
     @Override
     public void initRenderer(RendererType type) {
         super.initRenderer(type);
-        this.renderer = new StandardImage.RendererFactory().create(type);
+        this.renderer = new RendererFactory().create(type);
     }
 
     @Override
@@ -93,7 +94,6 @@ public class StandardImage extends AbstractImage implements LeftClickEventHandle
     }
 
     public static class Builder {
-        private Identifier identifier;
         private Pos startPos;
         private Pos stopPos;
         private double widthPercent;
@@ -102,17 +102,11 @@ public class StandardImage extends AbstractImage implements LeftClickEventHandle
         private Style style;
 
         public Builder() {
-            this.identifier = new Identifier("customgui", "/textures/gui/empty_img.png");
             this.widthPercent = 0.5;
             this.heightPercent = 1;
             this.startPos = Pos.defaultPos();
             this.style = Style.defaultStyle();
             this.itemStack = ItemStack.EMPTY;
-        }
-
-        public Builder identifier(Identifier imageIdentifier) {
-            this.identifier = imageIdentifier;
-            return this;
         }
 
         public Builder itemStack(ItemStack itemStack) {
@@ -178,7 +172,7 @@ public class StandardImage extends AbstractImage implements LeftClickEventHandle
                     )
                     .build(startPos.getXPercentValue(), startPos.getYPercentValue())
                     : this.stopPos;
-            StandardImage image = new StandardImage(startPos, stopPos, itemStack, identifier);
+            StandardImage image = new StandardImage(startPos, stopPos, itemStack, Registry.ITEM.getId(itemStack.getItem()));
             image.setStyle(style);
             return image;
         }
