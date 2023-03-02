@@ -10,7 +10,9 @@ import com.xxxmkxxx.customgui.client.hierarchy.style.Background;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
 import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
+import com.xxxmkxxx.customgui.client.ui.controls.button.SimpleButton;
 import lombok.Getter;
 
 import java.util.LinkedList;
@@ -23,8 +25,8 @@ import java.util.function.Function;
 public class SimplePane extends AbstractPane {
     private final List<AbstractNode> nodes;
 
-    protected SimplePane(Pos startPos, int width, int height) {
-        super(startPos, width, height);
+    protected SimplePane(Pos startPos, Pos stopPos) {
+        super(startPos, stopPos);
         nodes = new LinkedList<>();
     }
 
@@ -76,12 +78,16 @@ public class SimplePane extends AbstractPane {
     }
 
     public static final class Builder {
-        private Pos startPos = Pos.defaultPos();
-        private int width = 50;
-        private int height = 50;
-        private Style style = Style.defaultStyle();
+        private Pos startPos;
+        private Pos stopPos;
+        private Style style;
 
-        public Builder pos(Pos pos) {
+        public Builder() {
+            this.startPos = Pos.defaultPos();
+            this.style = Style.defaultStyle();
+        }
+
+        public Builder startPos(Pos pos) {
             try {
                 this.startPos = (Pos) pos.clone();
             } catch (CloneNotSupportedException e) {
@@ -90,13 +96,24 @@ public class SimplePane extends AbstractPane {
             return this;
         }
 
-        public Builder width(int width) {
-            this.width = width;
+        public Builder stopPos(Pos pos) {
+            try {
+                this.stopPos = (Pos) pos.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
             return this;
         }
 
-        public Builder height(int height) {
-            this.height = height;
+        public Builder positions(Pos startPos, Pos stopPos) {
+            startPos(startPos);
+            stopPos(stopPos);
+            return this;
+        }
+
+        public Builder positions(AbstractFrame frame) {
+            startPos(frame.getStartPos());
+            stopPos(frame.getStopPos());
             return this;
         }
 
@@ -110,7 +127,11 @@ public class SimplePane extends AbstractPane {
         }
 
         public SimplePane build() {
-            SimplePane simplePane = new SimplePane(startPos, width, height);
+            Pos stopPos = this.stopPos == null
+                    ? Pos.builder().relativeCoords(startPos.getXIndentPercent() + 10, startPos.getYIndentPercent() + 15).build(startPos.getXPercentValue(), startPos.getYPercentValue())
+                    : this.stopPos;
+
+            SimplePane simplePane = new SimplePane(startPos, stopPos);
             simplePane.setStyle(style);
             return simplePane;
         }
