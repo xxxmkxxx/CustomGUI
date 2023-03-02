@@ -7,13 +7,13 @@ import lombok.Getter;
 @Builder
 public class Indent implements Cloneable {
     @Builder.Default
-    private int top = 1;
+    private int top = 0;
     @Builder.Default
-    private int bottom = 1;
+    private int bottom = 0;
     @Builder.Default
-    private int right = 1;
+    private int right = 0;
     @Builder.Default
-    private int left = 1;
+    private int left = 0;
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
