@@ -1,9 +1,9 @@
 package com.xxxmkxxx.customgui.client.ui.controls.slot;
 
-import com.xxxmkxxx.customgui.CustomGUI;
 import com.xxxmkxxx.customgui.client.common.ParametrizedSelfDestructionMethod;
 import com.xxxmkxxx.customgui.client.common.event.EventBus;
 import com.xxxmkxxx.customgui.client.common.inventory.AbstractInventory;
+import com.xxxmkxxx.customgui.client.common.inventory.InventoryType;
 import com.xxxmkxxx.customgui.client.common.util.Utils;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHandler;
@@ -15,11 +15,14 @@ import com.xxxmkxxx.customgui.client.hierarchy.style.Background;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
+import com.xxxmkxxx.customgui.client.ui.controls.image.AbstractImage;
 import com.xxxmkxxx.customgui.client.ui.controls.image.SimpleImage;
+import com.xxxmkxxx.customgui.client.ui.controls.image.StandardImage;
 import com.xxxmkxxx.customgui.client.ui.controls.text.SimpleText;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -32,26 +35,20 @@ import java.util.function.Consumer;
 @SuppressWarnings("unused")
 public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, HoverEventHandler, ResetHoverEventHandler {
     private SimpleText amountItemsText;
-    private SimpleImage image;
+    private AbstractImage image;
     protected Runnable leftClickAction;
     protected Runnable hoverAction;
     protected Runnable resetHoverAction;
 
-    protected SimpleSlot(Pos startPos, int width, int height, int index, AbstractInventory inventory) {
-        super(startPos, width, height, index, inventory);
+    protected SimpleSlot(Pos startPos, Pos stopPos, AbstractImage image, int index, AbstractInventory inventory) {
+        super(startPos, stopPos, index, inventory);
         this.leftClickAction = () -> {};
         this.hoverAction = () -> {};
         this.resetHoverAction = () -> {};
         this.amountItemsText = SimpleText.builder()
                 .pos(initAmountItemsTextStartPos(Text.of(String.valueOf(inventory.getStack(index).getCount()))))
                 .build();
-        this.image = SimpleImage.builder()
-                .startPos(startPos)
-                //Затычка
-                .widthPercent(width)
-                //Затычка
-                .heightPercent(height)
-                .build();
+        this.image = image;
 
         updateAmountItemsText(inventory.getStack(index));
     }
@@ -133,15 +130,15 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
         return new Identifier(itemIdentifier.getNamespace(), "textures/gui/" + itemIdentifier.getPath());
     }
 
-    public static Factory factory(int width, int height, AbstractInventory inventory) {
-        return new Factory(width, height, inventory);
+    public static FactoryBuilder factoryBuilder() {
+        return new FactoryBuilder();
     }
 
     @Setter
     @RequiredArgsConstructor
     public static class Factory implements SlotFactory<SimpleSlot> {
-        private final int width;
-        private final int height;
+        private final double widthPercent;
+        private final double heightPercent;
         private final AbstractInventory inventory;
         private Style style = Style.defaultStyle();
         private Consumer<ItemStack> leftClickAction = (itemStack) -> {};
@@ -158,7 +155,29 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
 
         @Override
         public SimpleSlot create(int index, Pos pos) {
-            SimpleSlot slot = new SimpleSlot(pos, width, height, index, inventory);
+            Pos position = Pos.defaultPos();
+
+            try {
+                position = (Pos) pos.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
+
+            Identifier identifier = Registry.ITEM.getId(inventory.getStack(index).getItem());
+            AbstractImage image = identifier.getNamespace().equals("minecraft")
+                    ? StandardImage.builder().startPos(position).itemStack(inventory.getStack(index)).widthPercent(widthPercent).heightPercent(heightPercent).build()
+                    : SimpleImage.builder().startPos(position).identifier(identifier).widthPercent(widthPercent).heightPercent(heightPercent).build();
+
+            SimpleSlot slot = new SimpleSlot(
+                    position,
+                    Pos.builder()
+                            .relativeCoords(
+                                    position.getXIndentPercent() + widthPercent,
+                                    position.getYIndentPercent() + heightPercent
+                            )
+                            .build(pos.getXPercentValue(), position.getYPercentValue()),
+                    image, index, inventory
+            );
             slot.setLeftClickAction(() -> leftClickAction.accept(inventory.getStack(index)));
             slot.setHoverAction(hoverAction);
             slot.setResetHoverAction(resetHoverAction);
@@ -168,21 +187,118 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
         }
     }
 
+    public static class FactoryBuilder {
+        private Identifier identifier;
+        private double widthPercent;
+        private double heightPercent;
+        private AbstractInventory inventory;
+        private AbstractImage image;
+        private Style style;
+
+        public FactoryBuilder() {
+            this.widthPercent = 5;
+            this.heightPercent = 5;
+            this.style = Style.defaultStyle();
+            this.inventory = new AbstractInventory(InventoryType.EMPTY) {
+                @Override
+                public int size() {
+                    return 0;
+                }
+
+                @Override
+                public boolean isEmpty() {
+                    return false;
+                }
+
+                @Override
+                public ItemStack getStack(int slot) {
+                    return ItemStack.EMPTY;
+                }
+
+                @Override
+                public ItemStack removeStack(int slot, int amount) {
+                    return null;
+                }
+
+                @Override
+                public ItemStack removeStack(int slot) {
+                    return null;
+                }
+
+                @Override
+                public void setStack(int slot, ItemStack stack) {
+
+                }
+
+                @Override
+                public void markDirty() {
+
+                }
+
+                @Override
+                public boolean canPlayerUse(PlayerEntity player) {
+                    return false;
+                }
+
+                @Override
+                public void clear() {
+
+                }
+            };
+            this.image = SimpleImage.builder().build();
+            this.identifier = new Identifier("customgui", "/textures/gui/empty_img.png");
+        }
+
+        public FactoryBuilder style(Style style) {
+            try {
+                this.style = (Style) style.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
+            return this;
+        }
+
+        public FactoryBuilder image(SimpleImage image) {
+            this.image = image;
+            return this;
+        }
+
+        public FactoryBuilder image(Identifier identifier) {
+            this.identifier = identifier;
+            return this;
+        }
+
+        public FactoryBuilder widthPercent(double widthPercent) {
+            this.widthPercent = widthPercent;
+            return this;
+        }
+
+        public FactoryBuilder heightPercent(double heightPercent) {
+            this.heightPercent = heightPercent;
+            return this;
+        }
+
+        public FactoryBuilder inventory(AbstractInventory inventory) {
+            this.inventory = inventory;
+            return this;
+        }
+
+        public Factory build() {
+            Factory factory = new Factory(widthPercent, heightPercent, inventory);
+            factory.setStyle(style);
+
+            return factory;
+        }
+    }
+
     public static class RendererFactory implements NodeRendererFactory<SimpleSlot> {
         private ParametrizedSelfDestructionMethod<SimpleSlot> initBackgroundMethod = new ParametrizedSelfDestructionMethod<>();
         private Consumer<SimpleSlot> backgroundRenderMethod = simpleSlot -> {};
-        private Consumer<SimpleSlot> standardImageRenderMethod;
 
         public RendererFactory() {
             initBackgroundMethod.setAction(simpleSlot -> {
-                    backgroundRenderMethod = Background.chooseBackground(simpleSlot.getStyle().getBackground().getType());
-                });
-            standardImageRenderMethod = simpleSlot -> {
-                CustomGUI.NODE_DRAWABLE_HELPER.drawTexture(
-                        simpleSlot.getItemStack(),
-                        simpleSlot.getFrame()
-                );
-            };
+                backgroundRenderMethod = Background.chooseBackground(simpleSlot.getStyle().getBackground().getType());
+            });
         }
 
         @Override
@@ -195,11 +311,9 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
 
             backgroundRenderMethod.accept(slot);
 
-            ItemStack itemStack = slot.getItemStack();
-            if (itemStack == ItemStack.EMPTY) return;
-            if (slot.getImage().isStandard()) standardImageRenderMethod.accept(slot);
-            else slot.getImage().getState().execute(slot.getImage(), slot.getImage().getRenderer());
+            if (slot.getItemStack() == ItemStack.EMPTY) return;
 
+            slot.getImage().getState().execute(slot.getImage(), slot.getImage().getRenderer());
             slot.getAmountItemsText().getState().execute(slot.getAmountItemsText(), slot.getAmountItemsText().getRenderer());
         }
     }
