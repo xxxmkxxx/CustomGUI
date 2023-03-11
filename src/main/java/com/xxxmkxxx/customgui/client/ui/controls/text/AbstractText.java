@@ -13,22 +13,20 @@ public class AbstractText extends AbstractNode implements Text {
     protected double textWidth;
     protected double textHeight;
 
-    protected AbstractText(Pos startPos, net.minecraft.text.Text text) {
+    protected AbstractText(Pos startPos, Pos stopPos, net.minecraft.text.Text text) {
         this.text = text;
-        //Затычка
-        this.textWidth = Utils.getTextWidth(text) / startPos.getXPercentValue();
-        //Затычка
-        this.textHeight = Utils.getTextHeight() / startPos.getYPercentValue();
-
-        this.frame = SimpleFrame.builder().startPos(startPos).widthPercent(textWidth).heightPercent(textHeight).build();
+        this.frame = SimpleFrame.builder().positions(startPos, stopPos).build();
     }
 
     public void setText(net.minecraft.text.Text text) {
         this.text = text;
-        textWidth = Utils.getTextWidth(text);
         double lastXPercentValue = frame.getLastXPercentValue();
         double lastYPercentValue = frame.getLastYPercentValue();
-        frame = SimpleFrame.builder().startPos(frame.getInitialStartPos()).widthPercent(textWidth).heightPercent(textHeight).build();
+        frame = SimpleFrame.builder()
+                .startPos(frame.getInitialStartPos())
+                .widthPercent(textWidth)
+                .heightPercent(textHeight)
+                .build();
         frame.scaling(lastXPercentValue, lastYPercentValue);
         EventBus.CHANGE_EVENT.callHandler(this);
     }

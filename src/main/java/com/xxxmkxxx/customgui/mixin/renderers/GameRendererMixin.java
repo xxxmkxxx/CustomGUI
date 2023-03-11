@@ -1,4 +1,4 @@
-package com.xxxmkxxx.customgui.mixin;
+package com.xxxmkxxx.customgui.mixin.renderers;
 
 import com.xxxmkxxx.customgui.CustomGUI;
 import net.minecraft.client.MinecraftClient;

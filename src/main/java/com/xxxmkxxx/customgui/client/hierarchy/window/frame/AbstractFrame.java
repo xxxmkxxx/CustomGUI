@@ -162,7 +162,7 @@ public abstract class AbstractFrame implements Frame, Cloneable {
 
     @Override
     public String toString() {
-        return startPos.toString() + "\n" + stopPos.toString();
+        return "\n" +startPos.toString() + "\n" + stopPos.toString();
     }
 
     @Override

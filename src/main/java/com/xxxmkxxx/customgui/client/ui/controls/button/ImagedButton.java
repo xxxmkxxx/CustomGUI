@@ -43,7 +43,6 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
     public void scaling(Window window) {
         super.scaling(window);
         image.scaling(window);
-        System.out.println(frame);
     }
 
     public void setLeftClickAction(Runnable leftClickAction) {

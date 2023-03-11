@@ -39,7 +39,7 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
         //gag
         this.frame = SimpleFrame.builder().startPos(pos).widthPercent(0.0).heightPercent(0.0).build();
         this.text = SimpleText.builder()
-                .pos(pos)
+                .startPos(pos)
                 .text("")
                 .build();
         this.inputCursor = InputCursor.builder()

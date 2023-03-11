@@ -183,7 +183,7 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
         }
 
         public SimpleButton build() {
-            SimpleText text = textNode == null ? SimpleText.builder().pos(startPos).text(this.text).build() : this.textNode;
+            SimpleText text = textNode == null ? SimpleText.builder().startPos(startPos).text(this.text).build() : this.textNode;
             Pos stopPos;
 
             try {
