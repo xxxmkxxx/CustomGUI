@@ -16,14 +16,16 @@ public class Style implements Cloneable {
     private Color color = Color.builder().build();
     private Opacity opacity = new Opacity(100);
     private Shadow shadow = Shadow.builder().build();
-    private Indent indent = Indent.builder().build();
+    private Margins margins = Margins.builder().build();
+    private Paddings paddings = Paddings.builder().build();
     private Background background = Background.builder().build();
 
     static {
         defaultStyle.setColor(Color.DefaultColor.BLACK.getColor());
         defaultStyle.setOpacity(new Opacity(100));
         defaultStyle.setBackground(Background.builder().type(Background.Type.COLORED).color(Color.DefaultColor.BLUE.getColor()).build());
-        defaultStyle.setIndent(new Indent(1, 1, 1, 1));
+        defaultStyle.setMargins(new Margins(0, 0, 0, 0));
+        defaultStyle.setPaddings(new Paddings(1, 1, 1, 1));
     }
 
     public static Style defaultStyle() {
@@ -36,7 +38,7 @@ public class Style implements Cloneable {
 
     @Override
     public Object clone() throws CloneNotSupportedException {
-        return new Style(matrixStack, scaledFactorPercents, (Color) color.clone(), (Opacity) opacity.clone(), (Shadow) shadow.clone(), (Indent) indent.clone(), (Background) background.clone());
+        return new Style(matrixStack, scaledFactorPercents, (Color) color.clone(), (Opacity) opacity.clone(), (Shadow) shadow.clone(), (Margins) margins.clone(), paddings.clone(), (Background) background.clone());
     }
 
     public int getHexColor() {

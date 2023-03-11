@@ -97,7 +97,7 @@ public class CustomGUIClient implements ClientModInitializer {
             CustomGUI customGUI = CustomGUI.getInstance();
 
             Style style = new Style();
-            style.setIndent(Indent.builder().left(1).bottom(1).right(1).top(1).build());
+            style.setMargins(Margins.builder().left(1).bottom(1).right(1).top(1).build());
             style.setColor(new Color("2ad43b"));
             style.setBackground(Background.builder().opacity(new Opacity(20)).type(Background.Type.COLORED).color(Color.DefaultColor.BLUE.getColor()).build());
 

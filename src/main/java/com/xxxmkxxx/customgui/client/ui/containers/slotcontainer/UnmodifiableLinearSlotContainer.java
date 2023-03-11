@@ -126,7 +126,7 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
             );
 
             result[i] = slot;
-            currentPos.moveByX(slot.getFrame().getWidth() + slot.getStyle().getIndent().getLeft());
+            currentPos.moveByX(slot.getFrame().getWidth() + slot.getStyle().getMargins().getLeft());
         }
 
         return result;
