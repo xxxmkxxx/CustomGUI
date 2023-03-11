@@ -6,11 +6,14 @@
   "mixins": [
   ],
   "client": [
-    "GameRendererMixin",
     "KeyboardMixin",
     "MinecraftClientMixin",
     "MouseMixin",
-    "WindowMixin"
+    "WindowMixin",
+    "renderers.GameRendererMixin",
+    "renderers.text.DrawerMixin",
+    "renderers.text.GlyphRendererMixin",
+    "renderers.text.TextRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

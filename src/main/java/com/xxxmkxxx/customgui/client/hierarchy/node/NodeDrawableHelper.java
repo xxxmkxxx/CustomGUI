@@ -78,6 +78,24 @@ public class NodeDrawableHelper extends DrawableHelper {
         drawText(matrix, text, pos.getX(), pos.getY(), color);
     }
 
+    public void drawText(MatrixStack matrix, Text text, AbstractFrame frame, int color) {
+        VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
+
+        CLIENT.textRenderer.drawInternal(
+                text.asOrderedText(),
+                text.getString().length(),
+                frame.getStartPos().getX(),
+                frame.getStartPos().getY(),
+                frame.getWidth(), frame.getHeight(),
+                color, matrix.peek().getPositionMatrix(),
+                immediate, false,
+                0, LightmapTextureManager.MAX_LIGHT_COORDINATE
+
+        );
+
+        immediate.draw();
+    }
+
     public void drawTexture(ItemStack stack, AbstractFrame frame) {
         int width = frame.getStopPos().getX() - frame.getStartPos().getX();
         int height = frame.getStopPos().getY() - frame.getStartPos().getY();

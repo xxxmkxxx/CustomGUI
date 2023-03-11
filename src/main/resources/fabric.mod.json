@@ -7,7 +7,6 @@
   "authors": [],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/CustomGUI/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
@@ -21,5 +20,13 @@
     "fabricloader": ">=0.14.9",
     "fabric": "*",
     "minecraft": "1.18.2"
+  },
+  "accessWidener" : "customgui.accessWidener",
+  "custom": {
+    "loom:injected_interfaces": {
+      "net/minecraft/client/font/TextRenderer": ["com/xxxmkxxx/customgui/client/common/CustomGUITextRenderer"],
+      "net/minecraft/client/font/TextRenderer/Drawer": ["com/xxxmkxxx/customgui/client/common/CustomGUIDrawer"],
+      "net/minecraft/client/font/GlyphRenderer": ["com/xxxmkxxx/customgui/client/common/CustomGUIGlyphRenderer"]
+    }
   }
 }
