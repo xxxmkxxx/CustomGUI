@@ -18,6 +18,7 @@ public class Style implements Cloneable {
     private Shadow shadow = Shadow.builder().build();
     private Margins margins = Margins.builder().build();
     private Paddings paddings = Paddings.builder().build();
+    private Font font = Font.builder().build();
     private Background background = Background.builder().build();
 
     static {
@@ -38,7 +39,7 @@ public class Style implements Cloneable {
 
     @Override
     public Object clone() throws CloneNotSupportedException {
-        return new Style(matrixStack, scaledFactorPercents, (Color) color.clone(), (Opacity) opacity.clone(), (Shadow) shadow.clone(), (Margins) margins.clone(), paddings.clone(), (Background) background.clone());
+        return new Style(matrixStack, scaledFactorPercents, (Color) color.clone(), (Opacity) opacity.clone(), (Shadow) shadow.clone(), (Margins) margins.clone(), paddings.clone(), font.clone(), (Background) background.clone());
     }
 
     public int getHexColor() {
