@@ -1,9 +1,9 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node.animation.standard.inputfield;
 
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AbstractAnimation;
-import com.xxxmkxxx.customgui.client.ui.controls.field.InputField;
+import com.xxxmkxxx.customgui.client.ui.controls.field.NoneExpandableInputField;
 
-public class StandardLeftClickInputFieldAnimation extends AbstractAnimation<InputField> {
+public class StandardLeftClickInputFieldAnimation extends AbstractAnimation<NoneExpandableInputField> {
     public StandardLeftClickInputFieldAnimation() {
         long timeUnit = 0;
         addFrame(timeUnit+=10, field -> {});

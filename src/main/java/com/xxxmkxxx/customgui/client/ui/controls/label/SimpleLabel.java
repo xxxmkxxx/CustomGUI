@@ -28,6 +28,7 @@ public class SimpleLabel extends AbstractLabel implements LeftClickEventHandler,
         this.text = SimpleText.builder().text(text).build();
         this.pointer = pointer;
         this.position = position;
+        updateIndents();
     }
 
     public void setLeftClickAction(Runnable leftClickAction) {
@@ -50,6 +51,19 @@ public class SimpleLabel extends AbstractLabel implements LeftClickEventHandler,
         super.initRenderer(type);
         text.initRenderer(type);
         this.renderer = new RendererFactory().create(type);
+    }
+
+    @Override
+    public void update() {
+        updateIndents();
+    }
+
+    private void updateIndents() {
+        int leftLabelMargin = style.getMargins().getLeft();
+        int topLabelMargin = style.getMargins().getTop();
+
+        frame.moveStartPos(leftLabelMargin, topLabelMargin);
+        frame.moveStopPos(leftLabelMargin, topLabelMargin);
     }
 
     @Override

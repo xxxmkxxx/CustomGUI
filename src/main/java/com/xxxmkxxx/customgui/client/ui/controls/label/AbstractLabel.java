@@ -4,7 +4,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import lombok.Getter;
 
 @Getter
-public class AbstractLabel extends AbstractNode implements Label {
+public abstract class AbstractLabel extends AbstractNode implements Label {
     protected AbstractNode pointer;
     protected AbstractNode.Position position;
 }

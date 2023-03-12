@@ -8,7 +8,7 @@ import lombok.Getter;
 import net.minecraft.util.Identifier;
 
 @Getter
-public class AbstractImage extends AbstractNode implements Image {
+public abstract class AbstractImage extends AbstractNode implements Image {
     protected Identifier imageIdentifier;
 
     public AbstractImage(Pos startPos, Pos stopPos, Identifier imageIdentifier) {

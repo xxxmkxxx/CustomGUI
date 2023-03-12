@@ -28,6 +28,7 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
 
     protected SimpleText(Pos startPos, Pos stopPos, Text text) {
         super(startPos, stopPos, text);
+        updateIndents();
     }
 
     public void setLeftClickAction(Runnable leftClickAction) {
@@ -49,6 +50,19 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
     public void initRenderer(RendererType type) {
         super.initRenderer(type);
         this.renderer = new RendererFactory().create(type);
+    }
+
+    @Override
+    public void update() {
+        updateIndents();
+    }
+
+    private void updateIndents() {
+        int leftTextMargin = style.getMargins().getLeft();
+        int topTextMargin = style.getMargins().getTop();
+
+        frame.moveStartPos(leftTextMargin, topTextMargin);
+        frame.moveStopPos(leftTextMargin, topTextMargin);
     }
 
     @Override

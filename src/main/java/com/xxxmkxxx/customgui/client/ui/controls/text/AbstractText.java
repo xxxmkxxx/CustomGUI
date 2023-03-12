@@ -8,7 +8,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import lombok.Getter;
 
 @Getter
-public class AbstractText extends AbstractNode implements Text {
+public abstract class AbstractText extends AbstractNode implements Text {
     protected net.minecraft.text.Text text;
     protected double textWidth;
     protected double textHeight;

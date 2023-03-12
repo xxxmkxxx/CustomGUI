@@ -29,6 +29,7 @@ public class StandardImage extends AbstractImage implements LeftClickEventHandle
     public StandardImage(Pos startPos, Pos stopPos, ItemStack itemStack, Identifier imageIdentifier) {
         super(startPos, stopPos, imageIdentifier);
         this.itemStack = itemStack;
+        updateIndents();
     }
 
     public void setLeftClickAction(Runnable leftClickAction) {
@@ -50,6 +51,19 @@ public class StandardImage extends AbstractImage implements LeftClickEventHandle
     public void initRenderer(RendererType type) {
         super.initRenderer(type);
         this.renderer = new RendererFactory().create(type);
+    }
+
+    @Override
+    public void update() {
+        updateIndents();
+    }
+
+    private void updateIndents() {
+        int leftImageMargin = style.getMargins().getLeft();
+        int topImageMargin = style.getMargins().getTop();
+
+        frame.moveStartPos(leftImageMargin, topImageMargin);
+        frame.moveStopPos(leftImageMargin, topImageMargin);
     }
 
     @Override

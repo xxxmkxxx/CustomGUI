@@ -18,7 +18,7 @@ import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.SquareSlotConta
 import com.xxxmkxxx.customgui.client.ui.containers.slotcontainer.UnmodifiableLinearSlotContainer;
 import com.xxxmkxxx.customgui.client.ui.controls.button.ImagedButton;
 import com.xxxmkxxx.customgui.client.ui.controls.button.SimpleButton;
-import com.xxxmkxxx.customgui.client.ui.controls.field.InputField;
+import com.xxxmkxxx.customgui.client.ui.controls.field.NoneExpandableInputField;
 import com.xxxmkxxx.customgui.client.ui.controls.image.SimpleImage;
 import com.xxxmkxxx.customgui.client.ui.controls.label.SimpleLabel;
 import com.xxxmkxxx.customgui.client.ui.controls.slot.SimpleSlot;
@@ -97,7 +97,8 @@ public class CustomGUIClient implements ClientModInitializer {
             CustomGUI customGUI = CustomGUI.getInstance();
 
             Style style = new Style();
-            style.setMargins(Margins.builder().left(1).bottom(1).right(1).top(1).build());
+            style.setMargins(Margins.builder().left(0).bottom(0).right(0).top(0).build());
+            style.setPaddings(Paddings.builder().left(0).right(0).top(0).bottom(0).build());
             style.setColor(new Color("2ad43b"));
             style.setBackground(Background.builder().opacity(new Opacity(20)).type(Background.Type.COLORED).color(Color.DefaultColor.BLUE.getColor()).build());
 
@@ -174,7 +175,7 @@ public class CustomGUIClient implements ClientModInitializer {
                 SimpleScene scene = new SimpleScene(RendererType.SCREEN);
                 Window window = screenStage.getWindow();
 
-                InputField field = InputField.builder()
+                NoneExpandableInputField field = NoneExpandableInputField.builder()
                         .height(Utils.getTextHeight())
                         .width(50)
                         .pos(Pos.builder().relativeCoords(5, 5).build(window.getXPercentValue(), window.getYPercentValue()))
@@ -194,15 +195,15 @@ public class CustomGUIClient implements ClientModInitializer {
                 SimpleScene scene = new SimpleScene(RendererType.SCREEN);
                 Window window = screenStage.getWindow();
 
-                InputField inputField = InputField.builder()
+                NoneExpandableInputField noneExpandableInputField = NoneExpandableInputField.builder()
                         .style(style)
                         .height(Utils.getTextHeight())
                         .width(50)
                         .pos(Pos.builder().relativeCoords(5, 5).build(window.getXPercentValue(), window.getYPercentValue()))
                         .build();
-                inputField.getInputCursor().getStyle().setColor(Color.DefaultColor.ORANGE.getColor());
+                noneExpandableInputField.getInputCursor().getStyle().setColor(Color.DefaultColor.ORANGE.getColor());
 
-                scene.addElement(inputField);
+                scene.addElement(noneExpandableInputField);
 
                 return scene;
             });
@@ -345,10 +346,19 @@ public class CustomGUIClient implements ClientModInitializer {
                         .build();
 
                 //Armor slots
+                Style slotStyle;
+                try {
+                    slotStyle = (Style) standardElementStyle.clone();
+                    slotStyle.setMargins(Margins.builder().left(1).right(1).top(1).bottom(1).build());
+
+                } catch (CloneNotSupportedException e) {
+                    throw new RuntimeException(e);
+                }
+
                 UnmodifiableLinearSlotContainer.Builder<SimpleSlot> armorSlotsContainerBuilder = UnmodifiableLinearSlotContainer.builder();
                 SimpleSlot.Factory armorSlotFactory = SimpleSlot.factoryBuilder()
                         .inventory(inventory)
-                        .style(standardElementStyle)
+                        .style(slotStyle)
                         .widthPercent(2.92).heightPercent(6.97)
                         .build();
 

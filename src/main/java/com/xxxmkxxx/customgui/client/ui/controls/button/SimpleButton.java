@@ -60,6 +60,7 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
                             .deleteStickyAnimation("standard_hover_animation")
             );
         };
+        updateIndents();
     }
 
     @Override
@@ -82,6 +83,31 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
         super.initRenderer(type);
         renderer = new RendererFactory().create(type);
         text.initRenderer(type);
+    }
+
+    @Override
+    public void update() {
+        updateIndents();
+    }
+
+    @SuppressWarnings("DuplicatedCode")
+    private void updateIndents() {
+        int leftButtonMargin = style.getMargins().getLeft();
+        int topButtonMargin = style.getMargins().getTop();
+        int leftButtonPadding = style.getPaddings().getLeft();
+        int topButtonPadding = style.getPaddings().getTop();
+        int leftTextMargin = text.getStyle().getMargins().getLeft();
+        int topTextMargin = text.getStyle().getMargins().getTop();
+
+        frame.moveStartPos(leftButtonMargin, topButtonMargin);
+
+        int tempXDistance = leftButtonMargin + leftButtonPadding + leftTextMargin;
+        int tempYDistance = topButtonMargin + topButtonPadding + topTextMargin;
+
+        text.getFrame().moveStartPos(tempXDistance, tempYDistance);
+        text.getFrame().moveStopPos(tempXDistance, tempYDistance);
+
+        frame.moveStopPos(leftButtonMargin, topButtonMargin);
     }
 
     @Override

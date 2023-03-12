@@ -1,8 +1,7 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node.animation.standard.inputfield;
 
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AbstractAnimation;
-import com.xxxmkxxx.customgui.client.ui.controls.field.AbstractField;
-import com.xxxmkxxx.customgui.client.ui.controls.field.InputField;
+import com.xxxmkxxx.customgui.client.ui.controls.field.NoneExpandableInputField;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -11,5 +10,5 @@ import lombok.RequiredArgsConstructor;
 public enum StandardInputFieldAnimations {
     LEFT_CLICK(new StandardLeftClickInputFieldAnimation());
 
-    private final AbstractAnimation<InputField> animation;
+    private final AbstractAnimation<NoneExpandableInputField> animation;
 }

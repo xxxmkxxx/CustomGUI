@@ -51,6 +51,7 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
         this.image = image;
 
         updateAmountItemsText(inventory.getStack(index));
+        updateIndents();
     }
 
     private Pos initAmountItemsTextStartPos(Text text) {
@@ -92,6 +93,19 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
         amountItemsText.initRenderer(type);
         image.initRenderer(type);
         this.renderer = new RendererFactory().create(type);
+    }
+
+    @Override
+    public void update() {
+        updateIndents();
+    }
+
+    private void updateIndents() {
+        int leftSlotMargin = style.getMargins().getLeft();
+        int topSlotMargin = style.getMargins().getTop();
+
+        frame.moveStartPos(leftSlotMargin, topSlotMargin);
+        frame.moveStopPos(leftSlotMargin, topSlotMargin);
     }
 
     @Override

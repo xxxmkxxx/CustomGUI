@@ -18,6 +18,11 @@ import java.util.function.Function;
 public abstract class AbstractNode implements Node {
     public static final AbstractNode EMPTY_NODE = new AbstractNode() {
         @Override
+        public void update() {
+
+        }
+
+        @Override
         public void initRenderer(RendererType type) {
 
         }

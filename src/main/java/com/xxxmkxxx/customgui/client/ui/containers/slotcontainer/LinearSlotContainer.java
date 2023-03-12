@@ -2,6 +2,7 @@ package com.xxxmkxxx.customgui.client.ui.containers.slotcontainer;
 
 import com.xxxmkxxx.customgui.client.common.Validator;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
+import com.xxxmkxxx.customgui.client.hierarchy.node.Node;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
@@ -27,6 +28,7 @@ public class LinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlot
     protected LinearSlotContainer(Pos startPos, SlotFactory<T> factory) {
         super(factory);
         this.frame = SimpleFrame.builder().startPos(startPos).widthPercent(0.0).heightPercent(0.0).build();
+        updateIndents();
     }
 
     @Override
@@ -34,6 +36,20 @@ public class LinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlot
         super.initRenderer(type);
         renderer = new RendererFactory<T>().create(type);
         slots.forEach(slot -> slot.initRenderer(type));
+    }
+
+    @Override
+    public void update() {
+        slots.forEach(Node::update);
+        updateIndents();
+    }
+
+    public void updateIndents() {
+        int leftSlotContainerMargin = style.getMargins().getLeft();
+        int topSlotContainerMargin = style.getMargins().getTop();
+
+        frame.moveStartPos(leftSlotContainerMargin, topSlotContainerMargin);
+        frame.moveStopPos(leftSlotContainerMargin, topSlotContainerMargin);
     }
 
     @Override
@@ -73,9 +89,10 @@ public class LinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlot
                         .coords(frame.getStopPos().getX(), frame.getStartPos().getY())
                         .build(frame.getLastXPercentValue(), frame.getLastYPercentValue())
         );
+
         slots.add(slot);
 
-        frame.moveStopPos(slot.getFrame().getWidth() + slot.getStyle().getMargins().getLeft(), 0);
+        frame.moveStopPos(slot.getFrame().getWidth() + slot.getStyle().getMargins().getRight(), 0);
     }
 
     @Override

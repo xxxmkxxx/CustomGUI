@@ -3,6 +3,7 @@ package com.xxxmkxxx.customgui.client.ui.containers.pane;
 import com.xxxmkxxx.customgui.client.common.ParametrizedSelfDestructionMethod;
 import com.xxxmkxxx.customgui.client.common.Validator;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
+import com.xxxmkxxx.customgui.client.hierarchy.node.Node;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
@@ -28,6 +29,7 @@ public class SimplePane extends AbstractPane {
     protected SimplePane(Pos startPos, Pos stopPos) {
         super(startPos, stopPos);
         nodes = new LinkedList<>();
+        updateIndents();
     }
 
     @Override
@@ -47,6 +49,20 @@ public class SimplePane extends AbstractPane {
         super.initRenderer(type);
         this.renderer = new RendererFactory().create(type);
         nodes.forEach(node -> node.initRenderer(rendererType));
+    }
+
+    @Override
+    public void update() {
+        nodes.forEach(Node::update);
+        updateIndents();
+    }
+
+    private void updateIndents() {
+        int leftPaneMargin = style.getMargins().getLeft();
+        int topPaneMargin = style.getMargins().getTop();
+
+        frame.moveStartPos(leftPaneMargin, topPaneMargin);
+        frame.moveStopPos(leftPaneMargin, topPaneMargin);
     }
 
     @Override

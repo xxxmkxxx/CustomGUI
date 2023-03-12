@@ -31,6 +31,7 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
     protected ImagedButton(Pos startPos, Pos stopPos, SimpleText text, SimpleImage image) {
         super(startPos, stopPos, text);
         this.image = image;
+        updateIndents();
     }
 
     @Override
@@ -66,6 +67,39 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
         this.renderer = new RendererFactory().create(type);
         text.initRenderer(type);
         image.initRenderer(type);
+    }
+
+    @Override
+    public void update() {
+        updateIndents();
+    }
+
+    @SuppressWarnings("DuplicatedCode")
+    private void updateIndents() {
+        int leftButtonMargin = style.getMargins().getLeft();
+        int topButtonMargin = style.getMargins().getTop();
+        int leftButtonPadding = style.getPaddings().getLeft();
+        int topButtonPadding = style.getPaddings().getTop();
+        int leftImageMargin = style.getMargins().getLeft();
+        int topImageMargin = style.getMargins().getTop();
+        int leftTextMargin = text.getStyle().getMargins().getLeft();
+        int topTextMargin = text.getStyle().getMargins().getTop();
+
+        frame.moveStartPos(leftButtonMargin, topButtonMargin);
+
+        int tempXDistance = leftButtonMargin + leftButtonPadding + leftImageMargin;
+        int tempYDistance = topButtonMargin + topButtonPadding + topImageMargin;
+
+        image.getFrame().moveStartPos(tempXDistance, tempYDistance);
+        image.getFrame().moveStopPos(tempXDistance, tempYDistance);
+
+        tempXDistance += leftTextMargin;
+        tempYDistance += topTextMargin;
+
+        text.getFrame().moveStartPos(tempXDistance, tempYDistance);
+        text.getFrame().moveStopPos(tempXDistance, tempYDistance);
+
+        frame.moveStopPos(leftButtonMargin, topButtonMargin);
     }
 
     @Override

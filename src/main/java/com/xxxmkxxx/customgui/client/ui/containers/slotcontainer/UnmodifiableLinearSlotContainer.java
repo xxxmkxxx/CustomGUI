@@ -29,8 +29,9 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
     protected UnmodifiableLinearSlotContainer(Pos pos, SlotFactory<T> factory, int[] indexes) {
         super(factory);
         this.size = indexes.length;
-        this.slots = initSlots(indexes, pos, factory);
-        this.frame = SimpleFrame.builder().positions(pos, ((T)slots[slots.length - 1]).getFrame().getStopPos()).build();
+        this.frame = SimpleFrame.builder().startPos(pos).heightPercent(0.0).widthPercent(0.0).build();
+        updateIndents();
+        this.slots = initSlots(indexes, factory);
     }
 
     @Override
@@ -43,6 +44,22 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
             T slot = (T) slots[i];
             slot.initRenderer(type);
         }
+    }
+
+    @Override
+    public void update() {
+        for (int i = 0; i < size; i++) {
+            ((AbstractSlot)slots[i]).update();
+        }
+        updateIndents();
+    }
+
+    private void updateIndents() {
+        int leftSlotContainerMargin = style.getMargins().getLeft();
+        int topSlotContainerMargin = style.getMargins().getTop();
+
+        frame.moveStartPos(leftSlotContainerMargin, topSlotContainerMargin);
+        frame.moveStopPos(leftSlotContainerMargin, topSlotContainerMargin);
     }
 
     @Override
@@ -107,26 +124,24 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
         return new Builder<>();
     }
 
-    private Object[] initSlots(int[] indexes, Pos pos, SlotFactory<T> factory) {
+    private Object[] initSlots(int[] indexes, SlotFactory<T> factory) {
         Object[] result = new Object[size];
-        Pos currentPos = null;
-
-        try {
-            currentPos = (Pos) pos.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
 
         for (int i = 0; i < size; i++) {
             T slot = factory.create(
                     indexes[i],
                     Pos.builder()
-                            .coords(currentPos.getX(), currentPos.getY())
-                            .build(currentPos.getXPercentValue(), currentPos.getYPercentValue())
+                            .coords(frame.getStopPos().getX(), frame.getStopPos().getY())
+                            .build(frame.getLastXPercentValue(), frame.getLastYPercentValue())
             );
 
+            //gag
+            System.out.println("slot width - " + slot.getFrame().getWidth() + "\n");
+            System.out.println("slot height - " + slot.getFrame().getHeight() + "\n");
+
             result[i] = slot;
-            currentPos.moveByX(slot.getFrame().getWidth() + slot.getStyle().getMargins().getLeft());
+
+            frame.moveStopPos(slot.getFrame().getWidth() + slot.getStyle().getMargins().getRight(), 0);
         }
 
         return result;

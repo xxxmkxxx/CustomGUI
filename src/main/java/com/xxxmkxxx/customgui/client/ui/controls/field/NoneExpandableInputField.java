@@ -29,13 +29,13 @@ import org.lwjgl.glfw.GLFW;
 import java.util.function.Consumer;
 
 @Getter @Setter
-public class InputField extends AbstractField implements LeftClickEventHandler, ChangeEventHandler, KeyboardCharInputEventHandler, KeyboardKeyInputEventHandler {
+public class NoneExpandableInputField extends AbstractField implements LeftClickEventHandler, ChangeEventHandler, KeyboardCharInputEventHandler, KeyboardKeyInputEventHandler {
     private SimpleText text;
     private InputCursor inputCursor;
     private Runnable leftClickAction = () -> {};
     private Runnable changeAction = () -> {};
 
-    protected InputField(Pos pos, int width, int height) {
+    protected NoneExpandableInputField(Pos pos, int width, int height) {
         //gag
         this.frame = SimpleFrame.builder().startPos(pos).widthPercent(0.0).heightPercent(0.0).build();
         this.text = SimpleText.builder()
@@ -48,6 +48,7 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
                 .height((int) text.getTextHeight())
                 .build();
         inputCursor.hide();
+        updateIndents();
     }
 
     @Override
@@ -70,6 +71,28 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
         this.renderer = new RendererFactory().create(type);
         text.initRenderer(type);
         inputCursor.initRenderer(type);
+    }
+
+    @Override
+    public void update() {
+        updateIndents();
+    }
+
+    private void updateIndents() {
+        int leftInputFieldMargin = style.getMargins().getLeft();
+        int topInputFieldMargin = style.getMargins().getTop();
+
+        int tempXOffset = leftInputFieldMargin;
+        int tempYOffset = topInputFieldMargin;
+
+        frame.moveStartPos(tempXOffset, tempYOffset);
+        frame.moveStopPos(tempXOffset, tempYOffset);
+
+        tempXOffset += style.getPaddings().getLeft() + text.getStyle().getMargins().getLeft();
+        tempYOffset += style.getPaddings().getTop() + text.getStyle().getMargins().getTop();
+
+        text.getFrame().moveStartPos(tempXOffset, tempYOffset);
+        text.getFrame().moveStopPos(tempXOffset, tempYOffset);
     }
 
     @Override
@@ -174,35 +197,35 @@ public class InputField extends AbstractField implements LeftClickEventHandler, 
             return this;
         }
 
-        public InputField build() {
-            InputField inputField = new InputField(pos, width, height);
-            inputField.setStyle(style);
-            return inputField;
+        public NoneExpandableInputField build() {
+            NoneExpandableInputField noneExpandableInputField = new NoneExpandableInputField(pos, width, height);
+            noneExpandableInputField.setStyle(style);
+            return noneExpandableInputField;
         }
     }
 
-    public static class RendererFactory implements NodeRendererFactory<InputField> {
-        private final ParametrizedSelfDestructionMethod<InputField> initBackgroundMethod = new ParametrizedSelfDestructionMethod<>();
-        private Consumer<InputField> backgroundRendererMethod = inputField -> {};
+    public static class RendererFactory implements NodeRendererFactory<NoneExpandableInputField> {
+        private final ParametrizedSelfDestructionMethod<NoneExpandableInputField> initBackgroundMethod = new ParametrizedSelfDestructionMethod<>();
+        private Consumer<NoneExpandableInputField> backgroundRendererMethod = noneExpandableInputField -> {};
 
         public RendererFactory() {
-            initBackgroundMethod.setAction(inputField -> {
-                backgroundRendererMethod = Background.chooseBackground(inputField.getStyle().getBackground().getType());
+            initBackgroundMethod.setAction(noneExpandableInputField -> {
+                backgroundRendererMethod = Background.chooseBackground(noneExpandableInputField.getStyle().getBackground().getType());
             });
         }
 
         @Override
-        public NodeRenderer<InputField> create(RendererType type) {
+        public NodeRenderer<NoneExpandableInputField> create(RendererType type) {
             return this::render;
         }
 
-        private void render(InputField inputField) {
-            initBackgroundMethod.execute(inputField);
+        private void render(NoneExpandableInputField noneExpandableInputField) {
+            initBackgroundMethod.execute(noneExpandableInputField);
 
-            backgroundRendererMethod.accept(inputField);
+            backgroundRendererMethod.accept(noneExpandableInputField);
 
-            inputField.getText().getState().execute(inputField.getText(), inputField.getText().getRenderer());
-            inputField.getInputCursor().getState().execute(inputField.getInputCursor(), inputField.getInputCursor().getRenderer());
+            noneExpandableInputField.getText().getState().execute(noneExpandableInputField.getText(), noneExpandableInputField.getText().getRenderer());
+            noneExpandableInputField.getInputCursor().getState().execute(noneExpandableInputField.getInputCursor(), noneExpandableInputField.getInputCursor().getRenderer());
         }
     }
 }

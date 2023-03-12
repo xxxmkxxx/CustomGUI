@@ -30,13 +30,8 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
         this.rowSize = rowSize;
         this.amountRows = amountRows;
         this.rows = rows;
-        UnmodifiableLinearSlotContainer<T> container = rows[rows.length - 1];
-        this.frame = SimpleFrame.builder()
-                .positions(
-                        pos,
-                        container.getSlot(container.getSize() - 1).getFrame().getStopPos()
-                )
-                .build();
+        this.frame = SimpleFrame.builder().startPos(pos).widthPercent(0.0).heightPercent(0.0).build();
+        updateIndents();
     }
 
     @Override
@@ -44,6 +39,22 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
         super.initRenderer(type);
         renderer = new SquareSlotContainer.RendererFactory<T>().create(type);
         Arrays.stream(rows).forEach(container -> container.initRenderer(type));
+    }
+
+    @Override
+    public void update() {
+        for (int i = 0; i < amountRows; i++) {
+            rows[i].update();
+        }
+        updateIndents();
+    }
+
+    private void updateIndents() {
+        int leftSlotContainerMargin = style.getMargins().getLeft();
+        int topSlotContainerMargin = style.getMargins().getTop();
+
+        frame.moveStartPos(leftSlotContainerMargin, topSlotContainerMargin);
+        frame.moveStopPos(leftSlotContainerMargin, topSlotContainerMargin);
     }
 
     @Override

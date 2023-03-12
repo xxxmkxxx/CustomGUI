@@ -22,6 +22,7 @@ public class SimpleImage extends AbstractImage implements LeftClickEventHandler,
 
     protected SimpleImage(Pos startPos, Pos stopPos, Identifier imageIdentifier) {
         super(startPos, stopPos, imageIdentifier);
+        updateIndents();
     }
 
     public void setLeftClickAction(Runnable leftClickAction) {
@@ -43,6 +44,19 @@ public class SimpleImage extends AbstractImage implements LeftClickEventHandler,
     public void initRenderer(RendererType type) {
         super.initRenderer(type);
         this.renderer = new RendererFactory().create(type);
+    }
+
+    @Override
+    public void update() {
+        updateIndents();
+    }
+
+    private void updateIndents() {
+        int leftImageMargin = style.getMargins().getLeft();
+        int topImageMargin = style.getMargins().getTop();
+
+        frame.moveStartPos(leftImageMargin, topImageMargin);
+        frame.moveStopPos(leftImageMargin, topImageMargin);
     }
 
     @Override

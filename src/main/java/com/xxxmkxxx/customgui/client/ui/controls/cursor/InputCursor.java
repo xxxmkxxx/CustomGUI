@@ -10,12 +10,26 @@ import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 public class InputCursor extends AbstractCursor {
     protected InputCursor(Pos pos, int width, int height) {
         super(pos, width, height);
+        updateIndents();
     }
 
     @Override
     public void initRenderer(RendererType type) {
         super.initRenderer(type);
         this.renderer = new RendererFactory().create(type);
+    }
+
+    @Override
+    public void update() {
+        updateIndents();
+    }
+
+    private void updateIndents() {
+        int leftCursorMargin = style.getMargins().getLeft();
+        int topCursorMargin = style.getMargins().getTop();
+
+        frame.moveStartPos(leftCursorMargin, topCursorMargin);
+        frame.moveStopPos(leftCursorMargin, topCursorMargin);
     }
 
     public static Builder builder() {
