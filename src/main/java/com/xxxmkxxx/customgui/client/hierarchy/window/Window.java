@@ -2,6 +2,7 @@ package com.xxxmkxxx.customgui.client.hierarchy.window;
 
 import com.xxxmkxxx.customgui.client.common.comparators.NodeFrameComparator;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
+import com.xxxmkxxx.customgui.client.hierarchy.node.layout.Position;
 import com.xxxmkxxx.customgui.client.hierarchy.window.event.resize.ResizeWindowEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import lombok.Getter;
@@ -48,83 +49,6 @@ public class Window implements ResizeWindowEventHandler {
         windowSectionNodes.getNodes().forEach(node -> {
             node.scaling(this);
         });
-    }
-
-    public void arrangeNodeRelativelyTargetNode(AbstractNode targetNode, AbstractNode node, AbstractNode.Position position) {
-        switch (position) {
-            case RIGHT -> {
-                Pos startPos = Pos.builder()
-                        .coords(
-                                targetNode.getFrame().getInitialStopPos().getX(),
-                                targetNode.getFrame().getInitialStartPos().getY()
-                        )
-                        .build(xPercentValue, yPercentValue);
-
-                Pos stopPos = Pos.builder()
-                        .coords(
-                                targetNode.getFrame().getInitialStopPos().getX() + node.getFrame().getWidth(),
-                                targetNode.getFrame().getInitialStartPos().getY() + node.getFrame().getHeight()
-                        )
-                        .build(xPercentValue, yPercentValue);
-
-                node.getFrame().setStartPos(startPos);
-                node.getFrame().setStopPos(stopPos);
-            }
-            case LEFT -> {
-                Pos startPos = Pos.builder()
-                        .coords(
-                                targetNode.getFrame().getInitialStartPos().getX() - node.getFrame().getWidth(),
-                                targetNode.getFrame().getInitialStartPos().getY()
-                        )
-                        .build(xPercentValue, yPercentValue);
-
-                Pos stopPos = Pos.builder()
-                        .coords(
-                                targetNode.getFrame().getInitialStartPos().getX(),
-                                targetNode.getFrame().getInitialStartPos().getY() + node.getFrame().getHeight()
-                        )
-                        .build(xPercentValue, yPercentValue);
-
-                node.getFrame().setStartPos(startPos);
-                node.getFrame().setStopPos(stopPos);
-            }
-            case BOTTOM -> {
-                Pos startPos = Pos.builder()
-                        .coords(
-                                targetNode.getFrame().getInitialStartPos().getX(),
-                                targetNode.getFrame().getInitialStopPos().getY()
-                        )
-                        .build(xPercentValue, yPercentValue);
-
-                Pos stopPos = Pos.builder()
-                        .coords(
-                                targetNode.getFrame().getInitialStartPos().getX() + node.getFrame().getWidth(),
-                                targetNode.getFrame().getInitialStopPos().getY() + node.getFrame().getHeight()
-                        )
-                        .build(xPercentValue, yPercentValue);
-
-                node.getFrame().setStartPos(startPos);
-                node.getFrame().setStopPos(stopPos);
-            }
-            case TOP -> {
-                Pos startPos = Pos.builder()
-                        .coords(
-                                targetNode.getFrame().getInitialStartPos().getX(),
-                                targetNode.getFrame().getInitialStartPos().getY() - node.getFrame().getHeight()
-                        )
-                        .build(xPercentValue, yPercentValue);
-
-                Pos stopPos = Pos.builder()
-                        .coords(
-                                targetNode.getFrame().getInitialStartPos().getX() + node.getFrame().getWidth(),
-                                targetNode.getFrame().getInitialStartPos().getY()
-                        )
-                        .build(xPercentValue, yPercentValue);
-
-                node.getFrame().setStartPos(startPos);
-                node.getFrame().setStopPos(stopPos);
-            }
-        }
     }
 
     @Override

@@ -5,6 +5,8 @@ import com.xxxmkxxx.customgui.client.common.inventory.AbstractInventory;
 import com.xxxmkxxx.customgui.client.common.inventory.InventoryType;
 import com.xxxmkxxx.customgui.client.common.util.Utils;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
+import com.xxxmkxxx.customgui.client.hierarchy.node.layout.LayoutManager;
+import com.xxxmkxxx.customgui.client.hierarchy.node.layout.Position;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.scene.SimpleScene;
 import com.xxxmkxxx.customgui.client.hierarchy.style.*;
@@ -83,6 +85,52 @@ public class CustomGUIClient implements ClientModInitializer {
         @Override
         public boolean canPlayerUse(PlayerEntity player) {
             return true;
+        }
+
+        @Override
+        public void clear() {
+
+        }
+    };
+    private static AbstractInventory emptyInventory = new AbstractInventory(InventoryType.ENTITY) {
+        @Override
+        public int size() {
+            return 1000;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
+
+        @Override
+        public ItemStack getStack(int slot) {
+            return ItemStack.EMPTY;
+        }
+
+        @Override
+        public ItemStack removeStack(int slot, int amount) {
+            return null;
+        }
+
+        @Override
+        public ItemStack removeStack(int slot) {
+            return null;
+        }
+
+        @Override
+        public void setStack(int slot, ItemStack stack) {
+
+        }
+
+        @Override
+        public void markDirty() {
+
+        }
+
+        @Override
+        public boolean canPlayerUse(PlayerEntity player) {
+            return false;
         }
 
         @Override
@@ -183,7 +231,7 @@ public class CustomGUIClient implements ClientModInitializer {
                 SimpleLabel label = SimpleLabel.builder()
                         .text("label")
                         .style(style)
-                        .position(AbstractNode.Position.BOTTOM)
+                        .position(Position.BOTTOM)
                         .build(field);
 
                 scene.addElement(field);
@@ -287,6 +335,39 @@ public class CustomGUIClient implements ClientModInitializer {
 
                 return scene;
             });
+            customGUI.addGUIBlock("testLayout", (hudStage, screenStage) -> {
+                SimpleScene scene = new SimpleScene(RendererType.SCREEN);
+                Window window = screenStage.getWindow();
+
+                SimpleText firstText = SimpleText.builder()
+                        .style(style)
+                        .text("first")
+                        .startPos(Pos.builder().coords(50, 50).build(window.getXPercentValue(), window.getYPercentValue()))
+                        .widthPercent(5)
+                        .build();
+
+                SimpleText secondText = SimpleText.builder()
+                        .style(style)
+                        .text("second")
+                        .startPos(Pos.builder().coords(50, 50).build(window.getXPercentValue(), window.getYPercentValue()))
+                        .widthPercent(8)
+                        .build();
+
+                System.out.println("first - " + firstText.getFrame() + " " + firstText.getFrame().getWidth());
+                System.out.println("second - " + secondText.getFrame() + " " + secondText.getFrame().getWidth());
+                System.out.println("--------------------------------");
+
+                LayoutManager.positionNodeRelativeTargetNode(firstText, secondText, Position.RIGHT);
+
+                System.out.println("first - " + firstText.getFrame() + " " + firstText.getFrame().getWidth());
+                System.out.println("second - " + secondText.getFrame() + " " + secondText.getFrame().getWidth());
+                System.out.println("--------------------------------");
+
+                scene.addElement(firstText);
+                scene.addElement(secondText);
+
+                return scene;
+            });
 
             customGUI.addGUIBlock("RMC", (hudStage, screenStage) -> {
                 SimpleScene scene = new SimpleScene(RendererType.SCREEN);
@@ -299,6 +380,15 @@ public class CustomGUIClient implements ClientModInitializer {
 
                 Style standardElementStyle = new Style();
                 standardElementStyle.setBackground(moreElementsBackground);
+
+                Style slotStyle;
+                try {
+                    slotStyle = (Style) standardElementStyle.clone();
+                    slotStyle.setMargins(Margins.builder().left(1).right(1).top(1).bottom(1).build());
+
+                } catch (CloneNotSupportedException e) {
+                    throw new RuntimeException(e);
+                }
 
                 //Missions button
                 SimpleImage logoImage = SimpleImage.builder()
@@ -346,18 +436,9 @@ public class CustomGUIClient implements ClientModInitializer {
                         .build();
 
                 //Armor slots
-                Style slotStyle;
-                try {
-                    slotStyle = (Style) standardElementStyle.clone();
-                    slotStyle.setMargins(Margins.builder().left(1).right(1).top(1).bottom(1).build());
-
-                } catch (CloneNotSupportedException e) {
-                    throw new RuntimeException(e);
-                }
-
                 UnmodifiableLinearSlotContainer.Builder<SimpleSlot> armorSlotsContainerBuilder = UnmodifiableLinearSlotContainer.builder();
                 SimpleSlot.Factory armorSlotFactory = SimpleSlot.factoryBuilder()
-                        .inventory(inventory)
+                        .inventory(emptyInventory)
                         .style(slotStyle)
                         .widthPercent(2.92).heightPercent(6.97)
                         .build();
@@ -371,14 +452,149 @@ public class CustomGUIClient implements ClientModInitializer {
                                 0, 1, 2, 3, 4, 5, 6
                         );
 
+                //Skin manager
+                SimpleImage skinManagerImage = SimpleImage.builder()
+                        .positions(
+                                Pos.builder().relativeCoords(15.88, 43.55).build(window.getXPercentValue(), window.getYPercentValue()),
+                                Pos.builder().relativeCoords(16.92, 45.75).build(window.getXPercentValue(), window.getYPercentValue())
+                        )
+                        .style(standardElementStyle)
+                        .identifier(new Identifier("", ""))
+                        .build();
+
+                ImagedButton skinManagerButton = ImagedButton.builder()
+                        .positions(
+                                Pos.builder().relativeCoords(15.8, 43.17).build(window.getXPercentValue(), window.getYPercentValue()),
+                                Pos.builder().relativeCoords(17.04, 46.04).build(window.getXPercentValue(), window.getYPercentValue())
+                        )
+                        .style(standardElementStyle)
+                        .image(skinManagerImage)
+                        .build();
+
+                //Player 3D viewer
+                //gag
+                SimpleImage playerViewer = SimpleImage.builder()
+                        .positions(
+                                Pos.builder().relativeCoords(18.6, 6.3).build(window.getXPercentValue(), window.getYPercentValue()),
+                                Pos.builder().relativeCoords(29.44, 73.45).build(window.getXPercentValue(), window.getYPercentValue())
+                        )
+                        .style(standardElementStyle)
+                        .identifier(new Identifier("", ""))
+                        .build();
+
+                //Contacts button
+                SimpleImage contactsButtonImage = SimpleImage.builder()
+                        .positions(
+                                Pos.builder().relativeCoords(31.64, 1.62).build(window.getXPercentValue(), window.getYPercentValue()),
+                                Pos.builder().relativeCoords(33.00, 5.16).build(window.getXPercentValue(), window.getYPercentValue())
+                        )
+                        .style(standardElementStyle)
+                        .identifier(new Identifier("", ""))
+                        .build();
+
+                SimpleText contactsButtonText = SimpleText.builder()
+                        .style(standardElementStyle)
+                        .positions(
+                                Pos.builder().relativeCoords(34.84, 2.20).build(window.getXPercentValue(), window.getYPercentValue()),
+                                Pos.builder().relativeCoords(40.6, 4.39).build(window.getXPercentValue(), window.getYPercentValue())
+                        )
+                        .text("CONTACTS")
+                        .build();
+
+                ImagedButton contactsButton = ImagedButton.builder()
+                        .positions(
+                                Pos.builder().relativeCoords(30.92, 0.00).build(window.getXPercentValue(), window.getYPercentValue()),
+                                Pos.builder().relativeCoords(42.56, 6.69).build(window.getXPercentValue(), window.getYPercentValue())
+                        )
+                        .style(standardElementStyle)
+                        .image(contactsButtonImage)
+                        .text(contactsButtonText)
+                        .build();
+
+                //Player nickname
+                SimpleText playerNickname = SimpleText.builder()
+                        .positions(
+                                Pos.builder().relativeCoords(35.92, 9.84).build(window.getXPercentValue(), window.getYPercentValue()),
+                                Pos.builder().relativeCoords(37.84, 12.51).build(window.getXPercentValue(), window.getYPercentValue())
+                        )
+                        .style(standardElementStyle)
+                        .text("aboba")
+                        .build();
+
+                //Player stats
+                SimplePane playerStats = SimplePane.builder()
+                        .positions(
+                                Pos.builder().relativeCoords(33.32, 49.47).build(window.getXPercentValue(), window.getYPercentValue()),
+                                Pos.builder().relativeCoords(37.32, 68.69).build(window.getXPercentValue(), window.getYPercentValue())
+                        )
+                        .style(standardElementStyle)
+                        .build();
+
+                //Player inventory name
+                SimpleText playerInventoryName = SimpleText.builder()
+                        .positions(
+                                Pos.builder().relativeCoords(38.52, 50.43).build(window.getXPercentValue(), window.getYPercentValue()),
+                                Pos.builder().relativeCoords(44.04, 52.44).build(window.getXPercentValue(), window.getYPercentValue())
+                        )
+                        .style(standardElementStyle)
+                        .text("INVENTORY")
+                        .build();
+
+                //Player inventory
+                RectangularSlotContainer.Builder<SimpleSlot> playerInventorySlotsContainerBuilder = RectangularSlotContainer.builder();
+                SimpleSlot.Factory playerInventorySlot = SimpleSlot.factoryBuilder()
+                        .inventory(emptyInventory)
+                        .style(slotStyle)
+                        .widthPercent(2.92).heightPercent(6.97)
+                        .build();
+
+                RectangularSlotContainer<SimpleSlot> playerInventorySlotsContainer = playerInventorySlotsContainerBuilder
+                        .pos(Pos.builder().relativeCoords(38.36, 52.72).build(window.getXPercentValue(), window.getYPercentValue()))
+                        .amountRows(4).rowSize(6)
+                        .style(standardElementStyle)
+                        .build(
+                                playerInventorySlot,
+                                new int[][]{
+                                        {0, 0, 0, 0, 0, 0},
+                                        {0, 0, 0, 0, 0, 0},
+                                        {0, 0, 0, 0, 0, 0},
+                                        {0, 0, 0, 0, 0, 0}
+                                }
+                        );
+
+                //Player hot slots
+                UnmodifiableLinearSlotContainer.Builder<SimpleSlot> playerHotSlotsContainerBuilder = UnmodifiableLinearSlotContainer.builder();
+                SimpleSlot.Factory playerHotSlotFactory = SimpleSlot.factoryBuilder()
+                        .inventory(emptyInventory)
+                        .style(slotStyle)
+                        .widthPercent(2.92).heightPercent(6.97)
+                        .build();
+
+                UnmodifiableLinearSlotContainer<SimpleSlot> playerHotSlotsContainer = playerHotSlotsContainerBuilder
+                        .size(7)
+                        .style(standardElementStyle)
+                        .build(
+                                Pos.builder().relativeCoords(38.36, 52.72).build(window.getXPercentValue(), window.getYPercentValue()),
+                                playerHotSlotFactory,
+                                0,0,0,0,0,0
+                        );
+
                 scene.addElement(missionsButton);
                 scene.addElement(createTeamButton);
                 scene.addElement(armorSlotsContainer);
+                scene.addElement(skinManagerButton);
+                scene.addElement(playerViewer);
+                scene.addElement(contactsButton);
+                scene.addElement(playerNickname);
+                scene.addElement(playerStats);
+                scene.addElement(playerInventorySlotsContainer);
+                scene.addElement(playerInventoryName);
+                scene.addElement(playerHotSlotsContainer);
 
                 return scene;
             });
 
-            customGUI.setActiveScene("RMC", RendererType.SCREEN);
+            customGUI.setActiveScene("testLayout", RendererType.SCREEN);
         });
     }
 }

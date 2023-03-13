@@ -86,8 +86,4 @@ public abstract class AbstractNode implements Node {
     public int hashCode() {
         return Objects.hash(id, frame);
     }
-
-    public enum Position {
-        LEFT, RIGHT, TOP, BOTTOM
-    }
 }

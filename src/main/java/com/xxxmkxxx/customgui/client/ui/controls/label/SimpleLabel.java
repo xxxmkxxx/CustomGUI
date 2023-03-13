@@ -5,6 +5,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.ResetHoverEventHandler;
+import com.xxxmkxxx.customgui.client.hierarchy.node.layout.Position;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
@@ -27,7 +28,6 @@ public class SimpleLabel extends AbstractLabel implements LeftClickEventHandler,
     protected SimpleLabel(AbstractNode pointer, Text text, Position position) {
         this.text = SimpleText.builder().text(text).build();
         this.pointer = pointer;
-        this.position = position;
         updateIndents();
     }
 
@@ -112,7 +112,7 @@ public class SimpleLabel extends AbstractLabel implements LeftClickEventHandler,
     public static class Builder {
         protected Style style = Style.defaultStyle();
         protected Text text = Text.of("");
-        protected AbstractNode.Position position = Position.LEFT;
+        protected Position position = Position.LEFT;
 
         public Builder text(String text) {
             this.text = Text.of(text);
