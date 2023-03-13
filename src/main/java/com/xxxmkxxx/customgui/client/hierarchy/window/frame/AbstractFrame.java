@@ -111,12 +111,15 @@ public abstract class AbstractFrame implements Frame, Cloneable {
     }
 
     public void moveStopPos(Pos stopPos) {
-        moveStopPos(stopPos.getX(), stopPos.getY());
+        moveStopPos(
+                stopPos.getX() - this.stopPos.getX(),
+                stopPos.getY() - this.stopPos.getY()
+        );
     }
 
     private void updateFields(Pos startPos, Pos stopPos) {
-        this.width = stopPos.getX() - startPos.getX();
-        this.height = stopPos.getY() - startPos.getY();
+        this.width = Math.abs(stopPos.getX() - startPos.getX());
+        this.height = Math.abs(stopPos.getY() - startPos.getY());
         this.diagonal = Pos.calculateSegmentLength(startPos, stopPos);
     }
 
