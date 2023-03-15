@@ -5,6 +5,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.ResetHoverEventHandler;
+import com.xxxmkxxx.customgui.client.hierarchy.node.layout.LayoutManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.layout.Position;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
@@ -12,6 +13,10 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
 import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
+import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
+import com.xxxmkxxx.customgui.client.ui.controls.button.SimpleButton;
 import com.xxxmkxxx.customgui.client.ui.controls.text.SimpleText;
 import lombok.Getter;
 import net.minecraft.text.Text;
@@ -25,9 +30,11 @@ public class SimpleLabel extends AbstractLabel implements LeftClickEventHandler,
     private Runnable hoverAction = () -> {};
     private Runnable resetHoverAction = () -> {};
 
-    protected SimpleLabel(AbstractNode pointer, Text text, Position position) {
-        this.text = SimpleText.builder().text(text).build();
+    protected SimpleLabel(AbstractNode pointer, SimpleText text, Position position) {
+        this.text = text;
         this.pointer = pointer;
+        this.position = position;
+        this.frame = SimpleFrame.builder().positions(text.getFrame()).build();
         updateIndents();
     }
 
@@ -110,22 +117,24 @@ public class SimpleLabel extends AbstractLabel implements LeftClickEventHandler,
     }
 
     public static class Builder {
-        protected Style style = Style.defaultStyle();
-        protected Text text = Text.of("");
-        protected Position position = Position.LEFT;
+        protected Style style;
+        protected String text;
+        protected SimpleText textNode;
+        protected Position position;
 
-        public Builder text(String text) {
-            this.text = Text.of(text);
-            return this;
+        public Builder() {
+            this.style = Style.defaultStyle();
+            this.text = "label";
+            this.position = Position.LEFT;
         }
 
-        public Builder text(Text text) {
+        public Builder text(String text) {
             this.text = text;
             return this;
         }
 
-        public Builder position(Position position) {
-            this.position = position;
+        public Builder text(SimpleText text) {
+            this.textNode = text;
             return this;
         }
 
@@ -138,8 +147,27 @@ public class SimpleLabel extends AbstractLabel implements LeftClickEventHandler,
             return this;
         }
 
+        public Builder relativePosition(Position position) {
+            this.position = position;
+            return this;
+        }
+
         public SimpleLabel build(AbstractNode pointer) {
-            return new SimpleLabel(pointer, text, position);
+            SimpleText text;
+
+            if (this.textNode == null) {
+                text = SimpleText.builder().text(this.text).build();
+                LayoutManager.positionNodeRelativeTargetNode(pointer, text, position);
+            } else {
+                text = this.textNode;
+            }
+
+            SimpleLabel simpleLabel = new SimpleLabel(pointer, text, position);
+            simpleLabel.setStyle(style);
+
+            LayoutManager.positionNodeRelativeTargetNode(pointer, simpleLabel, position);
+
+            return simpleLabel;
         }
     }
 }
