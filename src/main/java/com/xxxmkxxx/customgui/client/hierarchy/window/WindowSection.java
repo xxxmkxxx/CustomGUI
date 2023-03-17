@@ -99,8 +99,8 @@ public enum WindowSection {
     }
 
     public static void initFrames(int windowWidth, int windowHeight) {
-        double xPercentValue = windowWidth / 100d;
-        double yPercentValue = windowHeight / 100d;
+        float xPercentValue = windowWidth / 100f;
+        float yPercentValue = windowHeight / 100f;
 
         for (WindowSection windowSection : values()) {
             windowSection.initFrame(
@@ -111,8 +111,8 @@ public enum WindowSection {
     }
 
     public static void updateFrames(int windowWidth, int windowHeight) {
-        double xPercentValue = windowWidth / 100d;
-        double yPercentValue = windowHeight / 100d;
+        float xPercentValue = windowWidth / 100f;
+        float yPercentValue = windowHeight / 100f;
 
         for (WindowSection windowSection : values()) {
             windowSection.getFrame().scaling(xPercentValue, yPercentValue);
@@ -120,6 +120,6 @@ public enum WindowSection {
     }
 
     private interface WindowSectionPosInitializer {
-        Pos init(int windowWidth, int windowHeight, double xPercentValue, double yPercentValue);
+        Pos init(int windowWidth, int windowHeight, float xPercentValue, float yPercentValue);
     }
 }

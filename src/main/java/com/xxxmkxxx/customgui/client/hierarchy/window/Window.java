@@ -14,10 +14,10 @@ public class Window implements ResizeWindowEventHandler {
     private int windowHeight;
     private int lastWindowWidth;
     private int lastWindowHeight;
-    private double xPercentValue;
-    private double yPercentValue;
-    private double lastXPercentValue;
-    private double lastYPercentValue;
+    private float xPercentValue;
+    private float yPercentValue;
+    private float lastXPercentValue;
+    private float lastYPercentValue;
 
     public Window(WindowSectionNodes windowSectionNodes, int windowWidth, int windowHeight) {
         this.windowSectionNodes = windowSectionNodes;
@@ -37,8 +37,8 @@ public class Window implements ResizeWindowEventHandler {
     private void updatePercentValues() {
         lastXPercentValue = xPercentValue;
         lastYPercentValue = yPercentValue;
-        xPercentValue = windowWidth / 100d;
-        yPercentValue = windowHeight / 100d;
+        xPercentValue = windowWidth / 100f;
+        yPercentValue = windowHeight / 100f;
     }
 
 
