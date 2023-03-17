@@ -17,8 +17,8 @@ public class SimpleFrame extends AbstractFrame {
     public static class Builder {
         private Pos startPos;
         private Pos stopPos;
-        private double widthPercent;
-        private double heightPercent;
+        private float widthPercent;
+        private float heightPercent;
 
         public Builder() {
             this.startPos = Pos.defaultPos();
@@ -56,12 +56,12 @@ public class SimpleFrame extends AbstractFrame {
             return this;
         }
 
-        public Builder widthPercent(double widthPercent) {
+        public Builder widthPercent(float widthPercent) {
             this.widthPercent = widthPercent;
             return this;
         }
 
-        public Builder heightPercent(double heightPercent) {
+        public Builder heightPercent(float heightPercent) {
             this.heightPercent = heightPercent;
             return this;
         }

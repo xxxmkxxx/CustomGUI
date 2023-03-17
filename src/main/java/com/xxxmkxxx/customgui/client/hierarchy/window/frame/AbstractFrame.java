@@ -16,11 +16,11 @@ public abstract class AbstractFrame implements Frame, Cloneable {
     protected Pos startPos;
     @Setter
     protected Pos stopPos;
-    protected int diagonal;
-    protected int width;
-    protected int height;
-    protected double lastXPercentValue;
-    protected double lastYPercentValue;
+    protected float diagonal;
+    protected float width;
+    protected float height;
+    protected float lastXPercentValue;
+    protected float lastYPercentValue;
 
     static {
         Pos startPos = Pos.defaultPos();
@@ -70,7 +70,7 @@ public abstract class AbstractFrame implements Frame, Cloneable {
         }
     }
 
-    public void scaling(double xPercentValue, double yPercentValue) {
+    public void scaling(float xPercentValue, float yPercentValue) {
         startPos = Pos.builder()
                 .relativeCoords(startPos.getXIndentPercent(), startPos.getYIndentPercent())
                 .build(xPercentValue, yPercentValue);
@@ -83,7 +83,7 @@ public abstract class AbstractFrame implements Frame, Cloneable {
         lastYPercentValue = yPercentValue;
     }
 
-    public void moveStartPos(int xDistance, int yDistance) {
+    public void moveStartPos(float xDistance, float yDistance) {
         this.initialStartPos.moveByXY(xDistance, yDistance);
         this.startPos = Pos.builder()
                 .relativeCoords(initialStartPos.getXIndentPercent(), initialStartPos.getYIndentPercent())
@@ -100,7 +100,7 @@ public abstract class AbstractFrame implements Frame, Cloneable {
         );
     }
 
-    public void moveStopPos(int xDistance, int yDistance) {
+    public void moveStopPos(float xDistance, float yDistance) {
         this.initialStopPos.moveByXY(xDistance, yDistance);
         this.stopPos = Pos.builder()
                 .relativeCoords(initialStopPos.getXIndentPercent(), initialStopPos.getYIndentPercent())
@@ -124,7 +124,7 @@ public abstract class AbstractFrame implements Frame, Cloneable {
     }
 
     @Override
-    public boolean checkPosBelongs(int xPos, int yPos) {
+    public boolean checkPosBelongs(float xPos, float yPos) {
         return checkPosBelongs(startPos, stopPos, xPos, yPos);
     }
 
@@ -133,7 +133,7 @@ public abstract class AbstractFrame implements Frame, Cloneable {
         return checkPosBelongs(pos.getX(), pos.getY());
     }
 
-    public static boolean checkPosBelongs(Pos startPos, Pos stopPos, int xPos, int yPos) {
+    public static boolean checkPosBelongs(Pos startPos, Pos stopPos, float xPos, float yPos) {
         boolean xBelongs = false, yBelongs = false;
 
         if (startPos.getX() < stopPos.getX()) {
