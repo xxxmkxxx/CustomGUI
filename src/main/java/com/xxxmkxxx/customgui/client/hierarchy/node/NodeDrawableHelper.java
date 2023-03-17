@@ -2,6 +2,7 @@ package com.xxxmkxxx.customgui.client.hierarchy.node;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.xxxmkxxx.customgui.client.hierarchy.style.Font;
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import net.fabricmc.api.EnvType;
@@ -78,19 +79,15 @@ public class NodeDrawableHelper extends DrawableHelper {
         drawText(matrix, text, pos.getX(), pos.getY(), color);
     }
 
-    public void drawText(MatrixStack matrix, Text text, AbstractFrame frame, int color) {
+    public void drawText(MatrixStack matrix, Text text, float x, float y, Font font) {
         VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
 
         CLIENT.textRenderer.drawInternal(
-                text.asOrderedText(),
-                text.getString().length(),
-                frame.getStartPos().getX(),
-                frame.getStartPos().getY(),
-                frame.getWidth(), frame.getHeight(),
-                color, matrix.peek().getPositionMatrix(),
+                x, y,
+                text.asOrderedText(), font,
+                matrix.peek().getPositionMatrix(),
                 immediate, false,
                 0, LightmapTextureManager.MAX_LIGHT_COORDINATE
-
         );
 
         immediate.draw();

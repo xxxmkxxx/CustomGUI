@@ -31,8 +31,7 @@ public abstract class DrawerMixin implements CharacterVisitor, CustomGUIDrawer {
     @Shadow private float y;
 
     @Override
-    public boolean accept(FontStorage fontStorage, float symbolWidth, float symbolHeight, int codePoint) {
-        Glyph glyph = fontStorage.getGlyph(codePoint);
+    public boolean accept(FontStorage fontStorage, float symbolWidth, float symbolHeight, float indent, int codePoint) {
         GlyphRenderer glyphRenderer = fontStorage.getGlyphRenderer(codePoint);
 
         if (!(glyphRenderer instanceof EmptyGlyphRenderer)) {
@@ -40,7 +39,10 @@ public abstract class DrawerMixin implements CharacterVisitor, CustomGUIDrawer {
             glyphRenderer.draw(x, y, symbolWidth, symbolHeight, matrix, vertexConsumer, red, green, blue, alpha, light);
         }
 
-        x += glyph.getAdvance() / 4;
+        //gag
+        float symbolIndent = symbolWidth + indent;
+
+        x += symbolIndent;
 
         return true;
     }
