@@ -70,8 +70,8 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
 
         Pos stopPos = Pos.builder()
                 .coords(
-                        (int) (startPos.getX() + amountItemsText.getTextWidth()),
-                        (int) (frame.getStopPos().getY() + amountItemsText.getTextHeight())
+                       startPos.getX() + amountItemsText.getFrame().getWidth(),
+                        frame.getStopPos().getY() + amountItemsText.getFrame().getHeight()
                 )
                 .build(frame.getLastXPercentValue(), frame.getLastYPercentValue());
 

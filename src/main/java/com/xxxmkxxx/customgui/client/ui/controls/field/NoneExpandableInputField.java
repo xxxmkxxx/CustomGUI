@@ -45,7 +45,7 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
         this.inputCursor = InputCursor.builder()
                 .pos(pos)
                 .width(1)
-                .height((int) text.getTextHeight())
+                .height(text.getFrame().getHeight())
                 .build();
         inputCursor.hide();
         updateIndents();

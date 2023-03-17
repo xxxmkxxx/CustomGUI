@@ -1,7 +1,6 @@
 package com.xxxmkxxx.customgui.client.ui.controls.text;
 
 import com.xxxmkxxx.customgui.CustomGUI;
-import com.xxxmkxxx.customgui.client.common.ParametrizedSelfDestructionMethod;
 import com.xxxmkxxx.customgui.client.common.event.EventBus;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHandler;
@@ -11,11 +10,8 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
-import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
-import com.xxxmkxxx.customgui.client.ui.controls.button.SimpleButton;
 import lombok.Getter;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
@@ -26,8 +22,8 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
     private Runnable hoverAction = () -> {};
     private Runnable  resetHoverAction = () -> {};
 
-    protected SimpleText(Pos startPos, Pos stopPos, Text text) {
-        super(startPos, stopPos, text);
+    protected SimpleText(Pos startPos, Pos stopPos, Text text, Style style) {
+        super(startPos, stopPos, text, style);
         updateIndents();
     }
 
@@ -97,8 +93,15 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
                 CustomGUI.NODE_DRAWABLE_HELPER.drawText(
                         simpleText.getMatrixStack(),
                         simpleText.getText(),
+                        simpleText.getFrame().getStartPos().getX(),
+                        simpleText.getFrame().getStartPos().getY(),
+                        simpleText.getStyle().getFont()
+                );
+
+                CustomGUI.NODE_DRAWABLE_HELPER.fillFrame(
+                        simpleText.getStyle().getMatrixStack(),
                         simpleText.getFrame(),
-                        simpleText.getStyle().getHexColor()
+                        simpleText.getStyle().getHexBackgroundColor()
                 );
             };
         }
@@ -115,16 +118,11 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
 
     public static class Builder {
         private Pos startPos;
-        private Pos stopPos;
-        private double widthPercent;
-        private double heightPercent;
         private Text text;
         private Style style;
 
         public Builder() {
             this.startPos = Pos.defaultPos();
-            this.widthPercent = 1;
-            this.heightPercent = 2;
             this.text = Text.of("text");
             this.style = Style.defaultStyle();
         }
@@ -148,11 +146,6 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
             return this;
         }
 
-        public Builder widthPercent(double widthPercent) {
-            this.widthPercent = widthPercent;
-            return this;
-        }
-
         public Builder startPos(Pos pos) {
             try {
                 this.startPos = (Pos) pos.clone();
@@ -162,35 +155,15 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
             return this;
         }
 
-        public Builder stopPos(Pos pos) {
-            try {
-                this.stopPos = (Pos) pos.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-            return this;
-        }
-
-        public Builder positions(Pos startPos, Pos stopPos) {
-            startPos(startPos);
-            stopPos(stopPos);
-            return this;
-        }
-
-        public Builder positions(AbstractFrame frame) {
-            startPos(frame.getStartPos());
-            stopPos(frame.getStopPos());
-            return this;
-        }
-
         public SimpleText build() {
-            Pos stopPos = this.stopPos == null
-                    ? Pos.builder().relativeCoords(startPos.getXIndentPercent() + widthPercent, startPos.getYIndentPercent() + heightPercent).build(startPos.getXPercentValue(), startPos.getYPercentValue())
-                    : this.stopPos;
+            Pos stopPos = Pos.builder()
+                    .relativeCoords(
+                            startPos.getXIndentPercent() + (style.getFont().getXSizePercent() + style.getFont().getSymbolPaddingPercent()) * text.getString().length(),
+                            startPos.getYIndentPercent() + style.getFont().getYSizePercent()
+                    )
+                    .build(startPos.getXPercentValue(), startPos.getYPercentValue());
 
-            SimpleText simpleText = new SimpleText(startPos, stopPos, text);
-            simpleText.setStyle(style);
-            return simpleText;
+            return new SimpleText(startPos, stopPos, text, style);
         }
     }
 }

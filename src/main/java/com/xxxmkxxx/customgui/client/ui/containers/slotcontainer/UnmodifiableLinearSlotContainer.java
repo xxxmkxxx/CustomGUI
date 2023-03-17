@@ -135,10 +135,6 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
                             .build(frame.getLastXPercentValue(), frame.getLastYPercentValue())
             );
 
-            //gag
-            System.out.println("slot width - " + slot.getFrame().getWidth() + "\n");
-            System.out.println("slot height - " + slot.getFrame().getHeight() + "\n");
-
             result[i] = slot;
 
             frame.moveStopPos(slot.getFrame().getWidth() + slot.getStyle().getMargins().getRight(), 0);
