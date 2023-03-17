@@ -13,13 +13,10 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
 import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
-import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
-import com.xxxmkxxx.customgui.client.ui.controls.button.SimpleButton;
 import com.xxxmkxxx.customgui.client.ui.controls.text.SimpleText;
 import lombok.Getter;
-import net.minecraft.text.Text;
 
 import java.util.function.Function;
 
@@ -67,8 +64,8 @@ public class SimpleLabel extends AbstractLabel implements LeftClickEventHandler,
     }
 
     private void updateIndents() {
-        int leftLabelMargin = style.getMargins().getLeft();
-        int topLabelMargin = style.getMargins().getTop();
+        float leftLabelMargin = style.getMargins().getLeft();
+        float topLabelMargin = style.getMargins().getTop();
 
         frame.moveStartPos(leftLabelMargin, topLabelMargin);
         frame.moveStopPos(leftLabelMargin, topLabelMargin);

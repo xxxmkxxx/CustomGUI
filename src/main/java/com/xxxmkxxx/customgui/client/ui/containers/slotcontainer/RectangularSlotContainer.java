@@ -30,7 +30,7 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
         this.rowSize = rowSize;
         this.amountRows = amountRows;
         this.rows = rows;
-        this.frame = SimpleFrame.builder().startPos(pos).widthPercent(0.0).heightPercent(0.0).build();
+        this.frame = SimpleFrame.builder().startPos(pos).widthPercent(0.0f).heightPercent(0.0f).build();
         updateIndents();
     }
 
@@ -50,8 +50,8 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
     }
 
     private void updateIndents() {
-        int leftSlotContainerMargin = style.getMargins().getLeft();
-        int topSlotContainerMargin = style.getMargins().getTop();
+        float leftSlotContainerMargin = style.getMargins().getLeft();
+        float topSlotContainerMargin = style.getMargins().getTop();
 
         frame.moveStartPos(leftSlotContainerMargin, topSlotContainerMargin);
         frame.moveStopPos(leftSlotContainerMargin, topSlotContainerMargin);

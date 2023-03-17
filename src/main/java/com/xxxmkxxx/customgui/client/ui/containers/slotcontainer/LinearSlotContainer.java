@@ -27,7 +27,7 @@ public class LinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlot
 
     protected LinearSlotContainer(Pos startPos, SlotFactory<T> factory) {
         super(factory);
-        this.frame = SimpleFrame.builder().startPos(startPos).widthPercent(0.0).heightPercent(0.0).build();
+        this.frame = SimpleFrame.builder().startPos(startPos).widthPercent(0.0f).heightPercent(0.0f).build();
         updateIndents();
     }
 
@@ -45,8 +45,8 @@ public class LinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlot
     }
 
     public void updateIndents() {
-        int leftSlotContainerMargin = style.getMargins().getLeft();
-        int topSlotContainerMargin = style.getMargins().getTop();
+        float leftSlotContainerMargin = style.getMargins().getLeft();
+        float topSlotContainerMargin = style.getMargins().getTop();
 
         frame.moveStartPos(leftSlotContainerMargin, topSlotContainerMargin);
         frame.moveStopPos(leftSlotContainerMargin, topSlotContainerMargin);

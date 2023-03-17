@@ -54,8 +54,8 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
     }
 
     private void updateIndents() {
-        int leftTextMargin = style.getMargins().getLeft();
-        int topTextMargin = style.getMargins().getTop();
+        float leftTextMargin = style.getMargins().getLeft();
+        float topTextMargin = style.getMargins().getTop();
 
         frame.moveStartPos(leftTextMargin, topTextMargin);
         frame.moveStopPos(leftTextMargin, topTextMargin);

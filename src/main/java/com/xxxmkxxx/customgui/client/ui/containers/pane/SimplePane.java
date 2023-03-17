@@ -13,7 +13,6 @@ import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
 import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSection;
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
-import com.xxxmkxxx.customgui.client.ui.controls.button.SimpleButton;
 import lombok.Getter;
 
 import java.util.LinkedList;
@@ -58,8 +57,8 @@ public class SimplePane extends AbstractPane {
     }
 
     private void updateIndents() {
-        int leftPaneMargin = style.getMargins().getLeft();
-        int topPaneMargin = style.getMargins().getTop();
+        float leftPaneMargin = style.getMargins().getLeft();
+        float topPaneMargin = style.getMargins().getTop();
 
         frame.moveStartPos(leftPaneMargin, topPaneMargin);
         frame.moveStopPos(leftPaneMargin, topPaneMargin);

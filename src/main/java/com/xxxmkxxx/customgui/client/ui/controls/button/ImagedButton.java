@@ -76,19 +76,19 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
 
     @SuppressWarnings("DuplicatedCode")
     private void updateIndents() {
-        int leftButtonMargin = style.getMargins().getLeft();
-        int topButtonMargin = style.getMargins().getTop();
-        int leftButtonPadding = style.getPaddings().getLeft();
-        int topButtonPadding = style.getPaddings().getTop();
-        int leftImageMargin = style.getMargins().getLeft();
-        int topImageMargin = style.getMargins().getTop();
-        int leftTextMargin = text.getStyle().getMargins().getLeft();
-        int topTextMargin = text.getStyle().getMargins().getTop();
+        float leftButtonMargin = style.getMargins().getLeft();
+        float topButtonMargin = style.getMargins().getTop();
+        float leftButtonPadding = style.getPaddings().getLeft();
+        float topButtonPadding = style.getPaddings().getTop();
+        float leftImageMargin = style.getMargins().getLeft();
+        float topImageMargin = style.getMargins().getTop();
+        float leftTextMargin = text.getStyle().getMargins().getLeft();
+        float topTextMargin = text.getStyle().getMargins().getTop();
 
         frame.moveStartPos(leftButtonMargin, topButtonMargin);
 
-        int tempXDistance = leftButtonMargin + leftButtonPadding + leftImageMargin;
-        int tempYDistance = topButtonMargin + topButtonPadding + topImageMargin;
+        float tempXDistance = leftButtonMargin + leftButtonPadding + leftImageMargin;
+        float tempYDistance = topButtonMargin + topButtonPadding + topImageMargin;
 
         image.getFrame().moveStartPos(tempXDistance, tempYDistance);
         image.getFrame().moveStopPos(tempXDistance, tempYDistance);

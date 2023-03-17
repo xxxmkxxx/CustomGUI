@@ -101,8 +101,8 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
     }
 
     private void updateIndents() {
-        int leftSlotMargin = style.getMargins().getLeft();
-        int topSlotMargin = style.getMargins().getTop();
+        float leftSlotMargin = style.getMargins().getLeft();
+        float topSlotMargin = style.getMargins().getTop();
 
         frame.moveStartPos(leftSlotMargin, topSlotMargin);
         frame.moveStopPos(leftSlotMargin, topSlotMargin);
@@ -151,8 +151,8 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
     @Setter
     @RequiredArgsConstructor
     public static class Factory implements SlotFactory<SimpleSlot> {
-        private final double widthPercent;
-        private final double heightPercent;
+        private final float widthPercent;
+        private final float heightPercent;
         private final AbstractInventory inventory;
         private Style style = Style.defaultStyle();
         private Consumer<ItemStack> leftClickAction = (itemStack) -> {};
@@ -203,8 +203,8 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
 
     public static class FactoryBuilder {
         private Identifier identifier;
-        private double widthPercent;
-        private double heightPercent;
+        private float widthPercent;
+        private float heightPercent;
         private AbstractInventory inventory;
         private AbstractImage image;
         private Style style;
@@ -282,12 +282,12 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
             return this;
         }
 
-        public FactoryBuilder widthPercent(double widthPercent) {
+        public FactoryBuilder widthPercent(float widthPercent) {
             this.widthPercent = widthPercent;
             return this;
         }
 
-        public FactoryBuilder heightPercent(double heightPercent) {
+        public FactoryBuilder heightPercent(float heightPercent) {
             this.heightPercent = heightPercent;
             return this;
         }

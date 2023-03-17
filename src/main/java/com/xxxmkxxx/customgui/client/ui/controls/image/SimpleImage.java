@@ -52,8 +52,8 @@ public class SimpleImage extends AbstractImage implements LeftClickEventHandler,
     }
 
     private void updateIndents() {
-        int leftImageMargin = style.getMargins().getLeft();
-        int topImageMargin = style.getMargins().getTop();
+        float leftImageMargin = style.getMargins().getLeft();
+        float topImageMargin = style.getMargins().getTop();
 
         frame.moveStartPos(leftImageMargin, topImageMargin);
         frame.moveStopPos(leftImageMargin, topImageMargin);
@@ -105,14 +105,14 @@ public class SimpleImage extends AbstractImage implements LeftClickEventHandler,
         private Identifier identifier;
         private Pos startPos;
         private Pos stopPos;
-        private double widthPercent;
-        private double heightPercent;
+        private float widthPercent;
+        private float heightPercent;
         private Style style;
 
         public Builder() {
             this.identifier = new Identifier("customgui", "/textures/gui/empty_img.png");
-            this.widthPercent = 0.5;
-            this.heightPercent = 1;
+            this.widthPercent = 0.5f;
+            this.heightPercent = 1.0f;
             this.startPos = Pos.defaultPos();
             this.style = Style.defaultStyle();
         }
@@ -152,12 +152,12 @@ public class SimpleImage extends AbstractImage implements LeftClickEventHandler,
             return this;
         }
 
-        public Builder widthPercent(double widthPercent) {
+        public Builder widthPercent(float widthPercent) {
             this.widthPercent = widthPercent;
             return this;
         }
 
-        public Builder heightPercent(double heightPercent) {
+        public Builder heightPercent(float heightPercent) {
             this.heightPercent = heightPercent;
             return this;
         }

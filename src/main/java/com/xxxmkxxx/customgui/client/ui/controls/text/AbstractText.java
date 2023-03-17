@@ -20,8 +20,8 @@ public abstract class AbstractText extends AbstractNode implements Text {
 
     public void setText(net.minecraft.text.Text text) {
         this.text = text;
-        double lastXPercentValue = frame.getLastXPercentValue();
-        double lastYPercentValue = frame.getLastYPercentValue();
+        float lastXPercentValue = frame.getLastXPercentValue();
+        float lastYPercentValue = frame.getLastYPercentValue();
         frame = SimpleFrame.builder()
                 .startPos(frame.getInitialStartPos())
                 .widthPercent((style.getFont().getXSizePercent() + style.getFont().getSymbolPaddingPercent()) * text.getString().length())

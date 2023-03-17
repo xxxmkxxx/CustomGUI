@@ -59,8 +59,8 @@ public class StandardImage extends AbstractImage implements LeftClickEventHandle
     }
 
     private void updateIndents() {
-        int leftImageMargin = style.getMargins().getLeft();
-        int topImageMargin = style.getMargins().getTop();
+        float leftImageMargin = style.getMargins().getLeft();
+        float topImageMargin = style.getMargins().getTop();
 
         frame.moveStartPos(leftImageMargin, topImageMargin);
         frame.moveStopPos(leftImageMargin, topImageMargin);
@@ -110,14 +110,14 @@ public class StandardImage extends AbstractImage implements LeftClickEventHandle
     public static class Builder {
         private Pos startPos;
         private Pos stopPos;
-        private double widthPercent;
-        private double heightPercent;
+        private float widthPercent;
+        private float heightPercent;
         private ItemStack itemStack;
         private Style style;
 
         public Builder() {
-            this.widthPercent = 0.5;
-            this.heightPercent = 1;
+            this.widthPercent = 0.5f;
+            this.heightPercent = 1.0f;
             this.startPos = Pos.defaultPos();
             this.style = Style.defaultStyle();
             this.itemStack = ItemStack.EMPTY;
@@ -158,12 +158,12 @@ public class StandardImage extends AbstractImage implements LeftClickEventHandle
             return this;
         }
 
-        public Builder widthPercent(double widthPercent) {
+        public Builder widthPercent(float widthPercent) {
             this.widthPercent = widthPercent;
             return this;
         }
 
-        public Builder heightPercent(double heightPercent) {
+        public Builder heightPercent(float heightPercent) {
             this.heightPercent = heightPercent;
             return this;
         }

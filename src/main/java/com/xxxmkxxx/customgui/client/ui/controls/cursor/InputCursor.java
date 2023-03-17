@@ -8,7 +8,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 
 public class InputCursor extends AbstractCursor {
-    protected InputCursor(Pos pos, int width, int height) {
+    protected InputCursor(Pos pos, float width, float height) {
         super(pos, width, height);
         updateIndents();
     }
@@ -25,8 +25,8 @@ public class InputCursor extends AbstractCursor {
     }
 
     private void updateIndents() {
-        int leftCursorMargin = style.getMargins().getLeft();
-        int topCursorMargin = style.getMargins().getTop();
+        float leftCursorMargin = style.getMargins().getLeft();
+        float topCursorMargin = style.getMargins().getTop();
 
         frame.moveStartPos(leftCursorMargin, topCursorMargin);
         frame.moveStopPos(leftCursorMargin, topCursorMargin);
@@ -66,13 +66,13 @@ public class InputCursor extends AbstractCursor {
             return this;
         }
 
-        public Builder width(int width) {
-            this.width = width;
+        //gag
+        public Builder width(float width) {
             return this;
         }
 
-        public Builder height(int height) {
-            this.height = height;
+        //gag
+        public Builder height(float height) {
             return this;
         }
 

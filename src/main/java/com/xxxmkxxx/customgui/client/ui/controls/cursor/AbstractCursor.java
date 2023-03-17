@@ -7,17 +7,12 @@ import lombok.Getter;
 
 @Getter
 public abstract class AbstractCursor extends AbstractNode implements Cursor {
-    protected int width;
-    protected int height;
-
-    public AbstractCursor(Pos pos, int width, int height) {
-        this.width = width;
-        this.height = height;
+    public AbstractCursor(Pos pos, float width, float height) {
         //gag
-        this.frame = SimpleFrame.builder().startPos(pos).widthPercent(0.0).heightPercent(0.0).build();
+        this.frame = SimpleFrame.builder().startPos(pos).widthPercent(0.0f).heightPercent(0.0f).build();
     }
 
-    public void move(int xDistance, int yDistance) {
+    public void move(float xDistance, float yDistance) {
         frame.moveStartPos(xDistance, yDistance);
         frame.moveStopPos(xDistance, yDistance);
     }

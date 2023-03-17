@@ -25,11 +25,10 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
     private final int size;
     private final Object[] slots;
 
-    @SuppressWarnings("unchecked")
     protected UnmodifiableLinearSlotContainer(Pos pos, SlotFactory<T> factory, int[] indexes) {
         super(factory);
         this.size = indexes.length;
-        this.frame = SimpleFrame.builder().startPos(pos).heightPercent(0.0).widthPercent(0.0).build();
+        this.frame = SimpleFrame.builder().startPos(pos).heightPercent(0.0f).widthPercent(0.0f).build();
         updateIndents();
         this.slots = initSlots(indexes, factory);
     }
@@ -55,8 +54,8 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
     }
 
     private void updateIndents() {
-        int leftSlotContainerMargin = style.getMargins().getLeft();
-        int topSlotContainerMargin = style.getMargins().getTop();
+        float leftSlotContainerMargin = style.getMargins().getLeft();
+        float topSlotContainerMargin = style.getMargins().getTop();
 
         frame.moveStartPos(leftSlotContainerMargin, topSlotContainerMargin);
         frame.moveStopPos(leftSlotContainerMargin, topSlotContainerMargin);

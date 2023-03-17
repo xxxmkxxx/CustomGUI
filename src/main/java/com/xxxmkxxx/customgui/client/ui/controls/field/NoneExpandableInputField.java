@@ -37,7 +37,7 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
 
     protected NoneExpandableInputField(Pos pos, int width, int height) {
         //gag
-        this.frame = SimpleFrame.builder().startPos(pos).widthPercent(0.0).heightPercent(0.0).build();
+        this.frame = SimpleFrame.builder().startPos(pos).widthPercent(0.0f).heightPercent(0.0f).build();
         this.text = SimpleText.builder()
                 .startPos(pos)
                 .text("")
@@ -79,11 +79,11 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
     }
 
     private void updateIndents() {
-        int leftInputFieldMargin = style.getMargins().getLeft();
-        int topInputFieldMargin = style.getMargins().getTop();
+        float leftInputFieldMargin = style.getMargins().getLeft();
+        float topInputFieldMargin = style.getMargins().getTop();
 
-        int tempXOffset = leftInputFieldMargin;
-        int tempYOffset = topInputFieldMargin;
+        float tempXOffset = leftInputFieldMargin;
+        float tempYOffset = topInputFieldMargin;
 
         frame.moveStartPos(tempXOffset, tempYOffset);
         frame.moveStopPos(tempXOffset, tempYOffset);
