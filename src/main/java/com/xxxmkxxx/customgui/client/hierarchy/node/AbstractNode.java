@@ -71,6 +71,7 @@ public abstract class AbstractNode implements Node {
     }
 
     public void scaling(Window window) {
+        style.scaling(window.getXPercentValue(), window.getYPercentValue());
         frame.scaling(window.getXPercentValue(), window.getYPercentValue());
     }
 

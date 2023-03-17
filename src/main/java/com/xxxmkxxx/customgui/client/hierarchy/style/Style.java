@@ -1,5 +1,6 @@
 package com.xxxmkxxx.customgui.client.hierarchy.style;
 
+import com.xxxmkxxx.customgui.client.common.Scalable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import net.minecraft.client.util.math.MatrixStack;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Style implements Cloneable {
+public class Style implements Cloneable, Scalable {
     private static final Style defaultStyle = new Style();
     private MatrixStack matrixStack = new MatrixStack();
     private int scaledFactorPercents = 100;
@@ -18,7 +19,8 @@ public class Style implements Cloneable {
     private Shadow shadow = Shadow.builder().build();
     private Margins margins = Margins.builder().build();
     private Paddings paddings = Paddings.builder().build();
-    private Font font = Font.builder().build();
+    //gag
+    private Font font = Font.builder().build(2, 1);
     private Background background = Background.builder().build();
 
     static {
@@ -45,7 +47,17 @@ public class Style implements Cloneable {
     public int getHexColor() {
         return (int) Long.parseLong(opacity.getHex() + color.getHexValue(), 16);
     }
+
+    public int getHexFontColor() {
+        return font.getHexColor();
+    }
+
     public int getHexBackgroundColor() {
         return (int) Long.parseLong(background.getOpacity().getHex() + background.getColor().getHexValue(), 16);
+    }
+
+    @Override
+    public void scaling(double xPercentValue, double yPercentValue) {
+        font.scaling(xPercentValue, yPercentValue);
     }
 }
