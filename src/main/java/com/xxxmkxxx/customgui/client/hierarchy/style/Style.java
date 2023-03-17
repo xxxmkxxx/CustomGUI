@@ -13,7 +13,6 @@ import net.minecraft.client.util.math.MatrixStack;
 public class Style implements Cloneable, Scalable {
     private static final Style defaultStyle = new Style();
     private MatrixStack matrixStack = new MatrixStack();
-    private int scaledFactorPercents = 100;
     private Color color = Color.builder().build();
     private Opacity opacity = new Opacity(100);
     private Shadow shadow = Shadow.builder().build();
@@ -41,7 +40,7 @@ public class Style implements Cloneable, Scalable {
 
     @Override
     public Object clone() throws CloneNotSupportedException {
-        return new Style(matrixStack, scaledFactorPercents, (Color) color.clone(), (Opacity) opacity.clone(), (Shadow) shadow.clone(), (Margins) margins.clone(), paddings.clone(), font.clone(), (Background) background.clone());
+        return new Style(matrixStack, (Color) color.clone(), (Opacity) opacity.clone(), (Shadow) shadow.clone(), (Margins) margins.clone(), paddings.clone(), font.clone(), (Background) background.clone());
     }
 
     public int getHexColor() {

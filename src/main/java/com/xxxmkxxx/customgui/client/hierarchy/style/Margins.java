@@ -7,13 +7,13 @@ import lombok.Getter;
 @Builder
 public class Margins implements Cloneable {
     @Builder.Default
-    private int top = 0;
+    private float top = 0.0f;
     @Builder.Default
-    private int bottom = 0;
+    private float bottom = 0.0f;
     @Builder.Default
-    private int right = 0;
+    private float right = 0.0f;
     @Builder.Default
-    private int left = 0;
+    private float left = 0.0f;
 
     @Override
     protected Object clone() throws CloneNotSupportedException {

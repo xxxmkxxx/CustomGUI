@@ -9,14 +9,14 @@ import net.minecraft.util.Identifier;
 @AllArgsConstructor
 public class Font implements Cloneable, Scalable {
     private Identifier identifier;
-    private int xSizePx;
-    private int ySizePx;
-    private double xSizePercent;
-    private double ySizePercent;
+    private float xSizePx;
+    private float ySizePx;
+    private float xSizePercent;
+    private float ySizePercent;
     private Color color;
     private Align align;
-    private int symbolPaddingPx;
-    private double symbolPaddingPercent;
+    private float symbolPaddingPx;
+    private float symbolPaddingPercent;
     private Opacity opacity;
 
     @Override
@@ -45,54 +45,54 @@ public class Font implements Cloneable, Scalable {
 
     public static class Builder {
         private Identifier identifier;
-        private int xSizePx;
-        private int ySizePx;
-        private double xSizePercent;
-        private double ySizePercent;
+        private float xSizePx;
+        private float ySizePx;
+        private float xSizePercent;
+        private float ySizePercent;
         private Color color;
         private Align align;
-        private int symbolPaddingPX;
-        private double symbolPaddingPercent;
+        private float symbolPaddingPX;
+        private float symbolPaddingPercent;
         private Opacity opacity;
 
         public Builder() {
             //gag
             this.identifier = new Identifier("");
-            this.xSizePx = 6;
-            this.ySizePx = 6;
+            this.xSizePx = 6.0f;
+            this.ySizePx = 6.0f;
             this.color = Color.DefaultColor.BLACK.getColor();
             this.align = Align.LEFT;
-            this.symbolPaddingPX = 1;
+            this.symbolPaddingPX = 1.0f;
             this.opacity = new Opacity(100);
         }
 
-        public Builder xSize(int xSizePx) {
+        public Builder xSize(float xSizePx) {
             this.xSizePx = xSizePx;
             return this;
         }
 
-        public Builder ySize(int ySizePx) {
+        public Builder ySize(float ySizePx) {
             this.ySizePx = ySizePx;
             return this;
         }
 
-        public Builder size(int size) {
+        public Builder size(float size) {
             xSize(size);
             ySize(size);
             return this;
         }
 
-        public Builder xSizePercent(double xSizePercent) {
+        public Builder xSizePercent(float xSizePercent) {
             this.xSizePercent = xSizePercent;
             return this;
         }
 
-        public Builder ySizePercent(double ySizePercent) {
+        public Builder ySizePercent(float ySizePercent) {
             this.ySizePercent = ySizePercent;
             return this;
         }
 
-        public Builder sizePercents(double percent) {
+        public Builder sizePercents(float percent) {
             xSizePercent(percent);
             ySizePercent(percent);
             return this;
@@ -103,20 +103,20 @@ public class Font implements Cloneable, Scalable {
             return this;
         }
 
-        public Builder symbolPadding(int symbolPaddingPX) {
+        public Builder symbolPadding(float symbolPaddingPX) {
             this.symbolPaddingPX = symbolPaddingPX;
             return this;
         }
 
-        public Builder symbolPaddingPercent(double symbolPaddingPercent) {
+        public Builder symbolPaddingPercent(float symbolPaddingPercent) {
             this.symbolPaddingPercent = symbolPaddingPercent;
             return this;
         }
 
-        public Font build(double xPercentValue, double yPercentValue) {
-            double xSizePercent = this.xSizePercent == 0.0 ? xSizePx / xPercentValue : this.xSizePercent;
-            double ySizePercent = this.ySizePercent == 0.0 ? ySizePx / yPercentValue : this.ySizePercent;
-            double symbolPaddingPercent = this.symbolPaddingPercent == 0.0 ? symbolPaddingPX / xPercentValue : this.symbolPaddingPercent;
+        public Font build(float xPercentValue, float yPercentValue) {
+            float xSizePercent = this.xSizePercent == 0.0 ? xSizePx / xPercentValue : this.xSizePercent;
+            float ySizePercent = this.ySizePercent == 0.0 ? ySizePx / yPercentValue : this.ySizePercent;
+            float symbolPaddingPercent = this.symbolPaddingPercent == 0.0 ? symbolPaddingPX / xPercentValue : this.symbolPaddingPercent;
 
             this.xSizePercent = xSizePercent;
             this.ySizePercent = ySizePercent;
