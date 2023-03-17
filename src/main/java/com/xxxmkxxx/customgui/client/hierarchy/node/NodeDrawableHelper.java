@@ -2,6 +2,7 @@ package com.xxxmkxxx.customgui.client.hierarchy.node;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.xxxmkxxx.customgui.client.common.util.Utils;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Font;
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
@@ -26,12 +27,73 @@ public class NodeDrawableHelper extends DrawableHelper {
     public static int stopGradientColor = -804253680;
     public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
-    public void gradientFillFrame(MatrixStack matrix, int startX, int startY, int stopX, int stopY, int colorStart, int colorEnd) {
-        fillGradient(matrix, startX, startY, stopX, stopY, colorStart, colorEnd);
+    private void fill(Matrix4f matrix, float startX, float startY, float stopX, float stopY, int color) {
+        float index;
+        if (startX < stopX) {
+            index = startX;
+            startX = stopX;
+            stopX = index;
+        }
+        if (startY < stopY) {
+            index = startY;
+            startY = stopY;
+            stopY = index;
+        }
+        float f = (float)(color >> 24 & 0xFF) / 255.0f;
+        float g = (float)(color >> 16 & 0xFF) / 255.0f;
+        float h = (float)(color >> 8 & 0xFF) / 255.0f;
+        float j = (float)(color & 0xFF) / 255.0f;
+        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+        RenderSystem.enableBlend();
+        RenderSystem.disableTexture();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+        bufferBuilder.vertex(matrix, startX, stopY, 0.0f).color(g, h, j, f).next();
+        bufferBuilder.vertex(matrix, stopX, stopY, 0.0f).color(g, h, j, f).next();
+        bufferBuilder.vertex(matrix, stopX, startY, 0.0f).color(g, h, j, f).next();
+        bufferBuilder.vertex(matrix, startX, startY, 0.0f).color(g, h, j, f).next();
+        bufferBuilder.end();
+        BufferRenderer.draw(bufferBuilder);
+        RenderSystem.enableTexture();
+        RenderSystem.disableBlend();
     }
 
-    public void gradientFillFrame(MatrixStack matrix, int startX, int startY, int stopX, int stopY) {
-        fillGradient(matrix, startX, startY, stopX, stopY, startGradientColor, stopGradientColor);
+    private void fillGradient(MatrixStack matrices, float startX, float startY, float endX, float endY, int colorStart, int colorEnd, int z) {
+        RenderSystem.disableTexture();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferBuilder = tessellator.getBuffer();
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+        fillGradient(matrices.peek().getPositionMatrix(), bufferBuilder, startX, startY, endX, endY, z, colorStart, colorEnd);
+        tessellator.draw();
+        RenderSystem.disableBlend();
+        RenderSystem.enableTexture();
+    }
+
+    private void fillGradient(Matrix4f matrix, BufferBuilder builder, float startX, float startY, float stopX, float stopY, float z, int colorStart, int colorEnd) {
+        float f = (float)(colorStart >> 24 & 0xFF) / 255.0f;
+        float g = (float)(colorStart >> 16 & 0xFF) / 255.0f;
+        float h = (float)(colorStart >> 8 & 0xFF) / 255.0f;
+        float i = (float)(colorStart & 0xFF) / 255.0f;
+        float j = (float)(colorEnd >> 24 & 0xFF) / 255.0f;
+        float k = (float)(colorEnd >> 16 & 0xFF) / 255.0f;
+        float l = (float)(colorEnd >> 8 & 0xFF) / 255.0f;
+        float m = (float)(colorEnd & 0xFF) / 255.0f;
+        builder.vertex(matrix, stopX, startY, z).color(g, h, i, f).next();
+        builder.vertex(matrix, startX, startY, z).color(g, h, i, f).next();
+        builder.vertex(matrix, startX, stopY, z).color(k, l, m, j).next();
+        builder.vertex(matrix, stopX, stopY, z).color(k, l, m, j).next();
+    }
+
+    public void gradientFillFrame(MatrixStack matrix, float startX, float startY, float stopX, float stopY, int colorStart, int colorEnd) {
+        fillGradient(matrix, startX, startY, stopX, stopY, colorStart, colorEnd, 0);
+    }
+
+    public void gradientFillFrame(MatrixStack matrix, float startX, float startY, float stopX, float stopY) {
+        fillGradient(matrix, startX, startY, stopX, stopY, startGradientColor, stopGradientColor, 0);
     }
 
     public void gradientFillFrame(MatrixStack matrix, AbstractFrame frame, int colorStart, int colorEnd) {
@@ -43,8 +105,8 @@ public class NodeDrawableHelper extends DrawableHelper {
         );
     }
 
-    public void fillFrame(MatrixStack matrix, int startX, int startY, int stopX, int stopY, int color) {
-        fill(matrix, startX, startY, stopX, stopY, color);
+    public void fillFrame(MatrixStack matrix, float startX, float startY, float stopX, float stopY, int color) {
+        fill(matrix.peek().getPositionMatrix(), startX, startY, stopX, stopY, color);
     }
 
     public void fillFrame(MatrixStack matrix, AbstractFrame frame, int color) {
@@ -56,6 +118,7 @@ public class NodeDrawableHelper extends DrawableHelper {
         );
     }
 
+    @Deprecated
     public void fillRoundingFrame() {
         Matrix4f m = new MatrixStack().peek().getPositionMatrix();
         RenderSystem.enableBlend();
@@ -71,7 +134,7 @@ public class NodeDrawableHelper extends DrawableHelper {
         BufferRenderer.draw(bufferBuilder);
     }
 
-    public void drawText(MatrixStack matrix, Text text, int x, int y, int color) {
+    public void drawText(MatrixStack matrix, Text text, float x, float y, int color) {
         CLIENT.textRenderer.draw(matrix, text, x, y, color);
     }
 
@@ -94,12 +157,12 @@ public class NodeDrawableHelper extends DrawableHelper {
     }
 
     public void drawTexture(ItemStack stack, AbstractFrame frame) {
-        int width = frame.getStopPos().getX() - frame.getStartPos().getX();
-        int height = frame.getStopPos().getY() - frame.getStartPos().getY();
+        float width = frame.getStopPos().getX() - frame.getStartPos().getX();
+        float height = frame.getStopPos().getY() - frame.getStartPos().getY();
         drawTexture(stack, frame.getStartPos(), width, height);
     }
 
-    public void drawTexture(ItemStack stack, Pos pos, int width, int height) {
+    public void drawTexture(ItemStack stack, Pos pos, float width, float height) {
         final ItemRenderer itemRenderer = CLIENT.getItemRenderer();
         BakedModel bakedModel = itemRenderer.getModel(stack, null, CLIENT.player, 0);
 
@@ -168,16 +231,46 @@ public class NodeDrawableHelper extends DrawableHelper {
 
     public void drawFrameAroundFrame(MatrixStack matrix, AbstractFrame frame, int color) {
         //Top line
-        drawHorizontalLine(matrix, frame.getStartPos().getX(), frame.getStopPos().getX(), frame.getStartPos().getY(), color);
+        drawHorizontalLine(
+                matrix,
+                Utils.nonNullIntValue(frame.getStartPos().getX()),
+                Utils.nonNullIntValue(frame.getStopPos().getX()),
+                Utils.nonNullIntValue(frame.getStartPos().getY()),
+                color
+        );
         //Down line
-        drawHorizontalLine(matrix, frame.getStartPos().getX(), frame.getStopPos().getX(), frame.getStopPos().getY(), color);
+        drawHorizontalLine(
+                matrix,
+                Utils.nonNullIntValue(frame.getStartPos().getX()),
+                Utils.nonNullIntValue(frame.getStopPos().getX()),
+                Utils.nonNullIntValue(frame.getStopPos().getY()),
+                color
+        );
         //Left line
-        drawVerticalLine(matrix, frame.getStartPos().getX(), frame.getStartPos().getY(), frame.getStopPos().getY(), color);
+        drawVerticalLine(
+                matrix,
+                Utils.nonNullIntValue(frame.getStartPos().getX()),
+                Utils.nonNullIntValue(frame.getStartPos().getY()),
+                Utils.nonNullIntValue(frame.getStopPos().getY()),
+                color
+        );
         //Right line
-        drawVerticalLine(matrix, frame.getStopPos().getX(), frame.getStartPos().getY(), frame.getStopPos().getY(), color);
+        drawVerticalLine(
+                matrix,
+                Utils.nonNullIntValue(frame.getStopPos().getX()),
+                Utils.nonNullIntValue(frame.getStartPos().getY()),
+                Utils.nonNullIntValue(frame.getStopPos().getY()),
+                color
+        );
     }
 
     public void drawVerticalLine(MatrixStack matrix, Pos startPos, Pos stopPos, int color) {
-        drawVerticalLine(matrix, startPos.getX(), startPos.getY(), stopPos.getY(), color);
+        drawVerticalLine(
+                matrix,
+                Utils.nonNullIntValue(startPos.getX()),
+                Utils.nonNullIntValue(startPos.getY()),
+                Utils.nonNullIntValue(stopPos.getY()),
+                color
+        );
     }
 }
