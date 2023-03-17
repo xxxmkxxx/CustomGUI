@@ -149,6 +149,7 @@ public class CustomGUIClient implements ClientModInitializer {
             style.setPaddings(Paddings.builder().left(0).right(0).top(0).bottom(0).build());
             style.setColor(new Color("2ad43b"));
             style.setBackground(Background.builder().opacity(new Opacity(20)).type(Background.Type.COLORED).color(Color.DefaultColor.BLUE.getColor()).build());
+            style.setFont(Font.builder().size(2).build(customGUI.getScreenStage().getWindow().getXPercentValue(), customGUI.getScreenStage().getWindow().getYPercentValue()));
 
             customGUI.addGUIBlock("testButton", (hudStage, screenStage) -> {
                 SimpleScene scene = new SimpleScene(RendererType.SCREEN);
@@ -223,18 +224,19 @@ public class CustomGUIClient implements ClientModInitializer {
                 SimpleScene scene = new SimpleScene(RendererType.SCREEN);
                 Window window = screenStage.getWindow();
 
-                NoneExpandableInputField field = NoneExpandableInputField.builder()
-                        .height(Utils.getTextHeight())
-                        .width(50)
-                        .pos(Pos.builder().relativeCoords(5, 5).build(window.getXPercentValue(), window.getYPercentValue()))
+                SimpleButton simpleButton = SimpleButton.builder()
+                        .text("button")
+                        .style(style)
+                        .startPos(Pos.builder().coords(50, 50).build(window.getXPercentValue(), window.getYPercentValue()))
                         .build();
+
                 SimpleLabel label = SimpleLabel.builder()
                         .text("label")
                         .style(style)
-                        .position(Position.BOTTOM)
-                        .build(field);
+                        .relativePosition(Position.BOTTOM)
+                        .build(simpleButton);
 
-                scene.addElement(field);
+                scene.addElement(simpleButton);
                 scene.addElement(label);
 
                 return scene;
@@ -310,7 +312,6 @@ public class CustomGUIClient implements ClientModInitializer {
 
                 SimpleText text = SimpleText.builder()
                         .startPos(Pos.builder().coords(50, 50).build(window.getXPercentValue(), window.getYPercentValue()))
-                        .stopPos(Pos.builder().coords(67, 57).build(window.getXPercentValue(), window.getYPercentValue()))
                         .style(style)
                         .text("text")
                         .build();
@@ -328,10 +329,10 @@ public class CustomGUIClient implements ClientModInitializer {
                 });
                 simpleButton.getStyle().getOpacity().setPercent(70);
                 System.out.println("text - " + text.getFrame());
-                System.out.println("button - " + simpleButton.getFrame());
+                //System.out.println("button - " + simpleButton.getFrame());
 
-                //scene.addElement(text);
-                scene.addElement(simpleButton);
+                scene.addElement(text);
+                //scene.addElement(simpleButton);
 
                 return scene;
             });
@@ -343,14 +344,12 @@ public class CustomGUIClient implements ClientModInitializer {
                         .style(style)
                         .text("first")
                         .startPos(Pos.builder().coords(50, 50).build(window.getXPercentValue(), window.getYPercentValue()))
-                        .widthPercent(5)
                         .build();
 
                 SimpleText secondText = SimpleText.builder()
                         .style(style)
                         .text("second")
                         .startPos(Pos.builder().coords(50, 50).build(window.getXPercentValue(), window.getYPercentValue()))
-                        .widthPercent(8)
                         .build();
 
                 System.out.println("first - " + firstText.getFrame() + " " + firstText.getFrame().getWidth());
@@ -378,8 +377,15 @@ public class CustomGUIClient implements ClientModInitializer {
                         .opacity(new Opacity(40))
                         .build();
 
+                Font font = Font.builder()
+                        .size(5)
+                        .color(Color.DefaultColor.BLUE.getColor())
+                        .symbolPadding(1)
+                        .build(window.getXPercentValue(), window.getYPercentValue());
+
                 Style standardElementStyle = new Style();
                 standardElementStyle.setBackground(moreElementsBackground);
+                standardElementStyle.setFont(font);
 
                 Style slotStyle;
                 try {
@@ -403,8 +409,7 @@ public class CustomGUIClient implements ClientModInitializer {
                 SimpleText missionsButtonText = SimpleText.builder()
                         .text("MISSIONS")
                         .startPos(Pos.builder().relativeCoords(  2.0, 3.34).build(window.getXPercentValue(), window.getYPercentValue()))
-                        .stopPos(Pos.builder().relativeCoords(4.08, 4.2).build(window.getXPercentValue(), window.getYPercentValue()))
-                        //.style(standardElementStyle)
+                        .style(standardElementStyle)
                         .build();
 
                 ImagedButton missionsButton = ImagedButton.builder()
@@ -419,10 +424,8 @@ public class CustomGUIClient implements ClientModInitializer {
 
                 //Create team button
                 SimpleText createTeamButtonText = SimpleText.builder()
-                        .positions(
-                                Pos.builder().relativeCoords(9.6, 92.55).build(window.getXPercentValue(), window.getYPercentValue()),
-                                Pos.builder().relativeCoords(14.28, 93.89).build(window.getXPercentValue(), window.getYPercentValue())
-                        )
+                        .startPos(Pos.builder().relativeCoords(9.6, 92.55).build(window.getXPercentValue(), window.getYPercentValue()))
+                        .style(standardElementStyle)
                         .text("CREATE TEAM")
                         .build();
 
@@ -494,10 +497,7 @@ public class CustomGUIClient implements ClientModInitializer {
 
                 SimpleText contactsButtonText = SimpleText.builder()
                         .style(standardElementStyle)
-                        .positions(
-                                Pos.builder().relativeCoords(34.84, 2.20).build(window.getXPercentValue(), window.getYPercentValue()),
-                                Pos.builder().relativeCoords(40.6, 4.39).build(window.getXPercentValue(), window.getYPercentValue())
-                        )
+                        .startPos(Pos.builder().relativeCoords(34.84, 2.20).build(window.getXPercentValue(), window.getYPercentValue()))
                         .text("CONTACTS")
                         .build();
 
@@ -513,10 +513,7 @@ public class CustomGUIClient implements ClientModInitializer {
 
                 //Player nickname
                 SimpleText playerNickname = SimpleText.builder()
-                        .positions(
-                                Pos.builder().relativeCoords(35.92, 9.84).build(window.getXPercentValue(), window.getYPercentValue()),
-                                Pos.builder().relativeCoords(37.84, 12.51).build(window.getXPercentValue(), window.getYPercentValue())
-                        )
+                        .startPos(Pos.builder().relativeCoords(35.92, 9.84).build(window.getXPercentValue(), window.getYPercentValue()))
                         .style(standardElementStyle)
                         .text("aboba")
                         .build();
@@ -532,10 +529,7 @@ public class CustomGUIClient implements ClientModInitializer {
 
                 //Player inventory name
                 SimpleText playerInventoryName = SimpleText.builder()
-                        .positions(
-                                Pos.builder().relativeCoords(38.52, 50.43).build(window.getXPercentValue(), window.getYPercentValue()),
-                                Pos.builder().relativeCoords(44.04, 52.44).build(window.getXPercentValue(), window.getYPercentValue())
-                        )
+                        .startPos(Pos.builder().relativeCoords(38.52, 50.43).build(window.getXPercentValue(), window.getYPercentValue()))
                         .style(standardElementStyle)
                         .text("INVENTORY")
                         .build();
@@ -594,7 +588,7 @@ public class CustomGUIClient implements ClientModInitializer {
                 return scene;
             });
 
-            customGUI.setActiveScene("testLayout", RendererType.SCREEN);
+            customGUI.setActiveScene("RMC", RendererType.SCREEN);
         });
     }
 }
