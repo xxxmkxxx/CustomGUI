@@ -17,4 +17,8 @@ public class Utils {
     public static int nonNullIntValue(double value) {
         return nonNullIntValue((int) Math.ceil(value));
     }
+
+    public static int nonNullIntValue(float value) {
+        return nonNullIntValue((int) Math.ceil(value));
+    }
 }
