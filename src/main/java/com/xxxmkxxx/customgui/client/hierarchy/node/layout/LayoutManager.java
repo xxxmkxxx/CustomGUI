@@ -7,11 +7,11 @@ public class LayoutManager {
     public static void positionNodeRelativeTargetNode(AbstractNode target, AbstractNode node, Position position) {
         switch (position) {
             case TOP -> {
-                int yStartCoordinate = target.getFrame().getStartPos().getY()
+                float yStartCoordinate = target.getFrame().getStartPos().getY()
                         - target.getStyle().getMargins().getTop()
                         - node.getStyle().getMargins().getBottom()
                         - node.getFrame().getHeight();
-                int yStopCoordinate = target.getFrame().getStartPos().getY()
+                float yStopCoordinate = target.getFrame().getStartPos().getY()
                         - target.getStyle().getMargins().getTop()
                         - node.getStyle().getMargins().getBottom();
 
@@ -29,10 +29,10 @@ public class LayoutManager {
             }
 
             case BOTTOM -> {
-                int yStartCoordinate = target.getFrame().getStopPos().getY()
+                float yStartCoordinate = target.getFrame().getStopPos().getY()
                         + target.getStyle().getMargins().getBottom()
                         + node.getStyle().getMargins().getTop();
-                int yStopCoordinate = target.getFrame().getStopPos().getY()
+                float yStopCoordinate = target.getFrame().getStopPos().getY()
                         + target.getStyle().getMargins().getBottom()
                         + node.getStyle().getMargins().getTop()
                         + node.getFrame().getHeight();
@@ -51,11 +51,11 @@ public class LayoutManager {
             }
 
             case LEFT -> {
-                int xStartCoordinate = target.getFrame().getStartPos().getX()
+                float xStartCoordinate = target.getFrame().getStartPos().getX()
                         - target.getStyle().getMargins().getLeft()
                         - node.getStyle().getMargins().getRight()
                         - node.getFrame().getWidth();
-                int xStopCoordinate = target.getFrame().getStartPos().getX()
+                float xStopCoordinate = target.getFrame().getStartPos().getX()
                         - target.getStyle().getMargins().getLeft()
                         - node.getStyle().getMargins().getRight();
 
@@ -73,10 +73,10 @@ public class LayoutManager {
             }
 
             case RIGHT -> {
-                int xStartCoordinate = target.getFrame().getStopPos().getX()
+                float xStartCoordinate = target.getFrame().getStopPos().getX()
                         + target.getStyle().getMargins().getRight()
                         + node.getStyle().getMargins().getLeft();
-                int xStopCoordinate = target.getFrame().getStopPos().getX()
+                float xStopCoordinate = target.getFrame().getStopPos().getX()
                         + target.getStyle().getMargins().getRight()
                         + node.getStyle().getMargins().getLeft()
                         + node.getFrame().getWidth();
