@@ -29,8 +29,7 @@ public class Pos implements Cloneable {
 
     @Override
     public Object clone() throws CloneNotSupportedException {
-        super.clone();
-        return new Pos(xPercentValue, yPercentValue, xIndentPercent, yIndentPercent);
+        return new Pos(xIndentPercent, yIndentPercent, xPercentValue, yPercentValue);
     }
 
     public static Pos defaultPos() {
@@ -99,6 +98,7 @@ public class Pos implements Cloneable {
 
         public Builder() {
             x = y = 10;
+            xIndentPercent = yIndentPercent = Float.MIN_VALUE;
         }
 
         public Builder coords(float x, float y) {
@@ -114,8 +114,8 @@ public class Pos implements Cloneable {
         }
 
         public Pos build(float xPercentValue, float yPercentValue) {
-            xIndentPercent = xIndentPercent == 0.0 ? x / xPercentValue : xIndentPercent;
-            yIndentPercent = yIndentPercent == 0.0 ? y / yPercentValue : yIndentPercent;
+            xIndentPercent = xIndentPercent == Float.MIN_VALUE ? x / xPercentValue : xIndentPercent;
+            yIndentPercent = yIndentPercent == Float.MIN_VALUE ? y / yPercentValue : yIndentPercent;
 
             return new Pos(xIndentPercent, yIndentPercent, xPercentValue, yPercentValue);
         }
