@@ -15,4 +15,12 @@ public interface CustomGUITextRenderer {
     ) {
         return 0;
     }
+
+    default float getSymbolWidth(int codepoint, Font font) {
+        return 0;
+    }
+
+    default float getTextWidth(String text, Font font) {
+        return 0;
+    }
 }
