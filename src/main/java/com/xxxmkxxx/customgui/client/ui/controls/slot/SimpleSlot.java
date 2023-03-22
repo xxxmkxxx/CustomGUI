@@ -57,8 +57,8 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
     private Pos initAmountItemsTextStartPos(Text text) {
         return Pos.builder()
                 .coords(
-                        frame.getStopPos().getX() - Utils.getTextWidth(text),
-                        frame.getStopPos().getY() - Utils.getTextHeight()
+                        frame.getStopPos().getX() - Utils.getTextWidth(text.toString(), style.getFont()),
+                        frame.getStopPos().getY() - style.getFont().getYSizePx()
                 )
                 .build(frame.getLastXPercentValue(), frame.getLastYPercentValue());
     }

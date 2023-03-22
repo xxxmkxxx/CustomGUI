@@ -120,7 +120,7 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
     public void onCharInput(char symbol) {
         textBuilder.append(symbol);
         text.setText(Text.of(textBuilder.toString()));
-        inputCursor.move(Utils.getTextWidth(Text.of(String.valueOf(symbol))), 0);
+        inputCursor.move(Utils.getTextWidth(String.valueOf(symbol), style.getFont()), 0);
         onChange();
     }
 

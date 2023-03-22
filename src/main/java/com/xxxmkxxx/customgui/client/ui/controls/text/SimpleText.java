@@ -2,6 +2,7 @@ package com.xxxmkxxx.customgui.client.ui.controls.text;
 
 import com.xxxmkxxx.customgui.CustomGUI;
 import com.xxxmkxxx.customgui.client.common.event.EventBus;
+import com.xxxmkxxx.customgui.client.common.util.Utils;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.ResetHoverEventHandler;
@@ -12,6 +13,8 @@ import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import lombok.Getter;
+import net.minecraft.client.font.FontStorage;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
@@ -59,11 +62,6 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
 
         frame.moveStartPos(leftTextMargin, topTextMargin);
         frame.moveStopPos(leftTextMargin, topTextMargin);
-    }
-
-    @Override
-    public void scaling(Window window) {
-        super.scaling(window);
     }
 
     @Override
@@ -157,9 +155,9 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
 
         public SimpleText build() {
             Pos stopPos = Pos.builder()
-                    .relativeCoords(
-                            startPos.getXIndentPercent() + (style.getFont().getXSizePercent() + style.getFont().getSymbolPaddingPercent()) * text.getString().length(),
-                            startPos.getYIndentPercent() + style.getFont().getYSizePercent()
+                    .coords(
+                            startPos.getX() + Utils.getTextWidth(text.getString(), style.getFont()),
+                            startPos.getY() + style.getFont().getYSizePx()
                     )
                     .build(startPos.getXPercentValue(), startPos.getYPercentValue());
 

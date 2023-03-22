@@ -18,7 +18,6 @@ public abstract class GlyphRendererMixin implements CustomGUIGlyphRenderer {
     @Shadow
     private float maxV;
 
-
     //gag
     @Override
     public void draw(float x, float y, float width, float height, Matrix4f matrix, VertexConsumer vertexConsumer, float red, float green, float blue, float alpha, int light) {
