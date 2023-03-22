@@ -18,12 +18,14 @@ public abstract class GlyphRendererMixin implements CustomGUIGlyphRenderer {
     @Shadow
     private float maxV;
 
+
+    //gag
     @Override
     public void draw(float x, float y, float width, float height, Matrix4f matrix, VertexConsumer vertexConsumer, float red, float green, float blue, float alpha, int light) {
         float finalMinX = x;
-        float finalMaxX = x + width;
+        float finalMaxX = x + width + 1.1f;
         float finalMinY = y;
-        float finalMaxY = y + height;
+        float finalMaxY = y + height + 0.5f;
         vertexConsumer.vertex(matrix, finalMinX, finalMinY, 0.0f).color(red, green, blue, alpha).texture(minU, minV).light(light).next();
         vertexConsumer.vertex(matrix, finalMinX, finalMaxY, 0.0f).color(red, green, blue, alpha).texture(minU, maxV).light(light).next();
         vertexConsumer.vertex(matrix, finalMaxX, finalMaxY, 0.0f).color(red, green, blue, alpha).texture(maxU, maxV).light(light).next();

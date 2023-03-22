@@ -1,6 +1,7 @@
 package com.xxxmkxxx.customgui.mixin.renderers.text;
 
 import com.xxxmkxxx.customgui.client.common.CustomGUIDrawer;
+import com.xxxmkxxx.customgui.client.hierarchy.style.Font;
 import net.minecraft.client.font.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -27,22 +28,23 @@ public abstract class DrawerMixin implements CharacterVisitor, CustomGUIDrawer {
     private float alpha;
     @Shadow
     private int light;
-    @Shadow private float x;
-    @Shadow private float y;
+    @Shadow float x;
+    @Shadow float y;
 
     @Override
-    public boolean accept(FontStorage fontStorage, float symbolWidth, float symbolHeight, float indent, int codePoint) {
+    public boolean accept(FontStorage fontStorage, Font font, int codePoint) {
         GlyphRenderer glyphRenderer = fontStorage.getGlyphRenderer(codePoint);
+        Glyph glyph = fontStorage.getGlyph(codePoint);
+
 
         if (!(glyphRenderer instanceof EmptyGlyphRenderer)) {
             VertexConsumer vertexConsumer = vertexConsumers.getBuffer(glyphRenderer.getLayer(this.layerType));
-            glyphRenderer.draw(x, y, symbolWidth, symbolHeight, matrix, vertexConsumer, red, green, blue, alpha, light);
+            glyphRenderer.draw(x, y, font.getXSizePx(), font.getYSizePx(), matrix, vertexConsumer, red, green, blue, alpha, light);
         }
 
-        //gag
-        float symbolIndent = symbolWidth + indent;
+        float width = (glyph.getAdvance() - 1) * font.getXSizePx() / 8f;
 
-        x += symbolIndent;
+        x += (width + font.getSymbolPaddingPx());
 
         return true;
     }
