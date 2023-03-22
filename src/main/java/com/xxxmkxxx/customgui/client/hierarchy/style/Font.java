@@ -33,9 +33,9 @@ public class Font implements Cloneable, Scalable {
     }
 
     @Override
-    public void scaling(double xPercentValue, double yPercentValue) {
-        xSizePx = (int) (xPercentValue * xSizePercent);
-        ySizePx = (int) (yPercentValue * ySizePercent);
+    public void scaling(float xPercentValue, float yPercentValue) {
+        xSizePx = xPercentValue * xSizePercent;
+        ySizePx = yPercentValue * ySizePercent;
         symbolPaddingPx = (int) (xPercentValue * symbolPaddingPercent);
     }
 
@@ -58,6 +58,9 @@ public class Font implements Cloneable, Scalable {
         public Builder() {
             //gag
             this.identifier = new Identifier("");
+            this.xSizePercent = Float.MIN_VALUE;
+            this.ySizePercent = Float.MIN_VALUE;
+            this.symbolPaddingPercent = Float.MIN_VALUE;
             this.xSizePx = 6.0f;
             this.ySizePx = 6.0f;
             this.color = Color.DefaultColor.BLACK.getColor();
@@ -114,9 +117,9 @@ public class Font implements Cloneable, Scalable {
         }
 
         public Font build(float xPercentValue, float yPercentValue) {
-            float xSizePercent = this.xSizePercent == 0.0 ? xSizePx / xPercentValue : this.xSizePercent;
-            float ySizePercent = this.ySizePercent == 0.0 ? ySizePx / yPercentValue : this.ySizePercent;
-            float symbolPaddingPercent = this.symbolPaddingPercent == 0.0 ? symbolPaddingPX / xPercentValue : this.symbolPaddingPercent;
+            float xSizePercent = this.xSizePercent == Float.MIN_VALUE ? xSizePx / xPercentValue : this.xSizePercent;
+            float ySizePercent = this.ySizePercent == Float.MIN_VALUE ? ySizePx / yPercentValue : this.ySizePercent;
+            float symbolPaddingPercent = this.symbolPaddingPercent == Float.MIN_VALUE ? symbolPaddingPX / xPercentValue : this.symbolPaddingPercent;
 
             this.xSizePercent = xSizePercent;
             this.ySizePercent = ySizePercent;

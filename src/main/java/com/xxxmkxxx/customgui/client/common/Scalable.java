@@ -1,5 +1,5 @@
 package com.xxxmkxxx.customgui.client.common;
 
 public interface Scalable {
-    void scaling(double xPercentValue, double yPercentValue);
+    void scaling(float xPercentValue, float yPercentValue);
 }

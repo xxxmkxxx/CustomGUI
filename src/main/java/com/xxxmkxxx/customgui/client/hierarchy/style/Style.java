@@ -56,7 +56,7 @@ public class Style implements Cloneable, Scalable {
     }
 
     @Override
-    public void scaling(double xPercentValue, double yPercentValue) {
+    public void scaling(float xPercentValue, float yPercentValue) {
         font.scaling(xPercentValue, yPercentValue);
     }
 }
