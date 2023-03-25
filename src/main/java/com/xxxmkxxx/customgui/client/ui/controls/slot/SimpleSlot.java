@@ -40,13 +40,14 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
     protected Runnable hoverAction;
     protected Runnable resetHoverAction;
 
-    protected SimpleSlot(Pos startPos, Pos stopPos, AbstractImage image, int index, AbstractInventory inventory) {
-        super(startPos, stopPos, index, inventory);
+    protected SimpleSlot(Pos startPos, Pos stopPos, AbstractImage image, int index, AbstractInventory inventory, Style style) {
+        super(startPos, stopPos, index, inventory, style);
         this.leftClickAction = () -> {};
         this.hoverAction = () -> {};
         this.resetHoverAction = () -> {};
         this.amountItemsText = SimpleText.builder()
-                .startPos(initAmountItemsTextStartPos(Text.of(String.valueOf(inventory.getStack(index).getCount()))))
+                .startPos(initAmountItemsTextStartPos(inventory.getStack(index).getCount()))
+                .style(style)
                 .build();
         this.image = image;
 
@@ -54,10 +55,10 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
         updateIndents();
     }
 
-    private Pos initAmountItemsTextStartPos(Text text) {
+    private Pos initAmountItemsTextStartPos(int amount) {
         return Pos.builder()
                 .coords(
-                        frame.getStopPos().getX() - Utils.getTextWidth(text.toString(), style.getFont()),
+                        frame.getStopPos().getX() - Utils.getTextWidth(String.valueOf(amount), style.getFont()),
                         frame.getStopPos().getY() - style.getFont().getYSizePx()
                 )
                 .build(frame.getLastXPercentValue(), frame.getLastYPercentValue());
@@ -65,18 +66,6 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
 
     private void updateAmountItemsText(ItemStack itemStack) {
         Text amount = Text.of(Integer.toString(itemStack.getCount()));
-
-        Pos startPos = initAmountItemsTextStartPos(amount);
-
-        Pos stopPos = Pos.builder()
-                .coords(
-                       startPos.getX() + amountItemsText.getFrame().getWidth(),
-                        frame.getStopPos().getY() + amountItemsText.getFrame().getHeight()
-                )
-                .build(frame.getLastXPercentValue(), frame.getLastYPercentValue());
-
-        amountItemsText.getFrame().moveStartPos(startPos);
-        amountItemsText.getFrame().moveStopPos(stopPos);
         amountItemsText.setText(amount);
     }
 
@@ -154,18 +143,10 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
         private final float widthPercent;
         private final float heightPercent;
         private final AbstractInventory inventory;
-        private Style style = Style.defaultStyle();
+        private final Style style;
         private Consumer<ItemStack> leftClickAction = (itemStack) -> {};
         private Runnable hoverAction = () -> {};
         private Runnable resetHoverAction = () -> {};
-
-        public void setStyle(Style style) {
-            try {
-                this.style = (Style) style.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-        }
 
         @Override
         public SimpleSlot create(int index, Pos pos) {
@@ -190,12 +171,12 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
                                     position.getYIndentPercent() + heightPercent
                             )
                             .build(pos.getXPercentValue(), position.getYPercentValue()),
-                    image, index, inventory
+                    image, index, inventory, style
             );
+
             slot.setLeftClickAction(() -> leftClickAction.accept(inventory.getStack(index)));
             slot.setHoverAction(hoverAction);
             slot.setResetHoverAction(resetHoverAction);
-            slot.setStyle(style);
 
             return slot;
         }
@@ -298,15 +279,14 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
         }
 
         public Factory build() {
-            Factory factory = new Factory(widthPercent, heightPercent, inventory);
-            factory.setStyle(style);
+            Factory factory = new Factory(widthPercent, heightPercent, inventory, style);
 
             return factory;
         }
     }
 
     public static class RendererFactory implements NodeRendererFactory<SimpleSlot> {
-        private ParametrizedSelfDestructionMethod<SimpleSlot> initBackgroundMethod = new ParametrizedSelfDestructionMethod<>();
+        private final ParametrizedSelfDestructionMethod<SimpleSlot> initBackgroundMethod = new ParametrizedSelfDestructionMethod<>();
         private Consumer<SimpleSlot> backgroundRenderMethod = simpleSlot -> {};
 
         public RendererFactory() {

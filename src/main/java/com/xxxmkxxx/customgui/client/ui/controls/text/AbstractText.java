@@ -1,6 +1,7 @@
 package com.xxxmkxxx.customgui.client.ui.controls.text;
 
 import com.xxxmkxxx.customgui.client.common.event.EventBus;
+import com.xxxmkxxx.customgui.client.common.util.Utils;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
@@ -20,14 +21,16 @@ public abstract class AbstractText extends AbstractNode implements Text {
 
     public void setText(net.minecraft.text.Text text) {
         this.text = text;
-        float lastXPercentValue = frame.getLastXPercentValue();
-        float lastYPercentValue = frame.getLastYPercentValue();
-        frame = SimpleFrame.builder()
-                .startPos(frame.getInitialStartPos())
-                .widthPercent((style.getFont().getXSizePercent() + style.getFont().getSymbolPaddingPercent()) * text.getString().length())
-                .heightPercent(style.getFont().getYSizePercent())
-                .build();
-        frame.scaling(lastXPercentValue, lastYPercentValue);
+
+        frame.moveStopPos(
+                Pos.builder()
+                    .coords(
+                            frame.getStartPos().getX() + Utils.getTextWidth(text.getString(), style.getFont()),
+                               frame.getStopPos().getY()
+                    )
+                    .build(frame.getLastXPercentValue(), frame.getLastYPercentValue())
+        );
+
         EventBus.CHANGE_EVENT.callHandler(this);
     }
 
