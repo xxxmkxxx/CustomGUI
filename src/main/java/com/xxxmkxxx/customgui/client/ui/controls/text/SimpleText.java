@@ -95,12 +95,6 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
                         simpleText.getFrame().getStartPos().getY(),
                         simpleText.getStyle().getFont()
                 );
-
-                CustomGUI.NODE_DRAWABLE_HELPER.fillFrame(
-                        simpleText.getStyle().getMatrixStack(),
-                        simpleText.getFrame(),
-                        simpleText.getStyle().getHexBackgroundColor()
-                );
             };
         }
 
