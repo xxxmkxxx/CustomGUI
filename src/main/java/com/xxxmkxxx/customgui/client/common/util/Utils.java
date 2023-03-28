@@ -9,6 +9,11 @@ public class Utils {
     public static float getTextWidth(String text, Font font) {
         return MinecraftClient.getInstance().textRenderer.getTextWidth(text, font);
     }
+
+    public static float getSymbolWidth(char symbol, Font font) {
+        return MinecraftClient.getInstance().textRenderer.getSymbolWidth(symbol, font);
+    }
+
     public static int nonNullIntValue(int value) {
         return value > 0 ? value : 1;
     }
