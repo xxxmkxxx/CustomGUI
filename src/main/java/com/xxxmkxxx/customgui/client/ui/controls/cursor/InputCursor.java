@@ -5,11 +5,13 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
+import com.xxxmkxxx.customgui.client.ui.controls.field.NoneExpandableInputField;
 
 public class InputCursor extends AbstractCursor {
-    protected InputCursor(Pos pos, float width, float height) {
-        super(pos, width, height);
+    protected InputCursor(Pos startPos, Pos stopPos, Style style) {
+        super(startPos,stopPos, style);
         updateIndents();
     }
 
@@ -52,27 +54,56 @@ public class InputCursor extends AbstractCursor {
     }
 
     public static class Builder {
-        private Pos pos = Pos.defaultPos();
-        private Style style = Style.defaultStyle();
-        private int width = 1;
-        private int height = 7;
+        private Pos startPos;
+        private Pos stopPos;
+        private Style style;
+        private float widthPercent;
+        private float heightPercent;
 
-        public Builder pos(Pos pos) {
+        public Builder() {
+            this.startPos = Pos.defaultPos();
+            this.style = Style.defaultStyle();
+            this.widthPercent = style.getFont().getXSizePercent();
+            this.heightPercent = style.getFont().getYSizePercent();
+        }
+
+        public Builder startPos(Pos pos) {
             try {
-                this.pos = (Pos) pos.clone();
+                this.startPos = (Pos) pos.clone();
             } catch (CloneNotSupportedException e) {
                 throw new RuntimeException(e);
             }
             return this;
         }
 
-        //gag
-        public Builder width(float width) {
+        public Builder stopPos(Pos pos) {
+            try {
+                this.stopPos = (Pos) pos.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
             return this;
         }
 
-        //gag
-        public Builder height(float height) {
+        public Builder widthPercent(float widthPercent) {
+            this.widthPercent = widthPercent;
+            return this;
+        }
+
+        public Builder heightPercent(float heightPercent) {
+            this.heightPercent = heightPercent;
+            return this;
+        }
+
+        public Builder positions(Pos startPos, Pos stopPos) {
+            startPos(startPos);
+            stopPos(stopPos);
+            return this;
+        }
+
+        public Builder positions(AbstractFrame frame) {
+            startPos(frame.getStartPos());
+            stopPos(frame.getStopPos());
             return this;
         }
 
@@ -86,9 +117,16 @@ public class InputCursor extends AbstractCursor {
         }
 
         public InputCursor build() {
-            InputCursor cursor = new InputCursor(pos, width, height);
-            cursor.setStyle(style);
-            return cursor;
+            Pos stopPos = this.stopPos == null
+                    ? Pos.builder()
+                        .relativeCoords(
+                                startPos.getXIndentPercent() + widthPercent,
+                                startPos.getYIndentPercent() + heightPercent
+                        )
+                        .build(startPos.getXPercentValue(), startPos.getYPercentValue())
+                    : this.stopPos;
+
+            return new InputCursor(startPos, stopPos, style);
         }
     }
 }
