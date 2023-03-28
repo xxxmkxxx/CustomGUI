@@ -17,6 +17,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Background;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
 import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
+import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.ui.controls.cursor.InputCursor;
@@ -31,22 +32,17 @@ import java.util.function.Consumer;
 @Getter @Setter
 public class NoneExpandableInputField extends AbstractField implements LeftClickEventHandler, ChangeEventHandler, KeyboardCharInputEventHandler, KeyboardKeyInputEventHandler {
     private SimpleText text;
+    private SimpleText promptText;
     private InputCursor inputCursor;
     private Runnable leftClickAction = () -> {};
     private Runnable changeAction = () -> {};
 
-    protected NoneExpandableInputField(Pos pos, int width, int height) {
-        //gag
-        this.frame = SimpleFrame.builder().startPos(pos).widthPercent(0.0f).heightPercent(0.0f).build();
-        this.text = SimpleText.builder()
-                .startPos(pos)
-                .text("")
-                .build();
-        this.inputCursor = InputCursor.builder()
-                .pos(pos)
-                .width(1)
-                .height(text.getFrame().getHeight())
-                .build();
+    protected NoneExpandableInputField(Pos startPos, Pos stopPos, SimpleText promptText, Style style) {
+        this.style = style;
+        this.frame = SimpleFrame.builder().positions(startPos, stopPos).build();
+        this.text = SimpleText.builder().style(style).startPos(startPos).text("").build();
+        this.promptText = promptText;
+        this.inputCursor = InputCursor.builder().startPos(startPos).widthPercent(0.3f).heightPercent(text.getFrame().getHeight()).style(style).build();
         inputCursor.hide();
         updateIndents();
     }
@@ -55,6 +51,7 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
     public void scaling(Window window) {
         super.scaling(window);
         text.scaling(window);
+        promptText.scaling(window);
         inputCursor.scaling(window);
     }
 
@@ -62,6 +59,7 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
     public void init(Consumer<AbstractNode> initMethod) {
         super.init(initMethod);
         text.init(initMethod);
+        promptText.init(initMethod);
         inputCursor.init(initMethod);
     }
 
@@ -70,6 +68,7 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
         super.initRenderer(type);
         this.renderer = new RendererFactory().create(type);
         text.initRenderer(type);
+        promptText.initRenderer(type);
         inputCursor.initRenderer(type);
     }
 
@@ -98,6 +97,8 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
     @Override
     public void onLeftClick() {
         leftClickAction.run();
+        promptText.hide();
+
         EventManager.sendAction(
                 rendererType,
                 ActionBuilder.of().unblockKeyboard().activeNode(this).addCyclicAnimation(
@@ -120,7 +121,7 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
     public void onCharInput(char symbol) {
         textBuilder.append(symbol);
         text.setText(Text.of(textBuilder.toString()));
-        inputCursor.move(Utils.getTextWidth(String.valueOf(symbol), style.getFont()), 0);
+        inputCursor.move(Utils.getSymbolWidth(symbol, style.getFont()) + style.getFont().getSymbolPaddingPx(), 0);
         onChange();
     }
 
@@ -156,6 +157,8 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
                                     .activeNode(EMPTY_NODE)
                     );
 
+                    if (textBuilder.isEmpty()) promptText.display();
+
                     EventBus.KEYBOARD_CHAR_INPUT_EVENT.removeHandler(this);
                     EventBus.KEYBOARD_KEY_INPUT_EVENT.removeHandler(this);
                 };
@@ -165,26 +168,69 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
     }
 
     public static class Builder {
-        private Pos pos = Pos.defaultPos();
-        private int width = 50, height = 10;
-        private Style style = Style.defaultStyle();
+        private Pos startPos;
+        private Pos stopPos;
+        private float widthPercent;
+        private float heightPercent;
+        private String promptText;
+        private SimpleText promptTextNode;
+        private Style style;
 
-        public Builder pos(Pos pos) {
+        public Builder() {
+            this.startPos = Pos.defaultPos();
+            this.style = Style.defaultStyle();
+            this.widthPercent = style.getFont().getXSizePercent() * 7;
+            this.heightPercent = style.getFont().getYSizePercent();
+            this.promptText = "prompt";
+        }
+
+        public Builder promptText(String promptText) {
+            this.promptText = promptText;
+            return this;
+        }
+
+        public Builder promptTextNode(SimpleText promptTextNode) {
+            this.promptTextNode = promptTextNode;
+            return this;
+        }
+
+        public Builder startPos(Pos pos) {
             try {
-                this.pos = (Pos) pos.clone();
+                this.startPos = (Pos) pos.clone();
             } catch (CloneNotSupportedException e) {
                 throw new RuntimeException(e);
             }
             return this;
         }
 
-        public Builder width(int width) {
-            this.width = width;
+        public Builder stopPos(Pos pos) {
+            try {
+                this.stopPos = (Pos) pos.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
             return this;
         }
 
-        public Builder height(int height) {
-            this.height = height;
+        public Builder widthPercent(float widthPercent) {
+            this.widthPercent = widthPercent;
+            return this;
+        }
+
+        public Builder heightPercent(float heightPercent) {
+            this.heightPercent = heightPercent;
+            return this;
+        }
+
+        public Builder positions(Pos startPos, Pos stopPos) {
+            startPos(startPos);
+            stopPos(stopPos);
+            return this;
+        }
+
+        public Builder positions(AbstractFrame frame) {
+            startPos(frame.getStartPos());
+            stopPos(frame.getStopPos());
             return this;
         }
 
@@ -198,9 +244,31 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
         }
 
         public NoneExpandableInputField build() {
-            NoneExpandableInputField noneExpandableInputField = new NoneExpandableInputField(pos, width, height);
-            noneExpandableInputField.setStyle(style);
-            return noneExpandableInputField;
+            Pos stopPos = this.stopPos == null
+                    ? Pos.builder().relativeCoords(
+                            startPos.getXIndentPercent() + widthPercent,
+                            startPos.getYIndentPercent() + heightPercent
+                    )
+                    .build(startPos.getXPercentValue(), startPos.getYPercentValue())
+                    : this.stopPos;
+
+            Style promptStyle;
+
+            try {
+                promptStyle = (Style) style.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
+
+            promptStyle.getFont().getOpacity().setPercent(50);
+
+            SimpleText promptTextNode = this.promptTextNode == null
+                    ? SimpleText.builder().text(promptText).style(promptStyle).startPos(startPos).build()
+                    : this.promptTextNode;
+
+
+
+            return new NoneExpandableInputField(startPos, stopPos, promptTextNode, style);
         }
     }
 
@@ -225,6 +293,7 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
             backgroundRendererMethod.accept(noneExpandableInputField);
 
             noneExpandableInputField.getText().getState().execute(noneExpandableInputField.getText(), noneExpandableInputField.getText().getRenderer());
+            noneExpandableInputField.getPromptText().getState().execute(noneExpandableInputField.getPromptText(), noneExpandableInputField.getPromptText().getRenderer());
             noneExpandableInputField.getInputCursor().getState().execute(noneExpandableInputField.getInputCursor(), noneExpandableInputField.getInputCursor().getRenderer());
         }
     }
