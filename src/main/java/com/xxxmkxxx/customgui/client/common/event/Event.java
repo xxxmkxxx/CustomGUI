@@ -1,8 +1,8 @@
 package com.xxxmkxxx.customgui.client.common.event;
 
 public interface Event<T, H> {
-    void callHandler(T type, Object ... args);
+    void callHandler(T id, Object ... args);
     void callAllHandlers(Object ... args);
-    void addHandler(T type, H handler);
-    void removeHandler(T type);
+    void addHandler(T id, H handler);
+    void removeHandler(T id);
 }

@@ -14,16 +14,13 @@ public class KeyboardManager {
 
     public void onCharInput(char symbol) {
         if (isActive) {
-            EventBus.KEYBOARD_CHAR_INPUT_EVENT.callHandler(targetManager.getActiveNode(), symbol);
+            EventBus.KEYBOARD_CHAR_INPUT_EVENT.callHandler(targetManager.getActiveNode().getId(), symbol);
         }
     }
 
     public void onKeyDown(int keyCode) {
         if (isActive) {
-            EventBus.KEYBOARD_KEY_INPUT_EVENT.callHandler(
-                    targetManager.getActiveNode(),
-                    keyCode
-            );
+            EventBus.KEYBOARD_KEY_INPUT_EVENT.callHandler(targetManager.getActiveNode().getId(), keyCode);
         }
     }
 }

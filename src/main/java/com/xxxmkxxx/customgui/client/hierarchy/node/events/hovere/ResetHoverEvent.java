@@ -5,7 +5,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.events.AbstractNodeEvent;
 
 public class ResetHoverEvent extends AbstractNodeEvent<ResetHoverEventHandler> {
     @Override
-    public void callHandler(AbstractNode node, Object ... args) {
-        handlers.get(node).onResetHover();
+    public void callHandler(Integer id, Object ... args) {
+        handlers.get(id).onResetHover();
     }
 }

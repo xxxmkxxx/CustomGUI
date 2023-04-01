@@ -10,11 +10,8 @@ import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.style.Style;
-import com.xxxmkxxx.customgui.client.hierarchy.window.Window;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import lombok.Getter;
-import net.minecraft.client.font.FontStorage;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
@@ -32,17 +29,17 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
 
     public void setLeftClickAction(Runnable leftClickAction) {
         this.leftClickAction = leftClickAction;
-        EventBus.LEFT_CLICK_EVENT.addHandler(this, this);
+        EventBus.LEFT_CLICK_EVENT.addHandler(getId(), this);
     }
 
     public void setHoverAction(Runnable hoverAction) {
         this.hoverAction = hoverAction;
-        EventBus.HOVER_EVENT.addHandler(this, this);
+        EventBus.HOVER_EVENT.addHandler(getId(), this);
     }
 
     public void setResetHoverAction(Runnable resetHoverAction) {
         this.resetHoverAction = resetHoverAction;
-        EventBus.RESET_HOVER_EVENT.addHandler(this, this);
+        EventBus.RESET_HOVER_EVENT.addHandler(getId(), this);
     }
 
     @Override

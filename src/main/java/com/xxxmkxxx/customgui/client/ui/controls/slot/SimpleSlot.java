@@ -114,17 +114,17 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
 
     public void setLeftClickAction(Runnable leftClickAction) {
         this.leftClickAction = leftClickAction;
-        EventBus.LEFT_CLICK_EVENT.addHandler(this, this);
+        EventBus.LEFT_CLICK_EVENT.addHandler(getId(), this);
     }
 
     public void setHoverAction(Runnable hoverAction) {
         this.hoverAction = hoverAction;
-        EventBus.HOVER_EVENT.addHandler(this, this);
+        EventBus.HOVER_EVENT.addHandler(getId(), this);
     }
 
     public void setResetHoverAction(Runnable resetHoverAction) {
         this.resetHoverAction = resetHoverAction;
-        EventBus.RESET_HOVER_EVENT.addHandler(this, this);
+        EventBus.RESET_HOVER_EVENT.addHandler(getId(), this);
     }
 
     public Identifier getItemAtlas(Item item) {

@@ -31,7 +31,7 @@ public abstract class AbstractText extends AbstractNode implements Text {
                     .build(frame.getLastXPercentValue(), frame.getLastYPercentValue())
         );
 
-        EventBus.CHANGE_EVENT.callHandler(this);
+        EventBus.CHANGE_EVENT.callHandler(getId());
     }
 
     public void setText(String text) {

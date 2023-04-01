@@ -115,8 +115,8 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
                 )
         );
 
-        EventBus.KEYBOARD_CHAR_INPUT_EVENT.addHandler(this, this);
-        EventBus.KEYBOARD_KEY_INPUT_EVENT.addHandler(this, this);
+        EventBus.KEYBOARD_CHAR_INPUT_EVENT.addHandler(getId(), this);
+        EventBus.KEYBOARD_KEY_INPUT_EVENT.addHandler(getId(), this);
     }
 
     @Override
@@ -148,24 +148,24 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
 
     public void setLeftClickAction(Runnable leftClickAction) {
         this.leftClickAction = leftClickAction;
-        EventBus.LEFT_CLICK_EVENT.addHandler(this, this);
+        EventBus.LEFT_CLICK_EVENT.addHandler(getId(), this);
     }
 
     public void setChangeAction(Runnable changeAction) {
         this.changeAction = changeAction;
-        EventBus.CHANGE_EVENT.addHandler(this, this);
+        EventBus.CHANGE_EVENT.addHandler(getId(), this);
     }
 
     public void setSendAction(FieldSendEventHandler sendAction) {
         this.sendAction = sendAction;
-        EventBus.FIELD_SEND_EVENT.addHandler(this, this);
+        EventBus.FIELD_SEND_EVENT.addHandler(getId(), this);
     }
 
     private Runnable changeKeyAction(int keyCode) {
         switch (keyCode) {
             case GLFW.GLFW_KEY_ENTER: {
                 return () -> {
-                    EventBus.FIELD_SEND_EVENT.callHandler(this, textBuilder.toString());
+                    EventBus.FIELD_SEND_EVENT.callHandler(getId(), textBuilder.toString());
                 };
             }
             case GLFW.GLFW_KEY_ESCAPE: {
@@ -180,7 +180,7 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
 
                     if (textBuilder.isEmpty()) promptText.display();
 
-                    EventBus.KEYBOARD_CHAR_INPUT_EVENT.removeHandler(this);
+                    EventBus.KEYBOARD_CHAR_INPUT_EVENT.removeHandler(getId());
                     EventBus.KEYBOARD_KEY_INPUT_EVENT.removeHandler(this);
                 };
             }
