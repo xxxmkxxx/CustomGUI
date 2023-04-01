@@ -21,6 +21,7 @@ import com.xxxmkxxx.customgui.client.hierarchy.window.frame.AbstractFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.frame.SimpleFrame;
 import com.xxxmkxxx.customgui.client.hierarchy.window.position.Pos;
 import com.xxxmkxxx.customgui.client.ui.controls.cursor.InputCursor;
+import com.xxxmkxxx.customgui.client.ui.controls.field.event.send.FieldSendEventHandler;
 import com.xxxmkxxx.customgui.client.ui.controls.text.SimpleText;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,19 +31,25 @@ import org.lwjgl.glfw.GLFW;
 import java.util.function.Consumer;
 
 @Getter @Setter
-public class NoneExpandableInputField extends AbstractField implements LeftClickEventHandler, ChangeEventHandler, KeyboardCharInputEventHandler, KeyboardKeyInputEventHandler {
+public class NoneExpandableInputField extends AbstractField implements LeftClickEventHandler, ChangeEventHandler, KeyboardCharInputEventHandler, KeyboardKeyInputEventHandler, FieldSendEventHandler {
     private SimpleText text;
     private SimpleText promptText;
     private InputCursor inputCursor;
     private Runnable leftClickAction = () -> {};
     private Runnable changeAction = () -> {};
+    private FieldSendEventHandler sendAction = (text) -> {};
 
     protected NoneExpandableInputField(Pos startPos, Pos stopPos, SimpleText promptText, Style style) {
         this.style = style;
         this.frame = SimpleFrame.builder().positions(startPos, stopPos).build();
         this.text = SimpleText.builder().style(style).startPos(startPos).text("").build();
         this.promptText = promptText;
-        this.inputCursor = InputCursor.builder().startPos(startPos).widthPercent(0.3f).heightPercent(text.getFrame().getHeight()).style(style).build();
+        this.inputCursor = InputCursor.builder()
+                .startPos(startPos)
+                .widthPercent(0.3f)
+                .heightPercent(text.getFrame().getStopPos().getYIndentPercent() - text.getFrame().getStartPos().getYIndentPercent())
+                .style(style)
+                .build();
         inputCursor.hide();
         updateIndents();
     }
@@ -130,6 +137,11 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
         changeKeyAction(key).run();
     }
 
+    @Override
+    public void onSend(String text) {
+        sendAction.onSend(text);
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -144,9 +156,18 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
         EventBus.CHANGE_EVENT.addHandler(this, this);
     }
 
+    public void setSendAction(FieldSendEventHandler sendAction) {
+        this.sendAction = sendAction;
+        EventBus.FIELD_SEND_EVENT.addHandler(this, this);
+    }
+
     private Runnable changeKeyAction(int keyCode) {
         switch (keyCode) {
-            case GLFW.GLFW_KEY_ENTER:
+            case GLFW.GLFW_KEY_ENTER: {
+                return () -> {
+                    EventBus.FIELD_SEND_EVENT.callHandler(this, textBuilder.toString());
+                };
+            }
             case GLFW.GLFW_KEY_ESCAPE: {
                 return () -> {
                     EventManager.sendAction(
