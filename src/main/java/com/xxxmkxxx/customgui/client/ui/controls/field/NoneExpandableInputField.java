@@ -163,11 +163,7 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
 
     private Runnable changeKeyAction(int keyCode) {
         switch (keyCode) {
-            case GLFW.GLFW_KEY_ENTER: {
-                return () -> {
-                    EventBus.FIELD_SEND_EVENT.callHandler(getId(), textBuilder.toString());
-                };
-            }
+            case GLFW.GLFW_KEY_ENTER: EventBus.FIELD_SEND_EVENT.callHandler(getId(), textBuilder.toString());
             case GLFW.GLFW_KEY_ESCAPE: {
                 return () -> {
                     EventManager.sendAction(
@@ -181,7 +177,7 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
                     if (textBuilder.isEmpty()) promptText.display();
 
                     EventBus.KEYBOARD_CHAR_INPUT_EVENT.removeHandler(getId());
-                    EventBus.KEYBOARD_KEY_INPUT_EVENT.removeHandler(this);
+                    EventBus.KEYBOARD_KEY_INPUT_EVENT.removeHandler(getId());
                 };
             }
             default: return () -> {};
