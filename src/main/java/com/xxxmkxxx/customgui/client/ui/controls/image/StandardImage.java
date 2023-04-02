@@ -2,6 +2,7 @@ package com.xxxmkxxx.customgui.client.ui.controls.image;
 
 import com.xxxmkxxx.customgui.CustomGUI;
 import com.xxxmkxxx.customgui.client.common.event.EventBus;
+import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNodeBuilder;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.ResetHoverEventHandler;
@@ -107,54 +108,45 @@ public class StandardImage extends AbstractImage implements LeftClickEventHandle
         }
     }
 
-    public static class Builder {
-        private Pos startPos;
-        private Pos stopPos;
+    public static class Builder extends AbstractNodeBuilder<StandardImage> {
         private float widthPercent;
         private float heightPercent;
         private ItemStack itemStack;
-        private Style style;
 
         public Builder() {
+            super();
             this.widthPercent = 0.5f;
             this.heightPercent = 1.0f;
-            this.startPos = Pos.defaultPos();
-            this.style = Style.defaultStyle();
             this.itemStack = ItemStack.EMPTY;
+        }
+
+        @Override
+        public Builder startPos(Pos pos) {
+            return (Builder) super.startPos(pos);
+        }
+
+        @Override
+        public Builder stopPos(Pos pos) {
+            return (Builder) super.stopPos(pos);
+        }
+
+        @Override
+        public Builder positions(Pos startPos, Pos stopPos) {
+            return (Builder) super.positions(startPos, stopPos);
+        }
+
+        @Override
+        public Builder positions(AbstractFrame frame) {
+            return (Builder) super.positions(frame);
+        }
+
+        @Override
+        public Builder style(Style style) {
+            return (Builder) super.style(style);
         }
 
         public Builder itemStack(ItemStack itemStack) {
             this.itemStack = itemStack;
-            return this;
-        }
-
-        public Builder startPos(Pos startPos) {
-            try {
-                this.startPos = (Pos) startPos.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-            return this;
-        }
-
-        public Builder stopPos(Pos stopPos) {
-            try {
-                this.stopPos = (Pos) stopPos.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-            return this;
-        }
-
-        public Builder positions(Pos startPos, Pos stopPos) {
-            startPos(startPos);
-            stopPos(stopPos);
-            return this;
-        }
-
-        public Builder positions(AbstractFrame frame) {
-            startPos(frame.getStartPos());
-            stopPos(frame.getStopPos());
             return this;
         }
 
@@ -165,15 +157,6 @@ public class StandardImage extends AbstractImage implements LeftClickEventHandle
 
         public Builder heightPercent(float heightPercent) {
             this.heightPercent = heightPercent;
-            return this;
-        }
-
-        public Builder style(Style style) {
-            try {
-                this.style = (Style) style.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
             return this;
         }
 

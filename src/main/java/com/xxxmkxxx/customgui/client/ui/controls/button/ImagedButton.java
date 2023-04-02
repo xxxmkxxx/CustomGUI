@@ -3,6 +3,7 @@ package com.xxxmkxxx.customgui.client.ui.controls.button;
 import com.xxxmkxxx.customgui.client.common.ParametrizedSelfDestructionMethod;
 import com.xxxmkxxx.customgui.client.common.event.EventBus;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
+import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNodeBuilder;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.click.LeftClickEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.HoverEventHandler;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.hovere.ResetHoverEventHandler;
@@ -147,59 +148,41 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
         }
     }
 
-    public static class Builder {
+    public static class Builder extends AbstractNodeBuilder<ImagedButton> {
         private String text;
-        private Pos startPos;
-        private Pos stopPos;
         private SimpleText textNode;
         private Identifier identifier;
-        private Style style;
         private SimpleImage image;
 
         public Builder() {
+            super();
             this.text = "button";
-            this.startPos = Pos.defaultPos();
-            this.style = Style.defaultStyle();
             this.identifier = new Identifier("customgui", "textures/gui/empty_img.png");
         }
 
-        public Builder style(Style style) {
-            try {
-                this.style = (Style) style.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-            return this;
+        @Override
+        public Builder startPos(Pos pos) {
+            return (Builder) super.startPos(pos);
         }
 
-        public Builder startPos(Pos startPos) {
-            try {
-                this.startPos = (Pos) startPos.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-            return this;
-        }
-
+        @Override
         public Builder stopPos(Pos pos) {
-            try {
-                this.stopPos = (Pos) pos.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-            return this;
+            return (Builder) super.stopPos(pos);
         }
 
+        @Override
         public Builder positions(Pos startPos, Pos stopPos) {
-            startPos(startPos);
-            stopPos(stopPos);
-            return this;
+            return (Builder) super.positions(startPos, stopPos);
         }
 
+        @Override
         public Builder positions(AbstractFrame frame) {
-            startPos(frame.getStartPos());
-            stopPos(frame.getStopPos());
-            return this;
+            return (Builder) super.positions(frame);
+        }
+
+        @Override
+        public Builder style(Style style) {
+            return (Builder) super.style(style);
         }
 
         public Builder text(String text) {

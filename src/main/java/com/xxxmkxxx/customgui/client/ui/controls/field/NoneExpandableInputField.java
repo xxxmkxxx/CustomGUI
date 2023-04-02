@@ -4,6 +4,8 @@ import com.xxxmkxxx.customgui.client.common.ParametrizedSelfDestructionMethod;
 import com.xxxmkxxx.customgui.client.common.event.EventBus;
 import com.xxxmkxxx.customgui.client.common.util.Utils;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
+import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNodeBuilder;
+import com.xxxmkxxx.customgui.client.hierarchy.node.NodeBuilder;
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.standard.inputfield.StandardInputFieldAnimations;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.ActionBuilder;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.EventManager;
@@ -184,21 +186,42 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
         }
     }
 
-    public static class Builder {
-        private Pos startPos;
-        private Pos stopPos;
+    public static class Builder extends AbstractNodeBuilder<NoneExpandableInputField> {
         private float widthPercent;
         private float heightPercent;
         private String promptText;
         private SimpleText promptTextNode;
-        private Style style;
 
         public Builder() {
-            this.startPos = Pos.defaultPos();
-            this.style = Style.defaultStyle();
+            super();
             this.widthPercent = style.getFont().getXSizePercent() * 7;
             this.heightPercent = style.getFont().getYSizePercent();
             this.promptText = "prompt";
+        }
+
+        @Override
+        public Builder startPos(Pos pos) {
+            return (Builder) super.startPos(pos);
+        }
+
+        @Override
+        public Builder stopPos(Pos pos) {
+            return (Builder) super.stopPos(pos);
+        }
+
+        @Override
+        public Builder positions(Pos startPos, Pos stopPos) {
+            return (Builder) super.positions(startPos, stopPos);
+        }
+
+        @Override
+        public Builder positions(AbstractFrame frame) {
+            return (Builder) super.positions(frame);
+        }
+
+        @Override
+        public Builder style(Style style) {
+            return (Builder) super.style(style);
         }
 
         public Builder promptText(String promptText) {
@@ -211,24 +234,6 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
             return this;
         }
 
-        public Builder startPos(Pos pos) {
-            try {
-                this.startPos = (Pos) pos.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-            return this;
-        }
-
-        public Builder stopPos(Pos pos) {
-            try {
-                this.stopPos = (Pos) pos.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-            return this;
-        }
-
         public Builder widthPercent(float widthPercent) {
             this.widthPercent = widthPercent;
             return this;
@@ -236,27 +241,6 @@ public class NoneExpandableInputField extends AbstractField implements LeftClick
 
         public Builder heightPercent(float heightPercent) {
             this.heightPercent = heightPercent;
-            return this;
-        }
-
-        public Builder positions(Pos startPos, Pos stopPos) {
-            startPos(startPos);
-            stopPos(stopPos);
-            return this;
-        }
-
-        public Builder positions(AbstractFrame frame) {
-            startPos(frame.getStartPos());
-            stopPos(frame.getStopPos());
-            return this;
-        }
-
-        public Builder style(Style style) {
-            try {
-                this.style = (Style) style.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
             return this;
         }
 

@@ -3,6 +3,7 @@ package com.xxxmkxxx.customgui.client.ui.controls.button;
 import com.xxxmkxxx.customgui.CustomGUI;
 import com.xxxmkxxx.customgui.client.common.ParametrizedSelfDestructionMethod;
 import com.xxxmkxxx.customgui.client.common.event.EventBus;
+import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNodeBuilder;
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.standard.button.StandardButtonAnimations;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.ActionBuilder;
 import com.xxxmkxxx.customgui.client.hierarchy.node.events.EventManager;
@@ -146,17 +147,38 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
         return new Builder();
     }
 
-    public static class Builder {
+    public static class Builder extends AbstractNodeBuilder<SimpleButton> {
         private SimpleText textNode;
         private String text;
-        private Pos startPos;
-        private Pos stopPos;
-        private Style style;
 
         public Builder() {
+            super();
             this.text = "button";
-            this.startPos = Pos.defaultPos();
-            this.style = Style.defaultStyle();
+        }
+
+        @Override
+        public Builder startPos(Pos pos) {
+            return (Builder) super.startPos(pos);
+        }
+
+        @Override
+        public Builder stopPos(Pos pos) {
+            return (Builder) super.stopPos(pos);
+        }
+
+        @Override
+        public Builder positions(Pos startPos, Pos stopPos) {
+            return (Builder) super.positions(startPos, stopPos);
+        }
+
+        @Override
+        public Builder positions(AbstractFrame frame) {
+            return (Builder) super.positions(frame);
+        }
+
+        @Override
+        public Builder style(Style style) {
+            return (Builder) super.style(style);
         }
 
         public Builder text(String text) {
@@ -169,58 +191,22 @@ public class SimpleButton extends AbstractButton implements LeftClickEventHandle
             return this;
         }
 
-        public Builder startPos(Pos pos) {
-            try {
-                this.startPos = (Pos) pos.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-            return this;
-        }
-
-        public Builder stopPos(Pos pos) {
-            try {
-                this.stopPos = (Pos) pos.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-            return this;
-        }
-
-        public Builder positions(Pos startPos, Pos stopPos) {
-            startPos(startPos);
-            stopPos(stopPos);
-            return this;
-        }
-
-        public Builder positions(AbstractFrame frame) {
-            startPos(frame.getStartPos());
-            stopPos(frame.getStopPos());
-            return this;
-        }
-
-        public Builder style(Style style) {
-            try {
-                this.style = (Style) style.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-            return this;
-        }
-
         public SimpleButton build() {
-            SimpleText text = textNode == null ? SimpleText.builder().startPos(startPos).text(this.text).build() : this.textNode;
-            Pos stopPos;
+            return build(() -> {
+                SimpleText text = textNode == null ? SimpleText.builder().startPos(startPos).text(this.text).build() : this.textNode;
+                Pos stopPos;
 
-            try {
-                stopPos = this.stopPos == null ? (Pos) text.getFrame().getStopPos().clone() : this.stopPos;
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
+                try {
+                    stopPos = this.stopPos == null ? (Pos) text.getFrame().getStopPos().clone() : this.stopPos;
+                } catch (CloneNotSupportedException e) {
+                    throw new RuntimeException(e);
+                }
 
-            SimpleButton button = new SimpleButton(startPos, stopPos, text);
-            button.setStyle(style);
-            return button;
+                SimpleButton button = new SimpleButton(startPos, stopPos, text);
+                button.setStyle(style);
+
+                return button;
+            });
         }
     }
 

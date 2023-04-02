@@ -1,6 +1,7 @@
 package com.xxxmkxxx.customgui.client.ui.controls.cursor;
 
 import com.xxxmkxxx.customgui.CustomGUI;
+import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNodeBuilder;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRenderer;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.NodeRendererFactory;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
@@ -53,36 +54,39 @@ public class InputCursor extends AbstractCursor {
         }
     }
 
-    public static class Builder {
-        private Pos startPos;
-        private Pos stopPos;
-        private Style style;
+    public static class Builder extends AbstractNodeBuilder<InputCursor> {
         private float widthPercent;
         private float heightPercent;
 
         public Builder() {
-            this.startPos = Pos.defaultPos();
-            this.style = Style.defaultStyle();
+            super();
             this.widthPercent = style.getFont().getXSizePercent();
             this.heightPercent = style.getFont().getYSizePercent();
         }
 
+        @Override
         public Builder startPos(Pos pos) {
-            try {
-                this.startPos = (Pos) pos.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-            return this;
+            return (Builder) super.startPos(pos);
         }
 
+        @Override
         public Builder stopPos(Pos pos) {
-            try {
-                this.stopPos = (Pos) pos.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-            return this;
+            return (Builder) super.stopPos(pos);
+        }
+
+        @Override
+        public Builder positions(Pos startPos, Pos stopPos) {
+            return (Builder) super.positions(startPos, stopPos);
+        }
+
+        @Override
+        public Builder positions(AbstractFrame frame) {
+            return (Builder) super.positions(frame);
+        }
+
+        @Override
+        public Builder style(Style style) {
+            return (Builder) super.style(style);
         }
 
         public Builder widthPercent(float widthPercent) {
@@ -95,38 +99,19 @@ public class InputCursor extends AbstractCursor {
             return this;
         }
 
-        public Builder positions(Pos startPos, Pos stopPos) {
-            startPos(startPos);
-            stopPos(stopPos);
-            return this;
-        }
-
-        public Builder positions(AbstractFrame frame) {
-            startPos(frame.getStartPos());
-            stopPos(frame.getStopPos());
-            return this;
-        }
-
-        public Builder style(Style style) {
-            try {
-                this.style = (Style) style.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-            return this;
-        }
-
         public InputCursor build() {
-            Pos stopPos = this.stopPos == null
-                    ? Pos.builder()
+            return build(() -> {
+                Pos stopPos = this.stopPos == null
+                        ? Pos.builder()
                         .relativeCoords(
                                 startPos.getXIndentPercent() + widthPercent,
                                 startPos.getYIndentPercent() + heightPercent
                         )
                         .build(startPos.getXPercentValue(), startPos.getYPercentValue())
-                    : this.stopPos;
+                        : this.stopPos;
 
-            return new InputCursor(startPos, stopPos, style);
+                return new InputCursor(startPos, stopPos, style);
+            });
         }
     }
 }
