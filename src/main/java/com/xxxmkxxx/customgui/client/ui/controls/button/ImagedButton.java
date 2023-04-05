@@ -156,7 +156,7 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
 
         public Builder() {
             super();
-            this.text = "button";
+            this.text = "";
             this.identifier = new Identifier("customgui", "textures/gui/empty_img.png");
         }
 
