@@ -73,10 +73,12 @@ public abstract class AbstractFrame implements Frame, Cloneable {
     public void scaling(float xPercentValue, float yPercentValue) {
         startPos = Pos.builder()
                 .relativeCoords(startPos.getXIndentPercent(), startPos.getYIndentPercent())
+                .proportionBy(startPos.getProportionBy())
                 .build(xPercentValue, yPercentValue);
 
         stopPos = Pos.builder()
                 .relativeCoords(stopPos.getXIndentPercent(), stopPos.getYIndentPercent())
+                .proportionBy(stopPos.getProportionBy())
                 .build(xPercentValue, yPercentValue);
 
         lastXPercentValue = xPercentValue;
@@ -87,6 +89,7 @@ public abstract class AbstractFrame implements Frame, Cloneable {
         this.initialStartPos.moveByXY(xDistance, yDistance);
         this.startPos = Pos.builder()
                 .relativeCoords(initialStartPos.getXIndentPercent(), initialStartPos.getYIndentPercent())
+                .proportionBy(initialStartPos.getProportionBy())
                 .build(lastXPercentValue, lastYPercentValue);
 
         updateFields(startPos, stopPos);
@@ -104,6 +107,7 @@ public abstract class AbstractFrame implements Frame, Cloneable {
         this.initialStopPos.moveByXY(xDistance, yDistance);
         this.stopPos = Pos.builder()
                 .relativeCoords(initialStopPos.getXIndentPercent(), initialStopPos.getYIndentPercent())
+                .proportionBy(initialStopPos.getProportionBy())
                 .build(lastXPercentValue, lastYPercentValue);
 
         updateFields(startPos, stopPos);
@@ -165,7 +169,7 @@ public abstract class AbstractFrame implements Frame, Cloneable {
 
     @Override
     public String toString() {
-        return "\n" +startPos.toString() + "\n" + stopPos.toString();
+        return "\n" + startPos.toString() + "\n" + stopPos.toString() + "\n" + "width - " + width + " height - " + height;
     }
 
     @Override

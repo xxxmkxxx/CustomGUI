@@ -8,14 +8,36 @@ public class Pos implements Cloneable {
     private float x, y;
     private float xPercentValue, yPercentValue;
     private float xIndentPercent, yIndentPercent;
+    private String proportionBy;
 
-    protected Pos(float xIndentPercent, float yIndentPercent, float xPercentValue, float yPercentValue) {
-        this.x = xIndentPercent * xPercentValue;
-        this.y = yIndentPercent * yPercentValue;
-        this.xIndentPercent = xIndentPercent;
-        this.yIndentPercent = yIndentPercent;
+    protected Pos(float xIndentPercent, float yIndentPercent, float xPercentValue, float yPercentValue, String proportionBy) {
+        switch (proportionBy) {
+            case "width": {
+                this.x = xIndentPercent * xPercentValue;
+                this.y = yIndentPercent * xPercentValue;
+                this.xIndentPercent = xIndentPercent;
+                this.yIndentPercent = yIndentPercent;
+                break;
+            }
+            case "height": {
+                this.x = xIndentPercent * yPercentValue;
+                this.y = yIndentPercent * yPercentValue;
+                this.xIndentPercent = xIndentPercent;
+                this.yIndentPercent = yIndentPercent;
+                break;
+            }
+            case "none": {
+                this.x = xIndentPercent * xPercentValue;
+                this.y = yIndentPercent * yPercentValue;
+                this.xIndentPercent = xIndentPercent;
+                this.yIndentPercent = yIndentPercent;
+                break;
+            }
+        }
+
         this.xPercentValue = xPercentValue;
         this.yPercentValue = yPercentValue;
+        this.proportionBy = proportionBy;
     }
 
     public static Builder builder() {
@@ -23,13 +45,27 @@ public class Pos implements Cloneable {
     }
 
     private void updateIndentPercents(float xPercentValue, float yPercentValue) {
-        xIndentPercent = x / xPercentValue;
-        yIndentPercent = y / yPercentValue;
+        switch (proportionBy) {
+            case "width": {
+                xIndentPercent = x / xPercentValue;
+                yIndentPercent = y / xPercentValue;
+                break;
+            }
+            case "height": {
+                xIndentPercent = x / yPercentValue;
+                yIndentPercent = y / yPercentValue;
+                break;
+            }
+            case "none": {
+                xIndentPercent = x / xPercentValue;
+                yIndentPercent = y / yPercentValue;
+            }
+        }
     }
 
     @Override
     public Object clone() throws CloneNotSupportedException {
-        return new Pos(xIndentPercent, yIndentPercent, xPercentValue, yPercentValue);
+        return new Pos(xIndentPercent, yIndentPercent, xPercentValue, yPercentValue, proportionBy);
     }
 
     public static Pos defaultPos() {
@@ -96,9 +132,12 @@ public class Pos implements Cloneable {
         private float x, y;
         private float xIndentPercent, yIndentPercent;
 
+        private String proportionBy;
+
         public Builder() {
-            x = y = 10;
-            xIndentPercent = yIndentPercent = Float.MIN_VALUE;
+            this.x = this.y = 10;
+            this.xIndentPercent = this.yIndentPercent = Float.MIN_VALUE;
+            this.proportionBy = "none";
         }
 
         public Builder coords(float x, float y) {
@@ -113,11 +152,37 @@ public class Pos implements Cloneable {
             return this;
         }
 
-        public Pos build(float xPercentValue, float yPercentValue) {
+        public Builder proportionBy(String proportionBy) {
+            this.proportionBy = proportionBy;
+            return this;
+        }
+
+        private void initIndents(float xPercentValue, float yPercentValue) {
             xIndentPercent = xIndentPercent == Float.MIN_VALUE ? x / xPercentValue : xIndentPercent;
             yIndentPercent = yIndentPercent == Float.MIN_VALUE ? y / yPercentValue : yIndentPercent;
+        }
 
-            return new Pos(xIndentPercent, yIndentPercent, xPercentValue, yPercentValue);
+        private void initIndents(float percentValue) {
+            initIndents(percentValue, percentValue);
+        }
+
+        @SuppressWarnings("SuspiciousNameCombination")
+        public Pos build(float xPercentValue, float yPercentValue) {
+            if (xIndentPercent == Float.MIN_VALUE) {
+                switch (proportionBy) {
+                    case "width" -> {
+                        initIndents(xPercentValue);
+                    }
+                    case "height" -> {
+                        initIndents(yPercentValue);
+                    }
+                    case "none" -> {
+                        initIndents(xPercentValue, yPercentValue);
+                    }
+                }
+            }
+
+            return new Pos(xIndentPercent, yIndentPercent, xPercentValue, yPercentValue, proportionBy);
         }
     }
 }

@@ -69,11 +69,12 @@ public class SimpleFrame extends AbstractFrame {
         public SimpleFrame build() {
             Pos stopPos = this.stopPos == null
                     ? Pos.builder()
-                        .relativeCoords(
-                                startPos.getXIndentPercent() + widthPercent,
-                                startPos.getYIndentPercent() + heightPercent
-                        )
-                        .build(startPos.getXPercentValue(), startPos.getYPercentValue())
+                    .relativeCoords(
+                            startPos.getXIndentPercent() + widthPercent,
+                            startPos.getYIndentPercent() + heightPercent
+                    )
+                    .proportionBy(startPos.getProportionBy())
+                    .build(startPos.getXPercentValue(), startPos.getYPercentValue())
                     : this.stopPos;
 
             return new SimpleFrame(startPos, stopPos);
