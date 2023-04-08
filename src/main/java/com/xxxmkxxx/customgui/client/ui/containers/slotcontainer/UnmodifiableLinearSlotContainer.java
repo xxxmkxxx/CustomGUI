@@ -131,6 +131,7 @@ public class UnmodifiableLinearSlotContainer<T extends AbstractSlot> extends Abs
                     indexes[i],
                     Pos.builder()
                             .coords(frame.getStopPos().getX(), frame.getStopPos().getY())
+                            .proportionBy(frame.getStartPos().getProportionBy())
                             .build(frame.getLastXPercentValue(), frame.getLastYPercentValue())
             );
 

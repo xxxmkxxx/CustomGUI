@@ -143,7 +143,10 @@ public class SimplePane extends AbstractPane {
 
         public SimplePane build() {
             Pos stopPos = this.stopPos == null
-                    ? Pos.builder().relativeCoords(startPos.getXIndentPercent() + 10, startPos.getYIndentPercent() + 15).build(startPos.getXPercentValue(), startPos.getYPercentValue())
+                    ? Pos.builder()
+                        .relativeCoords(startPos.getXIndentPercent() + 10, startPos.getYIndentPercent() + 15)
+                        .proportionBy(startPos.getProportionBy())
+                        .build(startPos.getXPercentValue(), startPos.getYPercentValue())
                     : this.stopPos;
 
             SimplePane simplePane = new SimplePane(startPos, stopPos);

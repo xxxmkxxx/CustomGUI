@@ -161,6 +161,7 @@ public class SimpleImage extends AbstractImage implements LeftClickEventHandler,
                              startPos.getXIndentPercent() + widthPercent,
                              startPos.getYIndentPercent() + heightPercent
                         )
+                        .proportionBy(startPos.getProportionBy())
                         .build(startPos.getXPercentValue(), startPos.getYPercentValue())
                     : this.stopPos;
             SimpleImage image = new SimpleImage(startPos, stopPos, identifier);

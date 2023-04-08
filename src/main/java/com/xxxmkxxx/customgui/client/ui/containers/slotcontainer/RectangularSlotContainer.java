@@ -169,6 +169,7 @@ public class RectangularSlotContainer <T extends AbstractSlot> extends AbstractM
                                         + container.getSlot(0).getFrame().getHeight()
                                         + container.getSlot(0).getStyle().getMargins().getTop()
                         )
+                        .proportionBy(pos.getProportionBy())
                         .build(currentPos.getXPercentValue(), currentPos.getYPercentValue());
             }
 

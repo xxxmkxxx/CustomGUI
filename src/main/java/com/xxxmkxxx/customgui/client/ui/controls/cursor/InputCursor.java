@@ -107,6 +107,7 @@ public class InputCursor extends AbstractCursor {
                                 startPos.getXIndentPercent() + widthPercent,
                                 startPos.getYIndentPercent() + heightPercent
                         )
+                        .proportionBy(startPos.getProportionBy())
                         .build(startPos.getXPercentValue(), startPos.getYPercentValue())
                         : this.stopPos;
 

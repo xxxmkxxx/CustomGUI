@@ -167,6 +167,7 @@ public class StandardImage extends AbstractImage implements LeftClickEventHandle
                             startPos.getXIndentPercent() + widthPercent,
                             startPos.getYIndentPercent() + heightPercent
                     )
+                    .proportionBy(startPos.getProportionBy())
                     .build(startPos.getXPercentValue(), startPos.getYPercentValue())
                     : this.stopPos;
             StandardImage image = new StandardImage(startPos, stopPos, itemStack, Registry.ITEM.getId(itemStack.getItem()));

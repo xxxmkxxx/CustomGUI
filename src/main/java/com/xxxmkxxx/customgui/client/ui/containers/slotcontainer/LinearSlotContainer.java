@@ -87,6 +87,7 @@ public class LinearSlotContainer<T extends AbstractSlot> extends AbstractRowSlot
                 index,
                 Pos.builder()
                         .coords(frame.getStopPos().getX(), frame.getStartPos().getY())
+                        .proportionBy(frame.getStartPos().getProportionBy())
                         .build(frame.getLastXPercentValue(), frame.getLastYPercentValue())
         );
 

@@ -150,6 +150,7 @@ public class SimpleText extends AbstractText implements LeftClickEventHandler, H
                             startPos.getX() + Utils.getTextWidth(text.getString(), style.getFont()),
                             startPos.getY() + style.getFont().getYSizePx()
                     )
+                    .proportionBy(startPos.getProportionBy())
                     .build(startPos.getXPercentValue(), startPos.getYPercentValue());
 
             return new SimpleText(startPos, stopPos, text, style);

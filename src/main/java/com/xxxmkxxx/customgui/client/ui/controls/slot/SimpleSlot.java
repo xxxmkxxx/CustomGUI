@@ -61,6 +61,7 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
                         frame.getStopPos().getX() - Utils.getTextWidth(String.valueOf(amount), style.getFont()),
                         frame.getStopPos().getY() - style.getFont().getYSizePx()
                 )
+                .proportionBy(frame.getStartPos().getProportionBy())
                 .build(frame.getLastXPercentValue(), frame.getLastYPercentValue());
     }
 
@@ -164,15 +165,16 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
                     : SimpleImage.builder().startPos(position).identifier(identifier).widthPercent(widthPercent).heightPercent(heightPercent).build();
 
             SimpleSlot slot = new SimpleSlot(
-                    position,
-                    Pos.builder()
-                            .relativeCoords(
-                                    position.getXIndentPercent() + widthPercent,
-                                    position.getYIndentPercent() + heightPercent
-                            )
-                            .build(pos.getXPercentValue(), position.getYPercentValue()),
-                    image, index, inventory, style
-            );
+                        position,
+                        Pos.builder()
+                                .relativeCoords(
+                                        position.getXIndentPercent() + widthPercent,
+                                        position.getYIndentPercent() + heightPercent
+                                )
+                                .proportionBy(position.getProportionBy())
+                                .build(pos.getXPercentValue(), position.getYPercentValue()),
+                        image, index, inventory, style
+                );
 
             slot.setLeftClickAction(() -> leftClickAction.accept(inventory.getStack(index)));
             slot.setHoverAction(hoverAction);
@@ -279,9 +281,7 @@ public class SimpleSlot extends AbstractSlot implements LeftClickEventHandler, H
         }
 
         public Factory build() {
-            Factory factory = new Factory(widthPercent, heightPercent, inventory, style);
-
-            return factory;
+            return new Factory(widthPercent, heightPercent, inventory, style);
         }
     }
 

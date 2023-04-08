@@ -214,6 +214,7 @@ public class ImagedButton extends AbstractButton implements LeftClickEventHandle
                             image.getFrame().getInitialStopPos().getX() + text.getFrame().getWidth(),
                             image.getFrame().getInitialStartPos().getY()
                     )
+                    .proportionBy(startPos.getProportionBy())
                     .build(startPos.getXPercentValue(), startPos.getXPercentValue())
                     : this.stopPos;
 
