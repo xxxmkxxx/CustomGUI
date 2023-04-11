@@ -10,10 +10,16 @@ public abstract class AbstractNodeBuilder<N extends AbstractNode> implements Nod
     protected Pos startPos;
     protected Pos stopPos;
     protected Style style;
+    protected float width;
+    protected float height;
+    protected float widthPercent;
+    protected float heightPercent;
 
     protected AbstractNodeBuilder() {
         this.startPos = Pos.defaultPos();
         this.style = Style.defaultStyle();
+        this.width = height = 5;
+        this.widthPercent = heightPercent = Float.MIN_VALUE;
     }
 
     @Override
@@ -52,6 +58,20 @@ public abstract class AbstractNodeBuilder<N extends AbstractNode> implements Nod
     }
 
     @Override
+    public AbstractNodeBuilder<N> sizes(float width, float height) {
+        this.width = width;
+        this.height = height;
+        return this;
+    }
+
+    @Override
+    public AbstractNodeBuilder<N> sizesPercent(float widthPercent, float heightPercent) {
+        this.widthPercent = widthPercent;
+        this.heightPercent = heightPercent;
+        return this;
+    }
+
+    @Override
     public AbstractNodeBuilder<N> style(Style style) {
         try {
             this.style = (Style) style.clone();
@@ -59,6 +79,29 @@ public abstract class AbstractNodeBuilder<N extends AbstractNode> implements Nod
             throw new RuntimeException(e);
         }
         return this;
+    }
+
+    protected Pos createStopPos() {
+        Pos pos;
+
+        if (stopPos != null) return stopPos;
+
+        if (widthPercent == Float.MIN_VALUE) {
+            pos = Pos.builder()
+                    .coords(startPos.getX() + width, startPos.getY() + height)
+                    .proportionBy(startPos.getProportionBy())
+                    .build(startPos.getXPercentValue(), startPos.getYPercentValue());
+        } else {
+            pos = Pos.builder()
+                    .relativeCoords(
+                            startPos.getXIndentPercent() + widthPercent,
+                            startPos.getYIndentPercent() + heightPercent
+                    )
+                    .proportionBy(startPos.getProportionBy())
+                    .build(startPos.getXPercentValue(), startPos.getYPercentValue());
+        }
+
+        return pos;
     }
 
     @Override

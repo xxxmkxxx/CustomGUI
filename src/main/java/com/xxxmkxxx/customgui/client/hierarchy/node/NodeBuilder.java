@@ -11,6 +11,10 @@ public interface NodeBuilder<N> {
 
     NodeBuilder<N> stopPos(Pos pos);
 
+    NodeBuilder<N> sizes(float width, float height);
+
+    NodeBuilder<N> sizesPercent(float widthPercent, float heightPercent);
+
     NodeBuilder<N> positions(Pos startPos, Pos stopPos);
 
     NodeBuilder<N> positions(AbstractFrame frame);
