@@ -25,11 +25,14 @@ public abstract class MouseMixin {
 
     @Inject(method = "lockCursor", at = @At(value = "HEAD"), cancellable = true)
     public void lockCursor(CallbackInfo ci) {
+        if (!CustomGUI.getInstance().isActiveAnyScene()) return;
         if (CustomGUI.getInstance().getScreenStage().getState() == StageState.RENDERING) ci.cancel();
     }
 
     @Inject(method = "onCursorPos", at = @At(value = "TAIL"))
     public void onCursorPos(long window, double x, double y, CallbackInfo ci) {
+        if (!CustomGUI.getInstance().isActiveAnyScene()) return;
+
         int xPos = (int) (x * this.client.getWindow().getScaledWidth() / this.client.getWindow().getWidth());
         int yPos = (int) (y * this.client.getWindow().getScaledHeight() / this.client.getWindow().getHeight());
 
@@ -39,6 +42,8 @@ public abstract class MouseMixin {
 
     @Inject(method = "onMouseButton", at = @At(value = "TAIL"))
     public void onMouseButton(long window, int button, int action, int mods, CallbackInfo ci) {
+        if (!CustomGUI.getInstance().isActiveAnyScene()) return;
+
         AbstractScene scene = CustomGUI.getInstance().getScreenStage().getActiveScene();
         AbstractNode node = scene.getTargetManager().getCurrentTarget();
 

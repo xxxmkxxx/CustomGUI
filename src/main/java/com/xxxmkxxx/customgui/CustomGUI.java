@@ -58,6 +58,10 @@ public class CustomGUI {
         return scenes.getOrDefault(blockId, guiBlocks.get(blockId).createScene(hudStage, screenStage));
     }
 
+    public boolean isActiveAnyScene() {
+        return hudStage.getActiveScene() != null || screenStage.getActiveScene() != null;
+    }
+
     @FunctionalInterface
     public interface GUIBlock {
         AbstractScene createScene(HudStage hudStage, ScreenStage screenStage);
