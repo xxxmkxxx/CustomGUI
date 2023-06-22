@@ -4,13 +4,13 @@ import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.KeyboardManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AbstractAnimation;
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AnimationManager;
-import com.xxxmkxxx.customgui.client.hierarchy.node.target.TargetManager;
+import com.xxxmkxxx.customgui.client.hierarchy.node.target.AbstractTargetManager;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class ActionBuilder {
-    private TargetManager targetManager;
+    private AbstractTargetManager targetManager;
     private AnimationManager animationManager;
     private KeyboardManager keyboardManager;
     private Queue<Runnable> actions = new LinkedList<>();
@@ -65,7 +65,7 @@ public class ActionBuilder {
         return this;
     }
 
-    public Runnable build(TargetManager targetManager, AnimationManager animationManager, KeyboardManager keyboardManager) {
+    public Runnable build(AbstractTargetManager targetManager, AnimationManager animationManager, KeyboardManager keyboardManager) {
         this.targetManager = targetManager;
         this.animationManager = animationManager;
         this.keyboardManager = keyboardManager;

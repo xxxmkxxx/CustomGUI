@@ -5,7 +5,8 @@ import com.xxxmkxxx.customgui.client.common.comparators.NodeFrameComparator;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
 import com.xxxmkxxx.customgui.client.hierarchy.node.KeyboardManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AnimationManager;
-import com.xxxmkxxx.customgui.client.hierarchy.node.target.TargetManager;
+import com.xxxmkxxx.customgui.client.hierarchy.node.target.AbstractTargetManager;
+import com.xxxmkxxx.customgui.client.hierarchy.node.target.SimpleTargetManager;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
 import com.xxxmkxxx.customgui.client.hierarchy.window.WindowSectionNodes;
 import com.xxxmkxxx.timecontrol.TimeControl;
@@ -31,8 +32,8 @@ public abstract class AbstractScene implements Scene {
         }
 
         @Override
-        public TargetManager getTargetManager() {
-            return super.getTargetManager();
+        public AbstractTargetManager getTargetManager() {
+            return AbstractTargetManager.EMPTY_TARGET_MANAGER;
         }
 
         @Override
@@ -69,7 +70,7 @@ public abstract class AbstractScene implements Scene {
     @Getter
     protected final WindowSectionNodes windowSectionNodes;
     @Getter
-    protected final TargetManager targetManager;
+    protected final AbstractTargetManager targetManager;
     @Getter
     protected final AnimationManager animationManager;
     @Getter
@@ -79,7 +80,7 @@ public abstract class AbstractScene implements Scene {
         this.windowSectionNodes = new WindowSectionNodes(new NodeFrameComparator());
         this.renderTimeControl = new TimeControl(new RenderTime());
         this.type = type;
-        this.targetManager = new TargetManager(windowSectionNodes);
+        this.targetManager = new SimpleTargetManager(windowSectionNodes);
         this.animationManager = new AnimationManager(renderTimeControl);
         this.keyboardManager = new KeyboardManager(targetManager);
     }
