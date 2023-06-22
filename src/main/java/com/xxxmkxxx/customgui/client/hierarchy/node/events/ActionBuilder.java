@@ -1,10 +1,9 @@
 package com.xxxmkxxx.customgui.client.hierarchy.node.events;
 
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
-import com.xxxmkxxx.customgui.client.hierarchy.node.keyboard.AbstractKeyboardManager;
-import com.xxxmkxxx.customgui.client.hierarchy.node.keyboard.SimpleKeyboardManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AbstractAnimation;
-import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AnimationManager;
+import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AbstractAnimationManager;
+import com.xxxmkxxx.customgui.client.hierarchy.node.keyboard.AbstractKeyboardManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.AbstractTargetManager;
 
 import java.util.LinkedList;
@@ -12,7 +11,7 @@ import java.util.Queue;
 
 public class ActionBuilder {
     private AbstractTargetManager targetManager;
-    private AnimationManager animationManager;
+    private AbstractAnimationManager animationManager;
     private AbstractKeyboardManager keyboardManager;
     private Queue<Runnable> actions = new LinkedList<>();
 
@@ -66,7 +65,7 @@ public class ActionBuilder {
         return this;
     }
 
-    public Runnable build(AbstractTargetManager targetManager, AnimationManager animationManager, AbstractKeyboardManager keyboardManager) {
+    public Runnable build(AbstractTargetManager targetManager, AbstractAnimationManager animationManager, AbstractKeyboardManager keyboardManager) {
         this.targetManager = targetManager;
         this.animationManager = animationManager;
         this.keyboardManager = keyboardManager;

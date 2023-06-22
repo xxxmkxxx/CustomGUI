@@ -3,9 +3,10 @@ package com.xxxmkxxx.customgui.client.hierarchy.scene;
 import com.xxxmkxxx.customgui.client.common.RenderTime;
 import com.xxxmkxxx.customgui.client.common.comparators.NodeFrameComparator;
 import com.xxxmkxxx.customgui.client.hierarchy.node.AbstractNode;
+import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AbstractAnimationManager;
+import com.xxxmkxxx.customgui.client.hierarchy.node.animation.SimpleAnimationManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.keyboard.AbstractKeyboardManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.keyboard.SimpleKeyboardManager;
-import com.xxxmkxxx.customgui.client.hierarchy.node.animation.AnimationManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.AbstractTargetManager;
 import com.xxxmkxxx.customgui.client.hierarchy.node.target.SimpleTargetManager;
 import com.xxxmkxxx.customgui.client.hierarchy.renderer.RendererType;
@@ -38,8 +39,8 @@ public abstract class AbstractScene implements Scene {
         }
 
         @Override
-        public AnimationManager getAnimationManager() {
-            return super.getAnimationManager();
+        public AbstractAnimationManager getAnimationManager() {
+            return AbstractAnimationManager.EMPTY_ANIMATION_MANAGER;
         }
 
         @Override
@@ -73,7 +74,7 @@ public abstract class AbstractScene implements Scene {
     @Getter
     protected final AbstractTargetManager targetManager;
     @Getter
-    protected final AnimationManager animationManager;
+    protected final AbstractAnimationManager animationManager;
     @Getter
     protected final AbstractKeyboardManager keyboardManager;
 
@@ -82,7 +83,7 @@ public abstract class AbstractScene implements Scene {
         this.renderTimeControl = new TimeControl(new RenderTime());
         this.type = type;
         this.targetManager = new SimpleTargetManager(windowSectionNodes);
-        this.animationManager = new AnimationManager(renderTimeControl);
+        this.animationManager = new SimpleAnimationManager(renderTimeControl);
         this.keyboardManager = new SimpleKeyboardManager(targetManager);
     }
 
