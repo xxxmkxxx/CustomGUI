@@ -14,6 +14,54 @@ import lombok.Getter;
 import java.util.List;
 
 public abstract class AbstractScene implements Scene {
+    public static AbstractScene EMPTY_SCENE = new AbstractScene(RendererType.SCREEN) {
+        @Override
+        public TimeControl getRenderTimeControl() {
+            return this.renderTimeControl;
+        }
+
+        @Override
+        public RendererType getType() {
+            return super.getType();
+        }
+
+        @Override
+        public WindowSectionNodes getWindowSectionNodes() {
+            return super.getWindowSectionNodes();
+        }
+
+        @Override
+        public TargetManager getTargetManager() {
+            return super.getTargetManager();
+        }
+
+        @Override
+        public AnimationManager getAnimationManager() {
+            return super.getAnimationManager();
+        }
+
+        @Override
+        public KeyboardManager getKeyboardManager() {
+            return super.getKeyboardManager();
+        }
+
+        @Override
+        public void addElement(AbstractNode node) {
+        }
+
+        @Override
+        public void render() {
+
+        }
+
+        @Override
+        public void updateTarget(int x, int y) {}
+
+        @Override
+        public List<AbstractNode> getAllNodes() {
+            return null;
+        }
+    };
     @Getter
     protected final TimeControl renderTimeControl;
     @Getter

@@ -19,6 +19,7 @@ public abstract class AbstractStage implements Stage {
     protected StageState state;
 
     public AbstractStage(RendererType type, int width, int height) {
+        this.activeScene = AbstractScene.EMPTY_SCENE;
         this.type = type;
         this.window = new Window(width, height);
         EventBus.RESIZE_WINDOW_EVENT.addHandler(window, window);
@@ -34,7 +35,7 @@ public abstract class AbstractStage implements Stage {
 
     @Override
     public void clearScene() {
-        activeScene = null;
+        activeScene = AbstractScene.EMPTY_SCENE;
         state.prev(this);
     }
 }
